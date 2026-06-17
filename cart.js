@@ -48,7 +48,7 @@ function renderCart() {
         <div class="cart-summary">
             <h3>Grand Total: <span>₹${dynamicTotal}</span></h3>
             <button class="btn btn-primary" onclick="openDetailsModal()" style="background-color: var(--accent-green); color: white;">
-                Proceed to Checkout
+                ORDER NOW
             </button>
         </div>
     </div>`;
