@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRADH DESI FUEL | Premium Nutromix Brand</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+    <a href="index.html">
+        <img src="logo.jpeg" alt="PRADH DESI FUEL Logo" style="height: 40px; width: auto; display: inline-block; vertical-align: middle;">
+    </a>
+</div>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span><span></span><span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link active">Home</a></li>
+                <li><a href="product.html" class="nav-link">Products</a></li>
+                <li><a href="about.html" class="nav-link">Our Story</a></li>
+                <li><a href="contact.html" class="nav-link">Contact & Policies</a></li>
+                <li><a href="cart.html" class="nav-link cart-icon-wrapper">Cart <span id="cart-count">0</span></a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>PRADH <span>DESI FUEL</span></h1>
+                <p class="hero-tagline">Just Pure Desi Fuel</p>
+                <div class="hero-buttons">
+                    <a href="product.html" class="btn btn-primary">Shop Now</a>
+                    <a href="about.html" class="btn btn-secondary">Our Story</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Featured Health Mixes</h2>
+            <div class="product-grid">
+                <div class="product-card">
+                    <!-- Photo section updated with proper image tag -->
+                    <div class="product-img-container">
+                        <img src="product.jpeg" alt="PRADH Desi Fuel Blend 1KG" class="product-real-img" onerror="this.src='https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=500';">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">PRADH Desi Fuel Blend</h3>
+                        <p class="product-desc">Traditional roasted grain and nut protein super-mix. Zero structural fillers, 100% natural fuel clean source.</p>
+                        <div class="product-meta">
+                            <span class="product-price">₹799 <small style="font-size:0.75rem; color:var(--text-muted)">/ 1 KG</small></span>
+                            <button class="btn btn-primary" onclick="addToCart('pdf-1kg', 'PRADH Desi Fuel Blend', 799, '1 KG')">Add To Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- --- WHY CHOOSE US & REVIEWS SECTION --- -->
+        <section class="section" style="background-color: #111827; color: white; border-radius: 16px; margin-top: 4rem; padding: 4rem 2rem;">
+            <h2 class="section-title" style="color: white;">Why PRADH Desi Fuel?</h2>
+            
+            <div class="about-features" style="margin-bottom: 4rem;">
+                <div class="feature-item" style="background: #1f2937; border-left-color: var(--accent-yellow); color: white;">
+                    <h4 style="color: var(--accent-yellow);">🔥 Traditional Sand-Roasting</h4>
+                    <p style="font-size: 0.9rem; color: #d1d5db;">Humaari slow-cooking technique se nutrition hamesha barkarar rehta hai aur gut par bilkul light rehta hai.</p>
+                </div>
+                <div class="feature-item" style="background: #1f2937; border-left-color: var(--accent-green); color: white;">
+                    <h4 style="color: var(--accent-green);">🚫 Zero Chemical Fillers</h4>
+                    <p style="font-size: 0.9rem; color: #d1d5db;">Koi artificial whey concentrates ya preservatives nahi. Jo hai, ekdum pure desi organic fuel hai.</p>
+                </div>
+            </div>
+
+            <h2 class="section-title" style="color: white;">What Our Desi Fitness Community Says</h2>
+            <div class="product-grid">
+                <div style="background: #1f2937; padding: 2rem; border-radius: 12px; border: 1px solid #374151;">
+                    <p style="font-style: italic; color: #e5e7eb;">"Bhai ab tak ka sabse best organic supplement hai. Subah workout ke baad milk ke saath leta hu, energy poore din solid rehti hai!"</p>
+                    <h4 style="color: var(--accent-yellow); margin-top: 1rem;">— Vikram Singh (Gym Enthusiast)</h4>
+                </div>
+                <div style="background: #1f2937; padding: 2rem; border-radius: 12px; border: 1px solid #374151;">
+                    <p style="font-style: italic; color: #e5e7eb;">"Sabse acchi baat lagne ki isme refined sugar nahi hai. Taste ekdum suthra aur authentic hai. Highly recommended!"</p>
+                    <h4 style="color: var(--accent-yellow); margin-top: 1rem;">— Dr. Rohan Mehta</h4>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="main.js"></script>
+    <!-- Floating WhatsApp Chat Button -->
+<a href="https://wa.me/918979993655?text=Hello%20PRADH%20Desi%20Fuel!%20I%20have%20a%20query%20about%20your%20product." 
+   class="whatsapp-floating-btn" 
+   target="_blank" 
+   title="Chat with us on WhatsApp">
+    <!-- WhatsApp Icon SVG Layer -->
+    <svg viewBox="0 0 32 32" class="whatsapp-svg">
+        <path d="M16 2a13 13 0 0 0-11.3 19.4L3 29l7.8-2A13 13 0 1 0 16 2zm0 24a11 11 0 0 1-5.6-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4A11 11 0 1 1 16 26zm5.9-8.1c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.1-.7.2l-1 1.3c-.2.3-.5.3-.8.1a10.3 10.3 0 0 1-3.7-2.3 11.4 11.4 0 0 1-2.5-3.2c-.2-.4 0-.6.2-.8l.6-.7v-.4c-.2-.5-.7-1.7-1-2.4-.2-.6-.5-.6-.7-.6h-.6a1.3 1.3 0 0 0-1 .4 4.8 4.8 0 0 0-1.5 3.5 8.3 8.3 0 0 0 1.8 4.4 19 19 0 0 0 7.3 6.5c3.5 1.4 4.2 1.1 5 1a4.2 4.2 0 0 0 2.8-2 3.4 3.4 0 0 0 .2-2c-.1-.2-.4-.3-.7-.5z"/>
+    </svg>
+</a>
+<footer>
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+            <p>&copy; 2026 <span>PRADH DESI FUEL</span>. All Rights Reserved.</p>
+            
+            <!-- Google Form Feedback Button -->
+            <a href="https://forms.gle/wybyGnhVKrNikMJV6" 
+               target="_blank" 
+               class="feedback-btn">
+               📝 Share Your Feedback
+            </a>
+        </div>
+    </footer>
+</body>
+</html>

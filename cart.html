@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart | PRADH DESI FUEL</title>
+    <link class="styles" rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo"><a href="index.html">PRADH <span>DESI FUEL</span></a></div>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span><span></span><span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="product.html" class="nav-link">Products</a></li>
+                <li><a href="about.html" class="nav-link">Our Story</a></li>
+                <li><a href="contact.html" class="nav-link">Contact & Policies</a></li>
+                <li><a href="cart.html" class="nav-link cart-icon-wrapper active">Cart <span id="cart-count">0</span></a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="section">
+        <h2 class="section-title">Your Selected Items</h2>
+        <div id="cart-wrapper">
+            <!-- JavaScript dynamically renders items here -->
+        </div>
+
+        <!-- --- POPUP DELIVERY DETAILS MODAL --- -->
+        <div id="detailsModal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Delivery Details 🚚</h3>
+                    <button class="close-modal-btn" onclick="closeDetailsModal()">✕</button>
+                </div>
+                <form id="checkoutForm" onsubmit="handleFormSubmit(event)">
+                    <div class="form-group">
+                        <label for="custName">Your Full Name *</label>
+                        <input type="text" id="custName" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="custPhone">WhatsApp Number *</label>
+                        <input type="tel" id="custPhone" required placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}">
+                    </div>
+                    <div class="form-group">
+                        <label for="custAddress">Full Delivery Address *</label>
+                        <textarea id="custAddress" required rows="3" placeholder="House No., Street, Colony, Landmark..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="custPincode">Pincode *</label>
+                        <input type="text" id="custPincode" required placeholder="6-digit Pincode" pattern="[0-9]{6}">
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentMethod">Preferred Payment Method</label>
+                        <select id="paymentMethod">
+                            <option value="UPI / Google Pay / PhonePe">UPI (Google Pay / PhonePe / Paytm)</option>
+                            <option value="Cash On Delivery (COD)">Cash On Delivery (COD)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; background-color: var(--accent-green); color: white;">
+                        Confirm Order on WhatsApp 🚀
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+   
+
+    <script src="main.js"></script>
+    <script src="cart.js"></script>
+    <!-- Floating WhatsApp Chat Button -->
+<a href="https://wa.me/918979993655?text=Hello%20PRADH%20Desi%20Fuel!%20I%20have%20a%20query%20about%20your%20product." 
+   class="whatsapp-floating-btn" 
+   target="_blank" 
+   title="Chat with us on WhatsApp">
+    <!-- WhatsApp Icon SVG Layer -->
+    <svg viewBox="0 0 32 32" class="whatsapp-svg">
+        <path d="M16 2a13 13 0 0 0-11.3 19.4L3 29l7.8-2A13 13 0 1 0 16 2zm0 24a11 11 0 0 1-5.6-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4A11 11 0 1 1 16 26zm5.9-8.1c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.1-.7.2l-1 1.3c-.2.3-.5.3-.8.1a10.3 10.3 0 0 1-3.7-2.3 11.4 11.4 0 0 1-2.5-3.2c-.2-.4 0-.6.2-.8l.6-.7v-.4c-.2-.5-.7-1.7-1-2.4-.2-.6-.5-.6-.7-.6h-.6a1.3 1.3 0 0 0-1 .4 4.8 4.8 0 0 0-1.5 3.5 8.3 8.3 0 0 0 1.8 4.4 19 19 0 0 0 7.3 6.5c3.5 1.4 4.2 1.1 5 1a4.2 4.2 0 0 0 2.8-2 3.4 3.4 0 0 0 .2-2c-.1-.2-.4-.3-.7-.5z"/>
+    </svg>
+</a>
+<footer>
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+            <p>&copy; 2026 <span>PRADH DESI FUEL</span>. All Rights Reserved.</p>
+            
+            <!-- Google Form Feedback Button -->
+            <a href="https://forms.gle/wybyGnhVKrNikMJV6" 
+               target="_blank" 
+               class="feedback-btn">
+               📝 Share Your Feedback
+            </a>
+        </div>
+    </footer>
+</body>
+</html>

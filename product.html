@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | PRADH DESI FUEL</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo"><a href="index.html">PRADH <span>DESI FUEL</span></a></div>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span><span></span><span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="product.html" class="nav-link active">Products</a></li>
+                <li><a href="about.html" class="nav-link">Our Story</a></li>
+                <li><a href="contact.html" class="nav-link">Contact & Policies</a></li>
+                <li><a href="cart.html" class="nav-link cart-icon-wrapper">Cart <span id="cart-count">0</span></a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="section">
+        <h2 class="section-title">Select Your Fuel Pack</h2>
+        <div class="product-grid">
+            
+            <!-- Variant Pack 250g -->
+            <div class="product-card">
+                <div class="product-img-container">
+                    <!-- YAHAN APNI IMAGE KA PATH DAALO -->
+                    <img src="product.jpeg" alt="PRADH Desi Fuel 250g" class="product-real-img" onerror="this.src='https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=500';">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">PRADH Desi Fuel (250g)</h3>
+                    <p class="product-desc">Perfect trial size package. High-protein roasted mix crafted clean for swift energetic lifestyle recoveries.</p>
+                    <div class="product-meta">
+                        <span class="product-price">₹249</span>
+                        <button class="btn btn-primary" onclick="addToCart('pdf-250g', 'PRADH Desi Fuel', 249, '250g')">Add To Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Variant Pack 500g -->
+            <div class="product-card">
+                <div class="product-img-container">
+                    <!-- YAHAN APNI IMAGE KA PATH DAALO -->
+                    <img src="product.jpeg" alt="PRADH Desi Fuel 500g" class="product-real-img" onerror="this.src='https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=500';">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">PRADH Desi Fuel (500g)</h3>
+                    <p class="product-desc">Standard balanced nutritional pack configuration. Ideal option for consistent fitness enthusiasts.</p>
+                    <div class="product-meta">
+                        <span class="product-price">₹449</span>
+                        <button class="btn btn-primary" onclick="addToCart('pdf-500g', 'PRADH Desi Fuel', 449, '500g')">Add To Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Variant Pack 1 KG -->
+            <div class="product-card">
+                <div class="product-img-container">
+                    <!-- YAHAN APNI IMAGE KA PATH DAALO -->
+                    <img src="product.jpeg" alt="PRADH Desi Fuel 1KG" class="product-real-img" onerror="this.src='https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=500';">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">PRADH Desi Fuel (1 KG)</h3>
+                    <p class="product-desc">Maximum value health pack configuration. Freshly roasted traditional formula optimized for bulk performance.</p>
+                    <div class="product-meta">
+                        <span class="product-price">₹799</span>
+                        <button class="btn btn-primary" onclick="addToCart('pdf-1kg', 'PRADH Desi Fuel', 799, '1 KG')">Add To Cart</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+    <!-- Floating WhatsApp Chat Button -->
+<a href="https://wa.me/918979993655?text=Hello%20PRADH%20Desi%20Fuel!%20I%20have%20a%20query%20about%20your%20product." 
+   class="whatsapp-floating-btn" 
+   target="_blank" 
+   title="Chat with us on WhatsApp">
+    <!-- WhatsApp Icon SVG Layer -->
+    <svg viewBox="0 0 32 32" class="whatsapp-svg">
+        <path d="M16 2a13 13 0 0 0-11.3 19.4L3 29l7.8-2A13 13 0 1 0 16 2zm0 24a11 11 0 0 1-5.6-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4A11 11 0 1 1 16 26zm5.9-8.1c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.1-.7.2l-1 1.3c-.2.3-.5.3-.8.1a10.3 10.3 0 0 1-3.7-2.3 11.4 11.4 0 0 1-2.5-3.2c-.2-.4 0-.6.2-.8l.6-.7v-.4c-.2-.5-.7-1.7-1-2.4-.2-.6-.5-.6-.7-.6h-.6a1.3 1.3 0 0 0-1 .4 4.8 4.8 0 0 0-1.5 3.5 8.3 8.3 0 0 0 1.8 4.4 19 19 0 0 0 7.3 6.5c3.5 1.4 4.2 1.1 5 1a4.2 4.2 0 0 0 2.8-2 3.4 3.4 0 0 0 .2-2c-.1-.2-.4-.3-.7-.5z"/>
+    </svg>
+</a>
+<footer>
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+            <p>&copy; 2026 <span>PRADH DESI FUEL</span>. All Rights Reserved.</p>
+            
+            <!-- Google Form Feedback Button -->
+            <a href="https://forms.gle/wybyGnhVKrNikMJV6" 
+               target="_blank" 
+               class="feedback-btn">
+               📝 Share Your Feedback
+            </a>
+        </div>
+    </footer>
+</body>
+</html>
