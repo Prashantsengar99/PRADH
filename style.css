@@ -695,3 +695,70 @@ footer p span {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(250, 204, 21, 0.2);
 }
+/* --- Mobile Menu Toggle Badge Styling --- */
+.menu-toggle {
+    position: relative; /* Badge position align karne ke liye */
+}
+
+#mobile-cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ef4444; /* Bright Red indicator alert */
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border: 1px solid var(--bg-dark);
+}
+/* --- Premium Dynamic Announcement Bar Styling --- */
+.announcement-bar {
+    background: linear-gradient(90deg, #0b0f1a, #1e293b);
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #facc15; /* PRADH Yellow theme line */
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Taaki scroll karne par sabke upar rahe */
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Coupon code highlights text */
+.coupon-highlight {
+    color: #facc15;
+    background: rgba(250, 204, 21, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px dashed #facc15;
+    display: inline-block;
+    animation: pulseGlow 1.5s infinite alternate;
+}
+
+/* Blinking/Glowing text animation */
+@keyframes pulseGlow {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(250, 204, 21, 0);
+    }
+    100% {
+        transform: scale(1.03);
+        box-shadow: 0 0 8px rgba(250, 204, 21, 0.4);
+    }
+}
+/* --- Ingredients Grid Hover Zoom effect --- */
+.ingredients-section div div:hover {
+    transform: translateY(-5px);
+    border-color: #facc15 !important;
+    box-shadow: 0 10px 20px rgba(250, 204, 21, 0.05);
+}
