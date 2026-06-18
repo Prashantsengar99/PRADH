@@ -208,56 +208,60 @@
         </div>
     </footer>
   <script>
-    async function handleFormSubmit(event) {
-        event.preventDefault(); // Page ko refresh hone se rokne ke liye
+  async function handleFormSubmit(event) {
+    event.preventDefault(); // Page reload hone se rokne ke liye
 
-        // 1. Tumhare form ke inputs se exact data uthana
-        const orderData = {
-            name: document.getElementById('custName').value.trim(),
-            phone: document.getElementById('custPhone').value.trim(),
-            address: document.getElementById('custAddress').value.trim(),
-            pincode: document.getElementById('custPincode').value.trim(),
-            payment: document.getElementById('paymentMethod').value
-        };
+    // 1. Form ke inputs se data uthana
+    const orderData = {
+        name: document.getElementById('custName').value.trim(),
+        phone: document.getElementById('custPhone').value.trim(),
+        address: document.getElementById('custAddress').value.trim(),
+        pincode: document.getElementById('custPincode').value.trim(),
+        payment: document.getElementById('paymentMethod').value
+    };
 
-        // 2. Data ko Backend Server (data.json) me save karna
-        try {
-            const response = await fetch("https://pradh-backend.onrender.com/api/orders", ... {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(orderData)
-            });
+    // 2. Data ko Backend Server par bhejna
+    try {
+        const response = await fetch("https://pradh-backend.onrender.com/api/orders", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json" 
+            },
+            body: JSON.stringify(orderData)
+        });
 
+        // Response check karna
+        if (response.ok) {
             const result = await response.json();
-
-            if (response.ok) {
-                // Backend me save hone ke baad user ko WhatsApp par bhejna
-                alert("Pradh Desi Fuel: Order details saved! Opening WhatsApp... 🚀");
-                
-                // WhatsApp URL banana (Bhai yahan apna asal number dal dena 91XXXXXXXXXX format me)
-                const myWhatsAppNumber = "919999999999"; 
-                const text = `*New Order for Pradh Desi Fuel* 🔥\n\n` +
-                             `👤 *Name:* ${orderData.name}\n` +
-                             `📞 *WhatsApp:* ${orderData.phone}\n` +
-                             `📍 *Address:* ${orderData.address}\n` +
-                             `📌 *Pincode:* ${orderData.pincode}\n` +
-                             `💳 *Payment:* ${orderData.payment}`;
-                
-                const whatsappUrl = `https://wa.me/${myWhatsAppNumber}?text=${encodeURIComponent(text)}`;
-                
-                // WhatsApp par redirect karna
-                window.open(whatsappUrl, '_blank');
-                
-                // Form clear karna
-                document.getElementById('checkoutForm').reset();
-            } else {
-                alert("Server Error: " + result.message);
-            }
-        } catch (error) {
-            console.error(error);
-            alert("Backend server band hai bhai! Terminal me 'node server.js' chalao.");
+            alert("Pradh Desi Fuel: Order details saved! Opening WhatsApp... 🚀");
+            
+            // WhatsApp URL banana
+            const myWhatsAppNumber = "918979993655"; // Apna sahi number yahan rakha hai
+            const text = `*New Order for Pradh Desi Fuel* 🔥\n\n` +
+                         `👤 *Name:* ${orderData.name}\n` +
+                         `📞 *WhatsApp:* ${orderData.phone}\n` +
+                         `📍 *Address:* ${orderData.address}\n` +
+                         `📌 *Pincode:* ${orderData.pincode}\n` +
+                         `💳 *Payment:* ${orderData.payment}`;
+            
+            const whatsappUrl = `https://wa.me/${myWhatsAppNumber}?text=${encodeURIComponent(text)}`;
+            
+            // WhatsApp par redirect karna
+            window.open(whatsappUrl, '_blank');
+            
+            // Form clear karna
+            document.getElementById('checkoutForm').reset();
+        } else {
+            // Agar server error de (jaise 404 ya 500)
+            alert("Server Error: Check console for details.");
+            console.error("Server response not ok:", response.status);
         }
+    } catch (error) {
+        // Agar network error ho (internet nahi ya server down)
+        console.error("Fetch Error:", error);
+        alert("Backend server se connect nahi ho paya. Error: " + error.message);
     }
+}
 </script>
 </body>
 </html>
