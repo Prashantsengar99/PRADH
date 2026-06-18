@@ -2,12 +2,18 @@ const express = require('express');
 const fs = require('fs');
 const cors = require('cors');
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || 8000; // Render ke liye dynamic port
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
 const DATA_FILE = './data.json';
+
+// Root Route
+app.get('/', (req, res) => {
+    res.send('PRADH Backend is Live and Running!');
+});
 
 // 1. Saare orders dekhne ke liye API
 app.get('/api/orders', (req, res) => {
@@ -17,7 +23,7 @@ app.get('/api/orders', (req, res) => {
     });
 });
 
-// 2. Naya order cart ke sath save karne ke liye API (Purane ko hata kar yeh naya rakha hai)
+// 2. Naya order save karne ke liye API
 app.post('/api/orders', (req, res) => {
     const { name, phone, address, pincode, payment, cart, totalAmount } = req.body;
 
@@ -27,19 +33,19 @@ app.post('/api/orders', (req, res) => {
 
     const newOrder = {
         id: Date.now(),
-        name,
-        phone,
-        address,
-        pincode,
-        payment,
-        cart,         // Isme poora cart ka array save hoga
-        totalAmount,  // Isme total paise save honge
-        date: new Date().toLocaleString()
+        name, phone, address, pincode, payment, cart, totalAmount,
+        date: new Date().toLocaleString(),
+        status: "Placed" // Default status
     };
 
     fs.readFile(DATA_FILE, 'utf8', (err, data) => {
         let orders = [];
-        if (!err && data) orders = JSON.parse(data);
+        try {
+            if (!err && data) orders = JSON.parse(data);
+        } catch (e) {
+            orders = [];
+        }
+        
         orders.push(newOrder);
 
         fs.writeFile(DATA_FILE, JSON.stringify(orders, null, 2), (err) => {
@@ -50,5 +56,5 @@ app.post('/api/orders', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Pradh Desi Fuel server running on http://localhost:${PORT}`);
+    console.log(`Pradh Desi Fuel server running on port ${PORT}`);
 });
