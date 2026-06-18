@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | PRADH</title>
+    <style>
+       /* Admin Login Section Styling */
+.admin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.login-card {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 350px;
+}
+
+.login-card h2 {
+    margin-bottom: 25px;
+    color: #333;
+    text-align: center;
+}
+
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; margin-bottom: 8px; color: #555; }
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.login-btn:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <h2>Admin Login</h2>
+    <form action="/admin-login" method="POST">
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Admin username" required>
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
+        <button type="submit" class="login-btn">Login</button>
+    </form>
+</div>
+<script>// Admin Login Validation
+document.addEventListener("DOMContentLoaded", function() {
+    const loginForm = document.querySelector("form");
+    
+    if (loginForm) {
+        loginForm.addEventListener("submit", function(e) {
+            const user = document.querySelector("input[name='username']").value;
+            const pass = document.querySelector("input[name='password']").value;
+
+            if (user === "" || pass === "") {
+                e.preventDefault(); // Form submit hone se rokna
+                alert("Bhai, username aur password dono bhar!");
+            }
+        });
+    }
+});
+    </script>
+
+</body>
+</html>

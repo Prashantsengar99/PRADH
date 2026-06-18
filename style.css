@@ -882,3 +882,39 @@ footer p span {
                 radial-gradient(circle at top right, rgba(250, 204, 21, 0.12), transparent 40%),
                 url('xyz.jpeg') center/cover no-repeat; /* 👈 Agar logo lagana hai toh yahan logo.jpeg kar dena */
 }
+/* Container jo button ko align kare */
+.admin-link-container {
+    display: flex;             /* Flexbox activate karega */
+    justify-content: center;   /* Horizontal center karne ke liye */
+    align-items: center;       /* Vertical center karne ke liye */
+    padding: 20px 0;           /* Thoda space dene ke liye */
+    width: 100%;               /* Poori width cover karega */
+}
+
+/* Modern Button ki styling */
+.modern-admin-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Gradient background */
+    color: #ffffff !important;
+    text-decoration: none;
+    border-radius: 30px; /* Rounded corners */
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+/* Hover Effects (Mouse le jane par changes) */
+.modern-admin-btn:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); /* Gradient reverse karega */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px); /* Thoda upar uthega */
+}
+
+/* Button ke andar arrow icon ke liye thoda space */
+.modern-admin-btn i {
+    margin-left: 20px;
+    font-size: 14px;
+}
