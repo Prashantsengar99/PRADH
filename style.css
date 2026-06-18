@@ -149,7 +149,7 @@ header {
 /* --- Hero Section with Local Image & Premium Gradient Fallback --- */
 .hero {
     background: linear-gradient(rgba(11, 15, 26, 0.82), rgba(17, 24, 39, 0.95)), 
-                url('../logo.jpeg') center/cover no-repeat;
+                url('logo.jpeg') center/cover no-repeat;
     background-color: #111827; /* Dark backup color agar image load na ho */
     color: var(--text-light);
     padding: 9rem 2rem 7rem 2rem;
@@ -159,7 +159,7 @@ header {
     /* Agar folder me image nahi milti toh niche wala stylish dynamic pattern background banayega */
     background-image: linear-gradient(rgba(11, 15, 26, 0.85), rgba(17, 24, 39, 0.95)), 
                       radial-gradient(circle at top right, rgba(250, 204, 21, 0.12), transparent 40%),
-                      url('../logo.jpeg') center/cover no-repeat;
+                      url('logo.jpeg') center/cover no-repeat;
 }
 .hero-content h1 {
     font-size: 3.5rem;
@@ -831,3 +831,65 @@ footer p span {
         color: #2e7d32;
         font-weight: bold;
     }
+.product-img-container {
+    width: 100%;
+    height: 320px; /* Is height ko tum apne hisab se badha sakte ho agar aur bada dikhana hai */
+    overflow: hidden;
+    position: relative;
+}
+
+.product-img-container {
+    width: 100%;
+    height: 350px; /* Isko tum apne hisab se lamba ya chota kar sakte ho */
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* 👇 JADU 1: Peeche background me wahi landscape image full screen phelegi blur hoke */
+    background-image: url('landscape.jpeg');
+    background-size: cover;
+    background-position: center;
+    backdrop-filter: blur(10px); /* Kafi premium look dega */
+}
+
+/* Ek halka sa dark overlay taaki background zyada bright na lage */
+.product-img-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.2); /* Agar dark theme hai toh rgba(0,0,0,0.3) kar dena */
+    z-index: 1;
+}
+
+.product-real-img {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    
+    /* 👇 JADU 2: Tumhari photo ab ek dum poori (original) dikhegii, kahin se nahi kategi */
+    object-fit: contain; 
+    
+    padding: 15px; /* Side se thoda sa saans lene ki jagah */
+    transition: transform 0.3s ease;
+}
+
+/* Hover par badhiya zoom effect */
+.product-img-container:hover .product-real-img {
+    transform: scale(1.05);
+}
+.hero {
+    color: var(--text-light);
+    padding: 9rem 2rem 7rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background-color: #111827; /* Dark backup color */
+    
+    /* 👇 Ek hi background property me sab set kar diya taaki crash na ho */
+    background: linear-gradient(rgba(11, 15, 26, 0.85), rgba(17, 24, 39, 0.95)), 
+                radial-gradient(circle at top right, rgba(250, 204, 21, 0.12), transparent 40%),
+                url('xyz.jpeg') center/cover no-repeat; /* 👈 Agar logo lagana hai toh yahan logo.jpeg kar dena */
+}
