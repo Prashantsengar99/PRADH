@@ -74,18 +74,20 @@ function removeCartItem(index) {
 function openDetailsModal() { document.getElementById('detailsModal').style.display = 'flex'; }
 function closeDetailsModal() { document.getElementById('detailsModal').style.display = 'none'; }
 
-// --- FIXED SUBMIT FUNCTION ---
 async function handleFormSubmit(event) {
     event.preventDefault();
+
     let cart = JSON.parse(localStorage.getItem('pradh_cart')) || [];
-    
+    if (cart.length === 0) { alert("Bhai cart khali hai!"); return; }
+
     const name = document.getElementById('custName').value.trim();
     const phone = document.getElementById('custPhone').value.trim();
     const address = document.getElementById('custAddress').value.trim();
     const pincode = document.getElementById('custPincode').value.trim();
     const payment = document.getElementById('paymentMethod').value;
-    
-    let dynamicTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    let dynamicTotal = 0;
+    cart.forEach(item => { dynamicTotal += item.price * item.quantity; });
 
     const orderData = { name, phone, address, pincode, payment, cart, totalAmount: dynamicTotal };
 
@@ -96,28 +98,34 @@ async function handleFormSubmit(event) {
             body: JSON.stringify(orderData)
         });
 
-        const result = await response.json();
-
         if (response.ok) {
-            let textMessage = `⚡ *NEW ORDER* ⚡\n\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n📍 *Address:* ${address}\n💰 *Total:* ₹${dynamicTotal}\n\n`;
-            cart.forEach(i => textMessage += `• ${i.name} x ${i.quantity}\n`);
-            
-            const finalWhatsAppUrl = `https://wa.me/918979993655?text=${encodeURIComponent(textMessage)}`;
+            alert("🎉 Order Placed Successfully! Redirecting you now...");
             localStorage.removeItem('pradh_cart');
-            window.location.assign(finalWhatsAppUrl);
+            closeDetailsModal();
+
+            // LOGIC: Agar UPI hai to UPI App, warna WhatsApp
+            if (payment.includes("UPI")) {
+                const upiUrl = `upi://pay?pa=8979993655@idfcfirst&pn=PRADH_DESI_FUEL&am=${dynamicTotal}&cu=INR&tn=Order_Payment`;
+                window.location.assign(upiUrl);
+            } else {
+                let textMessage = `⚡ *NEW ORDER - PRADH DESI FUEL* ⚡\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\nTotal: ₹${dynamicTotal}\nPayment: ${payment}`;
+                window.location.assign(`https://wa.me/918979993655?text=${encodeURIComponent(textMessage)}`);
+            }
         } else {
-            alert("Error: " + result.message);
+            alert("Server Error. Check console.");
         }
     } catch (error) {
-        alert("Server Error! Check console.");
+        alert("Backend server offline hai!");
     }
 }
 
 async function fetchMyOrders() {
     const phoneInput = document.getElementById('searchOrderPhone').value.trim();
     const ordersWrapper = document.getElementById('my-orders-wrapper');
-    if (!phoneInput) return;
+    
+    if (phoneInput.length !== 10) { alert("Sahi 10-digit number daalo!"); return; }
 
+    ordersWrapper.innerHTML = "<p>Loading...</p>";
     try {
         const response = await fetch("https://pradh-backend.onrender.com/api/orders");
         const allOrders = await response.json();
@@ -125,12 +133,16 @@ async function fetchMyOrders() {
 
         if (myOrders.length === 0) { ordersWrapper.innerHTML = "<p>No orders found.</p>"; return; }
 
-        ordersWrapper.innerHTML = myOrders.reverse().map(order => `
-            <div style="border:1px solid #ddd; padding:1rem; margin:1rem;">
-                <h4>Order ID: #${order.id}</h4>
-                <p>Status: ${order.status || 'Placed'}</p>
-                <p>Total: ₹${order.totalAmount}</p>
-            </div>
-        `).join('');
-    } catch (error) { ordersWrapper.innerHTML = "Error loading orders."; }
+        let html = "";
+        myOrders.reverse().forEach(o => {
+            html += `<div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+                        <p><strong>Order ID:</strong> #${o.id}</p>
+                        <p><strong>Total:</strong> ₹${o.totalAmount}</p>
+                        <p><strong>Status:</strong> ${o.status || 'Placed'}</p>
+                     </div>`;
+        });
+        ordersWrapper.innerHTML = html;
+    } catch (e) {
+        ordersWrapper.innerHTML = "<p>Error loading orders.</p>";
+    }
 }
