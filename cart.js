@@ -120,7 +120,9 @@ function closeDetailsModal() {
     };
 
     try {
-        const response = await fetch("http://127.0.0.1:8000/api/orders", {
+     const response = await
+     console.log("Data jo bhej rahe hain:", JSON.stringify(orderData));
+      fetch("https://pradh-backend.onrender.com/api/orders", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(orderData)
@@ -188,7 +190,7 @@ async function fetchMyOrders() {
     ordersWrapper.innerHTML = "<p style='text-align:center;'>Tracking your orders... 🔄</p>";
 
     try {
-        const response = await fetch("http://127.0.0.1:8000/api/orders");
+       const response = await fetch("https://pradh-backend.onrender.com/api/orders");
         if (!response.ok) throw new Error("Failed to fetch data");
 
         const allOrders = await response.json();
