@@ -60,8 +60,8 @@
                         <h3 class="product-title">PRADH Desi Fuel Blend</h3>
                         <p class="product-desc">Traditional roasted grain and nut protein super-mix. Zero structural fillers, 100% natural fuel clean source.</p>
                         <div class="product-meta">
-                            <span class="product-price">₹799 <small style="font-size:0.75rem; color:var(--text-muted)">/ 1 KG</small></span>
-                            <button class="btn btn-primary" onclick="addToCart('pdf-1kg', 'PRADH Desi Fuel Blend', 799, '1 KG')">Add To Cart</button>
+                            <span class="product-price">₹1099 <small style="font-size:0.75rem; color:var(--text-muted)">/ 1 KG</small></span>
+                            <button class="btn btn-primary" onclick="addToCart('pdf-1kg', 'PRADH Desi Fuel Blend', 1099, '1 KG')">Add To Cart</button>
                         </div>
                     </div>
                 </div>
@@ -207,5 +207,57 @@
             </a>
         </div>
     </footer>
+  <script>
+    async function handleFormSubmit(event) {
+        event.preventDefault(); // Page ko refresh hone se rokne ke liye
+
+        // 1. Tumhare form ke inputs se exact data uthana
+        const orderData = {
+            name: document.getElementById('custName').value.trim(),
+            phone: document.getElementById('custPhone').value.trim(),
+            address: document.getElementById('custAddress').value.trim(),
+            pincode: document.getElementById('custPincode').value.trim(),
+            payment: document.getElementById('paymentMethod').value
+        };
+
+        // 2. Data ko Backend Server (data.json) me save karna
+        try {
+            const response = await fetch("http://127.0.0.1:8000/api/orders", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(orderData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // Backend me save hone ke baad user ko WhatsApp par bhejna
+                alert("Pradh Desi Fuel: Order details saved! Opening WhatsApp... 🚀");
+                
+                // WhatsApp URL banana (Bhai yahan apna asal number dal dena 91XXXXXXXXXX format me)
+                const myWhatsAppNumber = "919999999999"; 
+                const text = `*New Order for Pradh Desi Fuel* 🔥\n\n` +
+                             `👤 *Name:* ${orderData.name}\n` +
+                             `📞 *WhatsApp:* ${orderData.phone}\n` +
+                             `📍 *Address:* ${orderData.address}\n` +
+                             `📌 *Pincode:* ${orderData.pincode}\n` +
+                             `💳 *Payment:* ${orderData.payment}`;
+                
+                const whatsappUrl = `https://wa.me/${myWhatsAppNumber}?text=${encodeURIComponent(text)}`;
+                
+                // WhatsApp par redirect karna
+                window.open(whatsappUrl, '_blank');
+                
+                // Form clear karna
+                document.getElementById('checkoutForm').reset();
+            } else {
+                alert("Server Error: " + result.message);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Backend server band hai bhai! Terminal me 'node server.js' chalao.");
+        }
+    }
+</script>
 </body>
 </html>

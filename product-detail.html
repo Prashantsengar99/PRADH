@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details | PRADH DESI FUEL</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .p-detail-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            display: flex;
+            gap: 3rem;
+            padding: 0 1rem;
+        }
+        /* Left Side: Images */
+        .p-image-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .main-product-img {
+            width: 100%;
+            max-height: 450px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+        }
+        .thumb-images-wrapper {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .thumb-img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .thumb-img.active {
+            border-color: var(--accent-green, #2e7d32);
+        }
+        /* Right Side: Details */
+        .p-info-section {
+            flex: 1;
+            text-align: left;
+        }
+        .p-title { font-size: 2rem; margin-bottom: 0.5rem; color: #333; }
+        .p-description { font-size: 1rem; color: #555; line-height: 1.6; margin-bottom: 1.5rem; }
+        
+        /* Specifications Styling (Soft & Clean) */
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        .specs-table tr {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .specs-table td {
+            padding: 12px 8px;
+            color: #444;
+            vertical-align: top;
+        }
+        .specs-table td:first-child {
+            width: 30%;
+            color: #777;
+            font-weight: 500;
+        }
+
+        /* Read More / Read Less Logic CSS */
+        .specs-collapsed {
+            position: relative;
+            max-height: 150px;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+        }
+        .specs-expanded {
+            max-height: 1200px;
+        }
+        
+        .specs-collapsed .specs-fade {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 55px;
+            background: linear-gradient(transparent, rgba(255, 255, 255, 0.95));
+        }
+        .specs-expanded .specs-fade {
+            display: none;
+        }
+
+        .read-more-btn {
+            background: none;
+            border: none;
+            color: #2874f0;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 5px 0;
+            margin-top: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .read-more-btn:hover {
+            color: #0043aa;
+            text-decoration: underline;
+        }
+
+        /* FAQ Accordion Styling */
+        .faq-item {
+            border: 1px solid #eaeaea;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover {
+            border-color: #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .faq-question {
+            width: 100%;
+            background: #fafafa;
+            border: none;
+            outline: none;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+            font-size: 0.98rem;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+        }
+        .faq-question:hover { background: #f5f5f5; }
+        .faq-icon { font-size: 1.2rem; color: #777; transition: transform 0.3s ease; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background-color: #fff; }
+        .faq-answer p { padding: 15px 20px; margin: 0; font-size: 0.92rem; color: #555; line-height: 1.6; border-top: 1px solid #f5f5f5; }
+        .faq-item.active .faq-icon { transform: rotate(45deg); color: #ff9f00; }
+        .faq-item.active { border-color: #e0e0e0; }
+
+        /* Flipkart Style Review Elements */
+        .rating-summary-box {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eaeaea;
+        }
+        .rating-big-number {
+            background-color: #26a541;
+            color: white;
+            padding: 5px 12px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .review-card {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1.2rem;
+        }
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.5rem;
+        }
+        .review-badge {
+            background-color: #26a541;
+            color: white;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+        .review-title {
+            font-size: 1.05rem;
+            color: #212121;
+        }
+        .review-body {
+            font-size: 0.95rem;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+        .review-footer {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: #878787;
+        }
+        .customer-name {
+            font-weight: 500;
+            color: #555;
+        }
+        .customer-gallery-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .customer-gallery-img:hover, .review-img-click:hover {
+            transform: scale(1.05);
+            border-color: #ff9f00;
+        }
+        .review-attached-images {
+            display: flex;
+            gap: 10px;
+            margin: 0.8rem 0;
+        }
+        .review-img-click {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #eee;
+            cursor: pointer;
+        }
+        .verified-buyer-badge {
+            background-color: #f1f8f5;
+            color: #108444;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 3px;
+            border: 1px solid #d4eedd;
+        }
+        
+        /* Modal Background popup styles */
+        .review-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+        }
+        .review-modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+        .close-modal {
+            position: absolute;
+            top: 30px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            .p-detail-container { flex-direction: column; gap: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo"><a href="index.html">PRADH <span>DESI FUEL</span></a></div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="product.html" class="nav-link active">Products</a></li>
+                <li><a href="cart.html" class="nav-link">Cart <span id="cart-count">0</span></a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="p-detail-container">
+        <!-- LEFT SIDE: IMAGES -->
+        <div class="p-image-section">
+            <img id="mainImg" src="product1.jpeg" alt="Product Image" class="main-product-img">
+            <div class="thumb-images-wrapper" id="thumbWrapper"></div>
+        </div>
+
+        <!-- RIGHT SIDE: DETAILS -->
+        <div class="p-info-section">
+            <h1 class="p-title" id="pTitle">Product Name</h1>
+            
+            <!-- FLIPKART STYLE PRICE BOX -->
+            <div class="main-price-box" style="margin: 1rem 0; display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                    <span id="pPrice" style="font-size: 2.2rem; font-weight: bold; color: #212121;">₹0</span>
+                    <span id="pOriginalPrice" style="text-decoration: line-through; color: #878787; font-size: 1.2rem;">₹0</span>
+                    <span id="pDiscountTag" style="color: #388e3c; font-size: 1.1rem; font-weight: 600;"></span>
+                </div>
+                <div style="color: #388e3c; font-weight: 500; font-size: 0.95rem; margin-top: 2px;">
+                    🚀 Delivery: <span style="font-weight: bold; text-transform: uppercase;">FREE</span>
+                </div>
+            </div>
+
+            <p class="p-description" id="pDesc">Loading Description...</p>
+            
+            <button class="btn btn-primary" id="addToCartBtn" style="background-color: #ff9f00; color: white; padding: 0.8rem 2rem; font-size: 1.1rem; border-radius: 4px; margin-bottom: 2rem; cursor: pointer; border: none; font-weight: bold;">
+                🛒 ADD TO CART
+            </button>
+
+            <!-- ================= SPECIFICATIONS SECTION ================= -->
+            <div class="specs-section" style="margin-top: 2rem;">
+                <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: #222; font-weight: 600;">Product Specifications</h3>
+                
+                <div id="specsContainer" class="specs-collapsed">
+                    <table class="specs-table">
+                        <tbody id="specsBody">
+                            <!-- Dynamically loaded rows via JS -->
+                        </tbody>
+                    </table>
+                    <div class="specs-fade"></div>
+                </div>
+
+                <button id="toggleSpecsBtn" onclick="toggleSpecifications()" class="read-more-btn">
+                    Read More ↓
+                </button>
+            </div>
+
+            <!-- ================= FAQ SECTION ================= -->
+            <div class="faq-section" style="margin-top: 3rem; border-top: 1px solid #eee; padding-top: 2rem;">
+                <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem; color: #222; font-weight: 600;">Frequently Asked Questions (FAQs)</h3>
+                <div class="faq-container" style="display: flex; flex-direction: column; gap: 10px;">
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            <span>Q: Kya DESI FUEL me refined sugar ya koi artificial sweetener hai?</span>
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer"><p>Bilkul nahi bhai! Hum zero percent refined sugar use karte hain. Isme mithaas ke liye sirf aur sirf premium Artisanal Thread Mishri (Dhaga Mishri) crystals ka use kiya gaya hai, jo health ke liye ekdum safe aur beneficial hai.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            <span>Q: Ise kaun-kaun pee sakta hai aur ise kaise prepare karna hai?</span>
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer"><p>Koki yeh 100% natural roasted grains aur nuts ka blend hai, ise 2 saal se bade bacchon se lekar ghar ke buzurgon tak sabhi pee sakte hain. Bas 2 chammach (approx 30g) powder ko 250ml garm ya thande doodh me milana hai, acche se shake karna hai aur aapka premium energy drink taiyar!</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            <span>Q: Isme Ashwagandha aur Shatavari ka kya role hai?</span>
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer"><p>Yeh hamari traditional wellness enrichment ka hissa hain. Ashwagandha body me energy, stamina aur stress management ko improve karta hai, jabki Shatavari overall strength aur immunity ko badhati hai. Yeh natural herbs DESI FUEL ko normal protein powder se kahin zyada takatwar banati hain.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            <span>Q: Order karne ke baad delivery me kitna samay lagta hai?</span>
+                            <span class="faq-icon">+</span>
+                        </button>
+                        <div class="faq-answer"><p>Hum batch preparation ke turant baad fresh pack karke dispatch karte hain. Uttar Pradesh aur Delhi-NCR me delivery 2-3 din me ho jaati hai, aur baaki India me 3-5 working days ke andar order aapke ghar pahunch jayega. Aap ise website par live track bhi kar sakte hain!</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= CUSTOMER REVIEWS SECTION WITH IMAGES (RESTORED) ================= -->
+            <div class="reviews-section" style="margin-top: 3rem; border-top: 1px solid #eee; padding-top: 2rem;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Customer Reviews & Ratings ⭐</h3>
+                
+                <!-- Ratings Summary Box -->
+                <div class="rating-summary-box">
+                    <div class="rating-big-number">
+                        4.8 <span style="font-size: 1.2rem; color: #fff;">★</span>
+                    </div>
+                    <div class="rating-summary-text">
+                        <strong>142 Ratings & 38 Reviews</strong><br>
+                        <span style="color: #666; font-size: 0.9rem;">100% Verified Customers from Hathras & Across India</span>
+                    </div>
+                </div>
+
+                <!-- Customer Photos Gallery -->
+                <div class="customer-photos-gallery" style="margin-top: 1.5rem;">
+                    <p style="font-size: 0.95rem; font-weight: bold; margin-bottom: 0.5rem; color: #212121;">Images Uploaded by Customers (6)</p>
+                    <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px;">
+                        <img src="product1.jpeg" class="customer-gallery-img" onclick="openReviewModal(this.src)">
+                        <img src="product2.jpeg" class="customer-gallery-img" onclick="openReviewModal(this.src)">
+                        <img src="product1.jpeg" class="customer-gallery-img" onclick="openReviewModal(this.src)">
+                        <img src="product2.jpeg" class="customer-gallery-img" onclick="openReviewModal(this.src)">
+                    </div>
+                </div>
+
+                <!-- Individual Review Cards -->
+                <div class="review-cards-container" style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1.5rem;">
+                    
+                    <!-- Review 1 -->
+                    <div class="review-card">
+                        <div class="review-header">
+                            <span class="review-badge">5 ★</span>
+                            <strong class="review-title">Kamaal ka swad aur energy! Original product h.</strong>
+                        </div>
+                        <p class="review-body">Bhai maine 500g ka pack order kiya tha. Doodh me mila kar peene me chocolate flavour ekdum natural lagta hai. Koi artificial sugar nahi h sabse achhi baat yhi h. Gym ke baad mast recovery hoti h!</p>
+                        
+                        <!-- Review Image -->
+                        <div class="review-attached-images">
+                            <img src="product1.jpeg" alt="Customer review image" class="review-img-click" onclick="openReviewModal(this.src)">
+                        </div>
+
+                        <div class="review-footer">
+                            <span class="customer-name">✓ Rahul Sharma</span>
+                            <span class="verified-buyer-badge">Verified Purchaser</span>
+                            <span class="review-date">12 June 2026</span>
+                        </div>
+                    </div>
+
+                    <!-- Review 2 -->
+                    <div class="review-card">
+                        <div class="review-header">
+                            <span class="review-badge">5 ★</span>
+                            <strong class="review-title">Family ke liye ekdum best healthy option</strong>
+                        </div>
+                        <p class="review-body">Bacchon ko ragi aur chana khilana bohot mushkil tha, par PRADH desi fuel ko vo doodh me khushi-khushi pee lete hain. Dhaga mishri ki vajah se mithaas bhi ekdum safe h. Delivery bhi 3 din me ho gyi thi.</p>
+                        
+                        <!-- Review Image -->
+                        <div class="review-attached-images">
+                            <img src="product2.jpeg" alt="Customer review image" class="review-img-click" onclick="openReviewModal(this.src)">
+                        </div>
+
+                        <div class="review-footer">
+                            <span class="customer-name">✓ Amit Verma</span>
+                            <span class="verified-buyer-badge">Verified Purchaser</span>
+                            <span class="review-date">05 June 2026</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Image Badi Karke Dekhne Ke Liye Modal Popup -->
+            <div id="reviewImageModal" class="review-modal" onclick="this.style.display='none'">
+                <span class="close-modal">&times;</span>
+                <img class="review-modal-content" id="imgModalTarget">
+            </div>
+        </div>
+    </main>
+
+    <script src="product-detail.js"></script>
+</body>
+</html>

@@ -762,3 +762,72 @@ footer p span {
     border-color: #facc15 !important;
     box-shadow: 0 10px 20px rgba(250, 204, 21, 0.05);
 }
+    /* Timeline Container */
+.timeline-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 1.5rem 0;
+        position: relative;
+        padding: 0 10px;
+    }
+    /* Beech ki connect karne wali line */
+    .timeline-line {
+        position: absolute;
+        top: 15px;
+        left: 30px;
+        right: 30px;
+        height: 4px;
+        background-color: #e0e0e0;
+        z-index: 1;
+    }
+    /* Active line jo status ke hisab se badhegi */
+    .timeline-line-progress {
+        position: absolute;
+        top: 15px;
+        left: 30px;
+        height: 4px;
+        background-color: #2e7d32; /* Green color */
+        z-index: 2;
+        transition: width 0.4s ease;
+    }
+    /* Timeline ke Individual Steps */
+    .timeline-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 3;
+        flex: 1;
+    }
+    /* Step ka Gol Circle */
+    .step-circle {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background-color: #fff;
+        border: 3px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: bold;
+        color: #999;
+        transition: all 0.4s ease;
+    }
+    /* Active step jab kaam ho jaye */
+    .timeline-step.active .step-circle {
+        border-color: #2e7d32;
+        background-color: #2e7d32;
+        color: white;
+    }
+    .step-label {
+        font-size: 0.75rem;
+        margin-top: 0.5rem;
+        color: #666;
+        font-weight: 500;
+    }
+    .timeline-step.active .step-label {
+        color: #2e7d32;
+        font-weight: bold;
+    }
