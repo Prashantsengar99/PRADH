@@ -66,26 +66,27 @@
             <label>Password</label>
             <input type="password" name="password" placeholder="Password" required>
         </div>
-        <button type="submit" class="login-btn">Login</button>
+       <button type="submit" class="login-btn">Login</button>
     </form>
 </div>
-<script>// Admin Login Validation
-document.addEventListener("DOMContentLoaded", function() {
-    const loginForm = document.querySelector("form");
-    
-    if (loginForm) {
-        loginForm.addEventListener("submit", function(e) {
-            const user = document.querySelector("input[name='username']").value;
-            const pass = document.querySelector("input[name='password']").value;
+<script>
+const loginForm = document.querySelector("form");
 
-            if (user === "" || pass === "") {
-                e.preventDefault(); // Form submit hone se rokna
-                alert("Bhai, username aur password dono bhar!");
-            }
-        });
+loginForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const username = document.querySelector("input[name='username']").value;
+    const password = document.querySelector("input[name='password']").value;
+
+    if(username === "pradh" && password === "1234") {
+
+        localStorage.setItem("adminLoggedIn", "true");
+
+      window.location.href = "admin-dashboard.html";
+    } else {
+        alert("Invalid Username or Password");
     }
 });
-    </script>
-
+</script>
 </body>
 </html>

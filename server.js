@@ -1,73 +1,59 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const cors = require('cors');
+
 const app = express();
-const PORT = process.env.PORT || 8000; // Render ke liye dynamic port
+const PORT = process.env.PORT || 3000;
+const ORDERS_FILE = path.join(__dirname, 'orders.json');
 
 // Middleware
 app.use(cors());
-app.options('*', cors()); // Yeh browsers ki "Preflight" check ko pass kar dega
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const DATA_FILE = './data.json';
-// Middleware ke turant baad ye daal do
-app.options('*', cors());
+// --- ADMIN LOGIN ROUTE ---
+app.post('/admin-login', (req, res) => {
+    console.log("Login request mili:", req.body);
+    const { username, password } = req.body;
 
-// Root Route
-app.get('/', (req, res) => {
-    res.send('PRADH Backend is Live and Running!');
-});
-
-// 1. Saare orders dekhne ke liye API
-app.get('/api/orders', (req, res) => {
-    fs.readFile(DATA_FILE, 'utf8', (err, data) => {
-        if (err) return res.status(500).json({ message: "Error reading data" });
-        res.json(JSON.parse(data || '[]'));
-    });
-});
-
-// 2. Naya order save karne ke liye API
-app.post('/api/orders', (req, res) => {
-    console.log("Server ko request mili!", req.body);
-    const { name, phone, address, pincode, payment, cart, totalAmount } = req.body;
-
-    if (!name || !phone || !address || !pincode) {
-        return res.status(400).json({ message: "Bhai saari details bharna zaroori hai!" });
+    if (username === "pradh" && password === "1234") {
+        console.log("Admin login success!");
+        res.status(200).send("OK");
+    } else {
+        console.log("Login fail: Galat credentials");
+        res.status(401).send("Galat Username ya Password!");
     }
+});
 
-    // --- DATA SAVE LOGIC ---
+// --- ORDER SAVING ROUTE ---
+app.post('/api/orders', (req, res) => {
+    console.log("Naya order aaya:", req.body);
     const newOrder = {
-        id: Date.now(), // Unique ID
-        name, phone, address, pincode, payment, cart, totalAmount,
+        id: Date.now(),
+        ...req.body,
         date: new Date().toLocaleString()
     };
 
-    // Yahan hum file mein save kar rahe hain (ya array mein)
-    // Agar tum "orders.json" use kar rahe ho toh:
-    const orders = JSON.parse(fs.readFileSync('orders.json', 'utf8') || '[]');
-    orders.push(newOrder);
-    fs.writeFileSync('orders.json', JSON.stringify(orders, null, 2));
-
-    res.status(201).json({ message: "Order saved!", order: newOrder });
-});
-
-    fs.readFile(DATA_FILE, 'utf8', (err, data) => {
-        let orders = [];
+    let orders = [];
+    if (fs.existsSync(ORDERS_FILE)) {
         try {
-            if (!err && data) orders = JSON.parse(data);
+            const data = fs.readFileSync(ORDERS_FILE, 'utf8');
+            orders = JSON.parse(data || '[]');
         } catch (e) {
             orders = [];
         }
-        
-        orders.push(newOrder);
+    }
+    
+    orders.push(newOrder);
+    fs.writeFileSync(ORDERS_FILE, JSON.stringify(orders, null, 2));
+    res.status(201).json({ message: "Order saved!", order: newOrder });
+});
 
-        fs.writeFile(DATA_FILE, JSON.stringify(orders, null, 2), (err) => {
-            if (err) return res.status(500).json({ message: "Error saving order" });
-            res.status(201).json({ message: "Order data saved successfully!", order: newOrder });
-        });
-    });
-;
+// --- SERVE STATIC FILES ---
+app.use(express.static(__dirname));
 
+// Server Start
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Pradh Desi Fuel server running on port ${PORT}`);
+    console.log(`Server is running on: http://localhost:${PORT}`);
 });

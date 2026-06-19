@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>orders</title>
+     <link class="styles" rel="stylesheet" href="style.css">
+</head>
+<body>
+      <!-- --- MY ORDERS SECTION --- -->
+<section class="section" style="margin-top: 3rem; border-top: 2px dashed #ccc; padding-top: 2rem;">
+    <h2 class="section-title">Track My Orders 📦</h2>
+    <div style="max-width: 500px; margin: 0 auto 1.5rem auto; display: flex; gap: 0.5rem;">
+        <input type="tel" id="searchOrderPhone" placeholder="Enter your 10-digit WhatsApp number" style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
+        <button onclick="fetchMyOrders()" class="btn btn-primary" style="background-color: var(--accent-green); color: white; white-space: nowrap;">
+            Show Orders
+        </button>
+    </div>
+    <div id="my-orders-wrapper">
+        <!-- Purane orders yahan dikhenge -->
+    </div>
+</section>
+  <script src="main.js"></script>
+    <script src="cart.js"></script>
+    
+</body>
+</html>

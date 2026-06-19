@@ -918,3 +918,163 @@ footer p span {
     margin-left: 20px;
     font-size: 14px;
 }
+.header-tools {
+    padding: 20px;
+    background: #f9f9f9;
+    text-align: center;
+}
+
+.nav-icons {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.nav-icons a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 12px;
+}
+
+.nav-icons i {
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.search-input {
+    width: 70%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-btn {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.account-page {
+    background-color: #f4f7f6;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.account-container {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.profile-header i {
+    font-size: 60px;
+    color: #28a745;
+    margin-bottom: 10px;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.action-card {
+    background: #f8f9fa;
+    padding: 20px 10px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: 0.3s;
+    border: 1px solid #eee;
+}
+
+.action-card i {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: #28a745;
+}
+
+.action-card:hover {
+    background: #28a745;
+    color: white;
+    transform: translateY(-5px);
+}
+
+.action-card:hover i {
+    color: white;
+}
+
+.logout { color: #dc3545; }
+.logout:hover { background: #dc3545; color: white; }
+.account-check-box {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px dashed #ccc; /* Thoda alag dikhne ke liye dashed border */
+    margin: 20px 0;
+}
+
+.account-check-box p {
+    margin: 0 0 10px 0;
+    font-size: 15px;
+    color: #555;
+}
+
+.create-account-link {
+    display: inline-block;
+    padding: 8px 20px;
+    background: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+.create-account-link:hover {
+    background: #0056b3;
+}
+.swiper {
+    width: 100%;
+    padding: 20px 0;
+}
+
+.swiper-slide {
+    height: auto; /* Card ki height barabar rakhne ke liye */
+}
+
+/* Card ka background sahi karne ke liye */
+.product-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+.section {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto; /* Ye slider ko center mein le aayega */
+}
