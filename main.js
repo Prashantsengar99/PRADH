@@ -118,3 +118,57 @@ function calculateFuel(event) {
     // Auto scroll down to view results cleanly on smartphones
     resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
+function startCountdown(durationInSeconds) {
+    let timer = durationInSeconds;
+    const display = document.getElementById('countdown');
+
+    const interval = setInterval(function () {
+        let hours = parseInt(timer / 3600, 10);
+        let minutes = parseInt((timer % 3600) / 60, 10);
+        let seconds = parseInt(timer % 60, 10);
+
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = hours + ":" + minutes + ":" + seconds;
+
+        if (--timer < 0) {
+            clearInterval(interval);
+            document.getElementById('timer-box').innerHTML = 
+                '🔥 Use Code: <span class="coupon-highlight">DESIFUEL10</span> for extra 10% OFF!';
+        }
+    }, 1000);
+}
+
+// Timer shuru karne ke liye (12 ghante = 43200 seconds)
+document.addEventListener('DOMContentLoaded', () => {
+    startCountdown(43200); 
+});
+document.addEventListener('DOMContentLoaded', () => {
+    const display = document.getElementById('countdown');
+    
+    // Safety check: Agar countdown ID exist karti hai tabhi timer chalao
+    if (display) {
+        // 12 ghante = 43200 seconds
+        let timer = 43200; 
+
+        const interval = setInterval(function () {
+            let hours = Math.floor(timer / 3600);
+            let minutes = Math.floor((timer % 3600) / 60);
+            let seconds = timer % 60;
+
+            // Formatting (00:00:00)
+            display.textContent = 
+                String(hours).padStart(2, '0') + ":" + 
+                String(minutes).padStart(2, '0') + ":" + 
+                String(seconds).padStart(2, '0');
+
+            if (--timer < 0) {
+                clearInterval(interval);
+                document.getElementById('timer-box').innerHTML = 
+                    '🔥 Use Code: <span class="coupon-highlight">DESIFUEL10</span> for extra 10% OFF!';
+            }
+        }, 1000);
+    }
+});

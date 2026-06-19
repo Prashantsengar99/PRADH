@@ -1078,3 +1078,17 @@ footer p span {
     max-width: 1200px;
     margin: 0 auto; /* Ye slider ko center mein le aayega */
 }
+#countdown {
+    font-family: monospace;
+    font-weight: bold;
+    background: #ffcc00;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #000;
+}
+.coupon-highlight {
+    background: #28a745;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+}

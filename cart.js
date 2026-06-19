@@ -82,6 +82,7 @@ async function handleFormSubmit(event) {
 
     const name = document.getElementById('custName').value.trim();
     const phone = document.getElementById('custPhone').value.trim();
+    const email = document.getElementById('custEmail').value.trim();
     const address = document.getElementById('custAddress').value.trim();
     const pincode = document.getElementById('custPincode').value.trim();
     const payment = document.getElementById('paymentMethod').value;
@@ -100,6 +101,15 @@ async function handleFormSubmit(event) {
 
         if (response.ok) {
             alert("🎉 Order Placed Successfully! Redirecting you now...");
+            // Yahan Email trigger kar
+// Order success hone par ye trigger hoga
+// Email background mein chala jayega, redirect ko nahi rokege
+            emailjs.send("service_87e5plv", "template_a1b2c3d4", {
+                name: name 
+            }).then(() => console.log("Email Sent!")).catch((err) => console.error("Email Error:", err));
+
+    localStorage.removeItem('pradh_cart');
+    // ... baki ka code
             localStorage.removeItem('pradh_cart');
             closeDetailsModal();
 
