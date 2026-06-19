@@ -46,6 +46,21 @@
             alert(data.message);
         }
     });
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // Hardcoded check (Testing ke liye)
+        if (username === "prashantsengar99" && password === "0000") {
+            alert("Login Success!");
+            // Yahan apne dashboard ka naam likh de
+            window.location.href = 'user-dashboard.html'; 
+        } else {
+            alert("Galat username ya password hai bhai!");
+        }
+    });
 </script>
 
 </body>

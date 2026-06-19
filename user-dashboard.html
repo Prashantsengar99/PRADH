@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRADH | User Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #6366f1; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+
+        /* Sidebar */
+        .sidebar { width: 250px; background: #1e293b; padding: 20px; border-right: 1px solid #334155; }
+        .sidebar h2 { color: var(--primary); margin-bottom: 30px; }
+        .nav-link { padding: 15px; margin-bottom: 10px; cursor: pointer; border-radius: 10px; transition: 0.3s; display: flex; align-items: center; gap: 10px; }
+        .nav-link:hover { background: var(--primary); }
+
+        /* Main Content */
+        .main { flex: 1; padding: 40px; animation: fadeIn 0.8s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        
+        /* Stats Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .card { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid #334155; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .card h3 { font-size: 14px; color: #94a3b8; }
+        .card h2 { font-size: 24px; margin-top: 10px; }
+
+        /* Action Section */
+        .cta-btn { background: var(--primary); color: white; padding: 12px 25px; border-radius: 50px; border: none; cursor: pointer; font-weight: 600; margin-top: 20px; }
+        .cta-btn:hover { transform: scale(1.05); transition: 0.3s; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>PRADH User</h2>
+    <div class="nav-link" onclick="window.location.href='user-dashboard.html'"><i class="fas fa-home"></i> Dashboard</div>
+    
+    <div class="nav-link" onclick="window.location.href='order.html'">
+        <i class="fas fa-shopping-bag"></i> My Orders
+    </div>
+    
+  <div class="nav-link" onclick="window.location.href='profile.html'">
+    <i class="fas fa-user-circle"></i> Profile
+</div>
+    <div class="nav-link" onclick="logout()" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> Logout</div>
+</div>
+
+<div class="main">
+    <div class="header">
+        <h1>Welcome back, <span id="userName">User</span>! 👋</h1>
+        <div id="date" style="color: #64748b;"></div>
+    </div>
+
+    <div class="grid">
+        <div class="card"><h3>Active Orders</h3><h2>0</h2></div>
+        <div class="card"><h3>Rewards Points</h3><h2>1,240</h2></div>
+        <div class="card"><h3>Member Level</h3><h2>Gold</h2></div>
+    </div>
+
+    <div class="card" style="margin-top: 30px;">
+        <h2>Ready to shop more?</h2>
+        <p style="color: #94a3b8; margin: 10px 0;">Check out our latest arrivals and exclusive offers for you.</p>
+        <button class="cta-btn" onclick="window.location.href='index.html'">Explore Store</button>
+    </div>
+</div>
+
+<script>
+    // Animation for Date
+    document.getElementById('date').innerText = new Date().toDateString();
+    
+    // Dynamic Name
+    document.getElementById('userName').innerText = "Prashant";
+
+    function logout() {
+        alert("Logging out...");
+        window.location.href = 'userlogin.html';
+    }
+</script>
+</body>
+</html>
