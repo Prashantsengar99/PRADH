@@ -48,7 +48,7 @@ function renderCart() {
         <div class="cart-summary">
             <h3>Grand Total: <span>₹${dynamicTotal}</span></h3>
             <button class="btn btn-primary" onclick="openDetailsModal()" style="background-color: var(--accent-green); color: white;">
-                ORDER NOW
+                PAY NOW
             </button>
         </div>
     </div>`;
@@ -76,83 +76,44 @@ function closeDetailsModal() { document.getElementById('detailsModal').style.dis
 
 async function handleFormSubmit(event) {
     event.preventDefault();
-
+    
+    // 1. Cart data validation
     let cart = JSON.parse(localStorage.getItem('pradh_cart')) || [];
-    if (cart.length === 0) { alert("Bhai cart khali hai!"); return; }
+    if (cart.length === 0) { 
+        alert("Cart khali hai!"); 
+        return; 
+    }
 
-    const name = document.getElementById('custName').value.trim();
-    const phone = document.getElementById('custPhone').value.trim();
-    const email = document.getElementById('custEmail').value.trim();
-    const address = document.getElementById('custAddress').value.trim();
-    const pincode = document.getElementById('custPincode').value.trim();
-    const payment = document.getElementById('paymentMethod').value;
-
-    let dynamicTotal = 0;
-    cart.forEach(item => { dynamicTotal += item.price * item.quantity; });
-
-    const orderData = { name, phone, address, pincode, payment, cart, totalAmount: dynamicTotal };
+    // 2. Form data collection
+    const orderData = {
+        name: document.getElementById('custName').value,
+        phone: document.getElementById('custPhone').value,
+        email: document.getElementById('custEmail').value,
+        address: document.getElementById('custAddress').value,
+        pincode: document.getElementById('custPincode').value,
+        cart: cart,
+        totalAmount: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+    };
 
     try {
-        const response = await fetch("https://pradh-backend.onrender.com/api/orders", {
+        const response = await fetch("http://localhost:3000/api/orders", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(orderData)
         });
 
+        // Agar response 200-299 ke beech hai
         if (response.ok) {
-            alert("🎉 Order Placed Successfully! Redirecting you now...");
-            // Yahan Email trigger kar
-// Order success hone par ye trigger hoga
-// Email background mein chala jayega, redirect ko nahi rokege
-            emailjs.send("service_87e5plv", "template_a1b2c3d4", {
-                name: name 
-            }).then(() => console.log("Email Sent!")).catch((err) => console.error("Email Error:", err));
-
-    localStorage.removeItem('pradh_cart');
-    // ... baki ka code
+            alert("Order placed successfully!"); // User ko feedback do
             localStorage.removeItem('pradh_cart');
-            closeDetailsModal();
-
-            // LOGIC: Agar UPI hai to UPI App, warna WhatsApp
-            if (payment.includes("UPI")) {
-                const upiUrl = `upi://pay?pa=8979993655@idfcfirst&pn=PRADH_DESI_FUEL&am=${dynamicTotal}&cu=INR&tn=Order_Payment`;
-                window.location.assign(upiUrl);
-            } else {
-                let textMessage = `⚡ *NEW ORDER - PRADH DESI FUEL* ⚡\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\nTotal: ₹${dynamicTotal}\nPayment: ${payment}`;
-                window.location.assign(`https://wa.me/918979993655?text=${encodeURIComponent(textMessage)}`);
-            }
+            window.location.href = "https://razorpay.me/@pradhfood";
         } else {
-            alert("Server Error. Check console.");
+            // Agar server ne error bheja hai
+            const result = await response.json();
+            alert("Error: " + (result.message || "Something went wrong"));
         }
     } catch (error) {
-        alert("Backend server offline hai!");
-    }
-}
-
-async function fetchMyOrders() {
-    const phoneInput = document.getElementById('searchOrderPhone').value.trim();
-    const ordersWrapper = document.getElementById('my-orders-wrapper');
-    
-    if (phoneInput.length !== 10) { alert("Sahi 10-digit number daalo!"); return; }
-
-    ordersWrapper.innerHTML = "<p>Loading...</p>";
-    try {
-        const response = await fetch("https://pradh-backend.onrender.com/api/orders");
-        const allOrders = await response.json();
-        const myOrders = allOrders.filter(o => o.phone === phoneInput);
-
-        if (myOrders.length === 0) { ordersWrapper.innerHTML = "<p>No orders found.</p>"; return; }
-
-        let html = "";
-        myOrders.reverse().forEach(o => {
-            html += `<div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
-                        <p><strong>Order ID:</strong> #${o.id}</p>
-                        <p><strong>Total:</strong> ₹${o.totalAmount}</p>
-                        <p><strong>Status:</strong> ${o.status || 'Placed'}</p>
-                     </div>`;
-        });
-        ordersWrapper.innerHTML = html;
-    } catch (e) {
-        ordersWrapper.innerHTML = "<p>Error loading orders.</p>";
+        console.error("Fetch Error:", error);
+        alert("Server se connection nahi ban pa raha. Check karein ki server chalu hai.");
     }
 }

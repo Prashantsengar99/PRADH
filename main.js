@@ -1,174 +1,108 @@
-// --- Navigation Menu Toggle (Mobile Viewports) ---
+// --- Universal Helper: Element Exist Check ---
+const getEl = (id) => document.getElementById(id);
+
+// --- Navigation Menu (Mobile) ---
 document.addEventListener('DOMContentLoaded', () => {
-    const menuToggle = document.getElementById('menuToggle');
-    const navMenu = document.getElementById('navMenu');
+    const menuToggle = getEl('menuToggle');
+    const navMenu = getEl('navMenu');
 
     if (menuToggle && navMenu) {
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
+        menuToggle.addEventListener('click', () => navMenu.classList.toggle('active'));
     }
     updateCartCount();
 });
 
-// --- Dynamic Cart Counter Tracker (Laptop + Mobile Badge) ---
+// --- Cart Counter ---
 function updateCartCount() {
     let cart = JSON.parse(localStorage.getItem('pradh_cart')) || [];
     let totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
-    // 1. Desktop view ka counter update
-    const cartCountElement = document.getElementById('cart-count');
-    if (cartCountElement) {
-        cartCountElement.textContent = totalItems;
-    }
+    const cartCountElement = getEl('cart-count');
+    if (cartCountElement) cartCountElement.textContent = totalItems;
 
-    // 2. Mobile view ka 3-lines badge control
-    const mobileBadge = document.getElementById('mobile-cart-badge');
+    const mobileBadge = getEl('mobile-cart-badge');
     if (mobileBadge) {
-        if (totalItems > 0) {
-            mobileBadge.textContent = totalItems;
-            mobileBadge.style.display = 'flex';
-        } else {
-            mobileBadge.style.display = 'none';
-        }
+        mobileBadge.textContent = totalItems;
+        mobileBadge.style.display = totalItems > 0 ? 'flex' : 'none';
     }
 }
 
-// --- Universal Add-To-Cart Processing Logic ---
+// --- Add To Cart ---
 function addToCart(id, name, price, variant) {
     let cart = JSON.parse(localStorage.getItem('pradh_cart')) || [];
-    const existingItemIndex = cart.findIndex(item => item.id === id && item.variant === variant);
+    const index = cart.findIndex(item => item.id === id && item.variant === variant);
 
-    if (existingItemIndex > -1) {
-        cart[existingItemIndex].quantity += 1;
+    if (index > -1) {
+        cart[index].quantity += 1;
     } else {
-        cart.push({
-            id: id,
-            name: name,
-            price: parseInt(price),
-            variant: variant,
-            quantity: 1
-        });
+        cart.push({ id, name, price: parseInt(price), variant, quantity: 1 });
     }
 
     localStorage.setItem('pradh_cart', JSON.stringify(cart));
     updateCartCount();
-    
-    alert(`${name} (${variant}) has been successfully added to your cart.`);
+    alert(`${name} (${variant}) added to cart.`);
 }
-// --- Announcement Bar Text Rotation Logic ---
+
+// --- Announcement Bar Rotation ---
 document.addEventListener('DOMContentLoaded', () => {
-    const announcementEl = document.getElementById('announcement-text');
+    const announcementEl = getEl('announcement-text');
     if (!announcementEl) return;
 
-    // Jo jo offers tumhein chalane hain, unhe is array mein daal do
     const offers = [
-        '🔥 Use Code: <span class="coupon-highlight">DESIFUEL10</span> for extra 10% OFF on your first order!',
-        '⚡ FREE Express Shipping across India on orders above ₹499! ⚡',
-        '💪 100% Pure Organic & Sand-Roasted Desi Nutrition Fuel! 💪'
+        '🔥 Use Code: <span class="coupon-highlight">DESIFUEL10</span> for extra 10% OFF!',
+        '⚡ FREE Express Shipping on orders above ₹499! ⚡',
+        '💪 100% Pure Organic & Sand-Roasted Desi Nutrition! 💪'
     ];
 
-    let currentIndex = 0;
-
+    let i = 0;
     setInterval(() => {
-        // Smooth fade-out effect
         announcementEl.style.opacity = 0;
-        announcementEl.style.transform = 'translateY(-10px)';
-
         setTimeout(() => {
-            currentIndex = (currentIndex + 1) % offers.length;
-            announcementEl.innerHTML = offers[currentIndex];
-            
-            // Smooth fade-in effect
+            i = (i + 1) % offers.length;
+            announcementEl.innerHTML = offers[i];
             announcementEl.style.opacity = 1;
-            announcementEl.style.transform = 'translateY(0)';
-        }, 300); // 300ms transition delay
-    }, 3000); // Har 3 second mein change hoga
+        }, 300);
+    }, 3000);
 });
-// --- Interactive Nutrition & Protein Calculator Logic ---
-function calculateFuel(event) {
-    event.preventDefault(); // Page reload hone se rokne ke liye
 
-    const weight = parseFloat(document.getElementById('calc-weight').value);
-    const goal = document.getElementById('calc-goal').value;
+// --- Nutrition Calculator ---
+function calculateFuel(event) {
+    if (event) event.preventDefault();
+    const weight = parseFloat(getEl('calc-weight')?.value);
+    const goal = getEl('calc-goal')?.value;
     
     if (!weight || weight <= 0) return;
 
-    let proteinPerKg = 1.0; // Default factor
+    const factors = { sedentary: 1.0, active: 1.4, muscle: 1.8 };
+    const protein = Math.round(weight * (factors[goal] || 1.0));
 
-    // Goal ke mutabik multiplier factor set karna
-    if (goal === 'sedentary') {
-        proteinPerKg = 1.0; // Normal lifestyle ke liye 1g per kg
-    } else if (goal === 'active') {
-        proteinPerKg = 1.4; // Active lifestyle ke liye 1.4g per kg
-    } else if (goal === 'muscle') {
-        proteinPerKg = 1.8; // Bodybuilding/Heavy weight training ke liye 1.8g per kg
+    const target = getEl('protein-target');
+    if (target) target.textContent = protein;
+    
+    const resBox = getEl('calc-result-box');
+    if (resBox) {
+        resBox.style.display = 'block';
+        resBox.scrollIntoView({ behavior: 'smooth' });
     }
-
-    // Calculation total target
-    const totalProteinNeeded = Math.round(weight * proteinPerKg);
-
-    // Dynamic result updates to layout DOM
-    document.getElementById('protein-target').textContent = totalProteinNeeded;
-    
-    // Result box ko design ke sath smooth display karwana
-    const resultBox = document.getElementById('calc-result-box');
-    resultBox.style.display = 'block';
-    
-    // Auto scroll down to view results cleanly on smartphones
-    resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
-function startCountdown(durationInSeconds) {
-    let timer = durationInSeconds;
-    const display = document.getElementById('countdown');
 
-    const interval = setInterval(function () {
-        let hours = parseInt(timer / 3600, 10);
-        let minutes = parseInt((timer % 3600) / 60, 10);
-        let seconds = parseInt(timer % 60, 10);
+// --- Countdown Timer ---
+document.addEventListener('DOMContentLoaded', () => {
+    const display = getEl('countdown');
+    if (!display) return;
 
-        hours = hours < 10 ? "0" + hours : hours;
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
+    let timer = 43200; 
+    const interval = setInterval(() => {
+        let h = Math.floor(timer / 3600);
+        let m = Math.floor((timer % 3600) / 60);
+        let s = timer % 60;
 
-        display.textContent = hours + ":" + minutes + ":" + seconds;
+        display.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 
         if (--timer < 0) {
             clearInterval(interval);
-            document.getElementById('timer-box').innerHTML = 
-                '🔥 Use Code: <span class="coupon-highlight">DESIFUEL10</span> for extra 10% OFF!';
+            const box = getEl('timer-box');
+            if (box) box.innerHTML = '🔥 Use Code: <span class="coupon-highlight">DESIFUEL10</span> for extra 10% OFF!';
         }
     }, 1000);
-}
-
-// Timer shuru karne ke liye (12 ghante = 43200 seconds)
-document.addEventListener('DOMContentLoaded', () => {
-    startCountdown(43200); 
-});
-document.addEventListener('DOMContentLoaded', () => {
-    const display = document.getElementById('countdown');
-    
-    // Safety check: Agar countdown ID exist karti hai tabhi timer chalao
-    if (display) {
-        // 12 ghante = 43200 seconds
-        let timer = 43200; 
-
-        const interval = setInterval(function () {
-            let hours = Math.floor(timer / 3600);
-            let minutes = Math.floor((timer % 3600) / 60);
-            let seconds = timer % 60;
-
-            // Formatting (00:00:00)
-            display.textContent = 
-                String(hours).padStart(2, '0') + ":" + 
-                String(minutes).padStart(2, '0') + ":" + 
-                String(seconds).padStart(2, '0');
-
-            if (--timer < 0) {
-                clearInterval(interval);
-                document.getElementById('timer-box').innerHTML = 
-                    '🔥 Use Code: <span class="coupon-highlight">DESIFUEL10</span> for extra 10% OFF!';
-            }
-        }, 1000);
-    }
 });

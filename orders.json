@@ -1,0 +1,40 @@
+[
+  {
+    "id": 1781972888810,
+    "name": "prashant",
+    "phone": "7983874328",
+    "email": "thakurprashant9720@gmail.com",
+    "address": "sasni",
+    "pincode": "202139",
+    "cart": [
+      {
+        "id": "pdf-250g",
+        "name": "PRADH Desi Fuel",
+        "price": 349,
+        "variant": "250g",
+        "quantity": 1
+      }
+    ],
+    "totalAmount": 349,
+    "date": "6/20/2026, 9:58:08 PM"
+  },
+  {
+    "id": 1781975357726,
+    "name": "priyanshu",
+    "phone": "9720343074",
+    "email": "prashant@gmail.com",
+    "address": "hathras",
+    "pincode": "202139",
+    "cart": [
+      {
+        "id": "pdf-1kg",
+        "name": "PRADH Desi Fuel",
+        "price": 1099,
+        "variant": "1 KG",
+        "quantity": 1
+      }
+    ],
+    "totalAmount": 1099,
+    "date": "6/20/2026, 10:39:17 PM"
+  }
+]
