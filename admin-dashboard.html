@@ -3,104 +3,617 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRADH | Elite Admin Dashboard</title>
+    <title>NutriAdmin | Pro Control Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .page { display: none; }
+        .active-page { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
     </style>
 </head>
-<body class="flex h-screen overflow-hidden">
+<body class="bg-slate-50 text-slate-900">
 
-    <aside class="w-64 glass m-4 rounded-3xl p-6 flex flex-col justify-between">
-        <div>
-            <h1 class="text-2xl font-bold text-white mb-10 flex items-center gap-2"><i class="fa-solid fa-bolt text-yellow-400"></i> PRADH</h1>
-            <nav class="space-y-4">
-                <a href="#" class="block p-3 bg-indigo-600 text-white rounded-xl shadow-lg shadow-indigo-500/20"><i class="fa-solid fa-house mr-3"></i> Dashboard</a>
-                <a href="order.html" class="block p-3 text-slate-400 hover:bg-slate-700 rounded-xl transition"><i class="fa-solid fa-cart-shopping mr-3"></i> Orders</a>
+    <div class="flex min-h-screen">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-slate-900 text-white w-64 p-6 z-30 transform -translate-x-full lg:translate-x-0 transition-transform shadow-2xl overflow-y-auto custom-scrollbar">
+            <h2 class="text-xl font-bold mb-8 text-blue-400 border-b border-slate-700 pb-4">NUTRI ADMIN PRO</h2>
+            <nav class="space-y-2">
+                <button onclick="nav('dashboard')" class="w-full text-left p-3 hover:bg-slate-800 rounded-lg">📊 Dashboard</button>
+                <button onclick="nav('products')" class="w-full text-left p-3 hover:bg-slate-800 rounded-lg">📦 Product Manager</button>
+                <button onclick="nav('inventory')" class="w-full text-left p-3 hover:bg-slate-800 rounded-lg">🏭 Stock & Batch</button>
+                <button onclick="nav('orders')" class="w-full text-left p-3 hover:bg-slate-800 rounded-lg">🚚 Order Tracker</button>
+                <button onclick="nav('customers')" class="w-full text-left p-3 hover:bg-slate-800 rounded-lg">👥 Customers</button>
+                <button onclick="nav('marketing')" class="w-full text-left p-3 hover:bg-slate-800 rounded-lg">📢 Coupons & Banners</button>
+                <button onclick="nav('reviews')" class="w-full text-left p-3 hover:bg-slate-800 rounded-lg">⭐ Review Control</button>
+                <button onclick="nav('finance')" class="w-full text-left p-3 hover:bg-slate-800 rounded-lg">🧾 GST & Invoices</button>
             </nav>
+        </aside>
+
+        <main class="flex-1 lg:ml-64 p-4 lg:p-8">
+            <button onclick="toggleSidebar()" class="lg:hidden p-2 bg-slate-900 text-white rounded mb-6">☰ MENU</button>
+
+            <section id="dashboard" class="page active-page">
+                <h1 class="text-2xl font-bold mb-6">Overview</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border">Sales: ₹4.5L</div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border">Active: 42 Orders</div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border">Low Stock: 8 Products</div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border">Growth: +12%</div>
+                </div>
+            </section>
+
+           <section id="products" class="page">
+    <h1 class="text-2xl font-bold mb-6">📦 Add/Edit Supplements</h1>
+    
+    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <div class="space-y-1">
+                <label class="text-sm font-medium text-slate-600">Product Name</label>
+                <input type="text" id="prodName" placeholder="e.g. Whey Protein" class="w-full border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-sm font-medium text-slate-600">Price (incl. 18% GST)</label>
+                <input type="number" id="prodPrice" placeholder="₹0.00" class="w-full border border-slate-200 p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+            </div>
+
+            <div class="md:col-span-2 space-y-1">
+                <label class="text-sm font-medium text-slate-600">Description</label>
+                <textarea id="prodDesc" placeholder="Enter product benefits and details..." class="w-full border border-slate-200 p-3 rounded-xl h-28 focus:ring-2 focus:ring-blue-500 outline-none transition-all"></textarea>
+            </div>
+
+            <div class="md:col-span-2 flex flex-col md:flex-row gap-4 items-end">
+                <div class="w-full md:w-2/3 space-y-1">
+                    <label class="text-sm font-medium text-slate-600">Product Image</label>
+                    <input type="file" class="w-full border border-slate-200 p-2 rounded-xl bg-slate-50 cursor-pointer">
+                </div>
+                <button onclick="saveProduct()" class="w-full md:w-1/3 bg-blue-600 text-white p-3 rounded-xl font-semibold hover:bg-blue-700 active:scale-95 transition-all shadow-lg shadow-blue-200">
+                    Save Supplement
+                </button>
+            </div>
         </div>
-        <button onclick="logout()" class="p-3 text-red-400 hover:bg-red-500/10 rounded-xl transition"><i class="fa-solid fa-right-from-bracket mr-3"></i> Logout</button>
-    </aside>
-
-    <main class="flex-1 p-8 overflow-y-auto">
-        <header class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-bold text-white">Dashboard Overview</h2>
-            <div class="glass px-6 py-3 rounded-full text-white flex items-center gap-3">
-                <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></span>
-                System Online
-            </div>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="glass p-8 rounded-3xl text-white">
-                <p class="text-slate-400 text-sm">Total Orders</p>
-                <h3 class="text-4xl font-bold mt-2" id="totalOrders">0</h3>
-            </div>
-            <div class="glass p-8 rounded-3xl text-white">
-                <p class="text-slate-400 text-sm">Total Revenue</p>
-                <h3 class="text-4xl font-bold mt-2" id="totalRevenue">₹0</h3>
-            </div>
+    </div>
+</section>
+          <section id="inventory" class="page">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <div>
+            <h1 class="text-2xl font-bold">🏭 Stock & Batch Tracking</h1>
+            <p class="text-slate-500 text-sm">Monitor your current inventory levels.</p>
         </div>
+        <button class="bg-slate-900 text-white px-5 py-2 rounded-xl hover:bg-slate-800 transition-all">
+            + Add Batch
+        </button>
+    </div>
 
-        <div class="glass p-8 rounded-3xl text-white">
-            <h3 class="text-xl font-bold mb-6">Recent Transactions</h3>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
             <table class="w-full text-left">
-                <thead>
-                    <tr class="text-slate-400 border-b border-white/10">
-                        <th class="pb-4">Order ID</th>
-                        <th class="pb-4">Customer</th>
-                        <th class="pb-4">Status</th>
-                        <th class="pb-4 text-right">Action</th>
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="p-4 font-semibold text-slate-700">Product</th>
+                        <th class="p-4 font-semibold text-slate-700">Batch ID</th>
+                        <th class="p-4 font-semibold text-slate-700">Stock</th>
+                        <th class="p-4 font-semibold text-slate-700">Status</th>
+                        <th class="p-4 font-semibold text-slate-700">Action</th>
                     </tr>
                 </thead>
-                <tbody id="ordersTable" class="divide-y divide-white/10">
+                <tbody id="inventoryTable" class="divide-y divide-slate-100">
                     </tbody>
             </table>
         </div>
-    </main>
+    </div>
+</section>
+<section id="orders" class="page">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <div>
+            <h1 class="text-2xl font-bold">🚚 Order Tracker</h1>
+            <p class="text-slate-500 text-sm">Track customer orders and update status.</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="p-4 font-semibold text-slate-700">Order ID</th>
+                        <th class="p-4 font-semibold text-slate-700">Customer</th>
+                        <th class="p-4 font-semibold text-slate-700">Amount</th>
+                        <th class="p-4 font-semibold text-slate-700">Status</th>
+                        <th class="p-4 font-semibold text-slate-700">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="orderTable" class="divide-y divide-slate-100">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+            <section id="customers" class="page">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <h1 class="text-2xl font-bold">👥 Customer Directory</h1>
+        <button class="bg-blue-600 text-white px-5 py-2 rounded-xl shadow-lg hover:bg-blue-700 transition-all">
+            + Add Customer
+        </button>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr>
+                        <th class="p-4 font-semibold text-slate-700">Name</th>
+                        <th class="p-4 font-semibold text-slate-700">Email</th>
+                        <th class="p-4 font-semibold text-slate-700">Total Spent</th>
+                        <th class="p-4 font-semibold text-slate-700">Status</th>
+                        <th class="p-4 font-semibold text-slate-700">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="customerTable" class="divide-y divide-slate-100">
+                    </tbody>
+            </table>
+        </div>
+        <div id="emptyMsg" class="p-8 text-center text-slate-400">No customers found.</div>
+    </div>
+</section>
+<section id="marketing" class="page">
+
+    <h1 class="text-2xl font-bold mb-4">🎟 Coupons & Banners</h1>
+
+    <!-- Coupon Dashboard -->
+
+    <div class="bg-white p-4 rounded shadow mb-5">
+
+        <h2 class="text-xl font-bold mb-3">Create Coupon</h2>
+
+        <input type="text" id="couponCode"
+               placeholder="Coupon Code (PRADH10)"
+               class="border p-2 w-full mb-2">
+
+        <input type="number" id="discountValue"
+               placeholder="Discount %"
+               class="border p-2 w-full mb-2">
+
+        <input type="date" id="expiryDate"
+               class="border p-2 w-full mb-3">
+
+        <button onclick="addCoupon()"
+                class="bg-green-600 text-white px-4 py-2 rounded">
+            Create Coupon
+        </button>
+
+    </div>
+    <div id="bannerSection" class="admin-section" style="display:none;">
+
+    <h2>📢 Banner Manager</h2>
+
+    <div class="card">
+
+        <input type="text"
+               id="bannerTitle"
+               placeholder="Banner Heading">
+
+        <textarea id="bannerText"
+                  placeholder="Offer Description"></textarea>
+
+        <button onclick="saveBanner()">
+            Save Banner
+        </button>
+
+    </div>
+
+    <div class="preview-box">
+        <h3 id="previewTitle">
+            No Banner Added
+        </h3>
+
+        <p id="previewText"></p>
+    </div>
+
+</div>
+
+    <div class="bg-white p-4 rounded shadow mb-5">
+
+        <h2 class="text-xl font-bold mb-3">Coupon List</h2>
+
+        <table class="w-full border">
+
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border p-2">Code</th>
+                    <th class="border p-2">Discount</th>
+                    <th class="border p-2">Expiry</th>
+                    <th class="border p-2">Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="couponTable"></tbody>
+
+        </table>
+
+    </div>
+
+    <!-- Banner Manager -->
+
+    <div class="bg-white p-4 rounded shadow">
+
+        <h2 class="text-xl font-bold mb-3">
+            Homepage Banner Manager
+        </h2>
+
+        <input type="text"
+               id="bannerTitle"
+               placeholder="Banner Heading"
+               class="border p-2 w-full mb-2">
+
+        <textarea id="bannerText"
+                  placeholder="Offer Description"
+                  class="border p-2 w-full mb-3"></textarea>
+
+        <button onclick="saveBanner()"
+                class="bg-blue-600 text-white px-4 py-2 rounded">
+            Save Banner
+        </button>
+
+        <div class="mt-5 p-4 border rounded bg-gray-100">
+
+            <h3 id="previewTitle"
+                class="font-bold text-lg">
+                No Banner Added
+            </h3>
+
+            <p id="previewText"></p>
+
+        </div>
+
+    </div>
+
+</section>
+ <section id="reviews" class="page">
+    <h1 class="text-2xl font-bold mb-6">⭐ Review Control</h1>
+    
+    <div class="bg-white p-6 rounded-2xl shadow border mb-8">
+        <h2 class="text-lg font-bold mb-4">Add Manual Review</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input type="text" id="revUser" placeholder="Customer Name" class="border p-2 rounded">
+            <input type="number" id="revRating" placeholder="Rating (1-5)" min="1" max="5" class="border p-2 rounded">
+            <button onclick="addReview()" class="bg-indigo-600 text-white p-2 rounded hover:bg-indigo-700">Post Review</button>
+        </div>
+        <textarea id="revComment" placeholder="Comment..." class="w-full mt-4 border p-2 rounded"></textarea>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow border overflow-x-auto">
+        <table class="w-full text-left">
+            <thead class="bg-gray-50 border-b">
+                <tr>
+                    <th class="p-4">Customer</th>
+                    <th class="p-4">Rating</th>
+                    <th class="p-4">Comment</th>
+                    <th class="p-4">Action</th>
+                </tr>
+            </thead>
+            <tbody id="reviewTable"></tbody>
+        </table>
+    </div>
+</section>
+            <section id="reviews" class="page"><h1 class="text-2xl font-bold">Review Control</h1></section>
+           </section>
+
+            <section id="finance" class="page">
+                <h1 class="text-2xl font-bold mb-4">GST Invoice Generator</h1>
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <label class="block text-sm">Customer Name</label>
+                    <input type="text" class="w-full border p-2 mb-4 rounded">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="number" placeholder="Amount" class="border p-2 rounded">
+                        <div class="bg-gray-100 p-2 rounded">GST (18%): Auto Calculated</div>
+                    </div>
+                    <button class="mt-4 bg-green-600 text-white px-6 py-2 rounded">Generate Invoice</button>
+                </div>
+            </section>
+    </div>
 
     <script>
-        async function loadAdminData() {
-            try {
-                const res = await fetch("https://pradh-backend.onrender.com/api/orders");
-                const orders = await res.json();
-                const tbody = document.getElementById('ordersTable');
-                tbody.innerHTML = "";
-                let rev = 0;
-
-                orders.reverse().forEach(o => {
-                    rev += o.totalAmount || 0;
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-white/5 transition">
-                            <td class="py-4 font-mono text-blue-400">#${o._id.slice(-6)}</td>
-                            <td class="py-4">${o.name}<br><small class="text-slate-500">${o.phone}</small></td>
-                            <td class="py-4"><span class="px-3 py-1 rounded-full text-xs ${o.status === 'Completed' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}">${o.status}</span></td>
-                            <td class="py-4 text-right">
-                                <button onclick="updateStatus('${o._id}')" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg transition">Done</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                document.getElementById('totalOrders').innerText = orders.length;
-                document.getElementById('totalRevenue').innerText = "₹" + rev.toLocaleString();
-            } catch(e) { console.error(e); }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
+        function nav(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.getElementById(id).classList.add('active-page');
+            if(window.innerWidth < 1024) toggleSidebar();
         }
+  
 
-        async function updateStatus(id) {
-            await fetch(`https://pradh-backend.onrender.com/api/orders/${id}`, {
-                method: 'PATCH',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({status: 'Completed'})
-            });
-            loadAdminData();
+let coupons =
+JSON.parse(localStorage.getItem("coupons")) || [];
+
+renderCoupons();
+
+function addCoupon(){
+
+    const code =
+    document.getElementById("couponCode").value;
+
+    const discount =
+    document.getElementById("discountValue").value;
+
+    const expiry =
+    document.getElementById("expiryDate").value;
+
+    if(!code || !discount || !expiry){
+        alert("Fill all fields");
+        return;
+    }
+
+    coupons.push({
+        code,
+        discount,
+        expiry
+    });
+
+    localStorage.setItem(
+        "coupons",
+        JSON.stringify(coupons)
+    );
+
+    renderCoupons();
+
+    document.getElementById("couponCode").value="";
+    document.getElementById("discountValue").value="";
+    document.getElementById("expiryDate").value="";
+}
+
+function renderCoupons(){
+
+    let html="";
+
+    coupons.forEach((coupon,index)=>{
+
+        html += `
+        <tr>
+            <td class="border p-2">${coupon.code}</td>
+            <td class="border p-2">${coupon.discount}%</td>
+            <td class="border p-2">${coupon.expiry}</td>
+            <td class="border p-2">
+                <button onclick="deleteCoupon(${index})"
+                class="bg-red-600 text-white px-3 py-1 rounded">
+                Delete
+                </button>
+            </td>
+        </tr>
+        `;
+    });
+
+    document.getElementById("couponTable").innerHTML
+    = html;
+}
+
+function deleteCoupon(index){
+
+    coupons.splice(index,1);
+
+    localStorage.setItem(
+        "coupons",
+        JSON.stringify(coupons)
+    );
+
+    renderCoupons();
+}
+
+function saveBanner(){
+
+    const title =
+    document.getElementById("bannerTitle").value;
+
+    const text =
+    document.getElementById("bannerText").value;
+
+    localStorage.setItem("bannerTitle",title);
+    localStorage.setItem("bannerText",text);
+
+    document.getElementById("previewTitle")
+    .innerText = title;
+
+    document.getElementById("previewText")
+    .innerText = text;
+
+    alert("Banner Saved Successfully");
+}
+
+window.addEventListener("load",()=>{
+
+    document.getElementById("previewTitle")
+    .innerText =
+    localStorage.getItem("bannerTitle")
+    || "No Banner Added";
+
+    document.getElementById("previewText")
+    .innerText =
+    localStorage.getItem("bannerText")
+    || "";
+
+});
+
+// Aise bhi likh sakte hain:
+function renderCoupons() {
+    const tbody = document.getElementById("couponTable");
+    tbody.innerHTML = coupons.map((c, i) => `
+        <tr>
+            <td class="border p-2">${c.code}</td>
+            <td class="border p-2">${c.discount}%</td>
+            <td class="border p-2">${c.expiry}</td>
+            <td class="border p-2">
+                <button onclick="deleteCoupon(${i})" class="bg-red-600 text-white px-3 py-1 rounded">Delete</button>
+            </td>
+        </tr>
+    `).join('');
+}
+let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+// Initial load
+renderReviews();
+
+function addReview() {
+    const user = document.getElementById("revUser").value;
+    const rating = document.getElementById("revRating").value;
+    const comment = document.getElementById("revComment").value;
+
+    if(!user || !rating || !comment) return alert("Please fill all fields");
+
+    reviews.push({ user, rating, comment });
+    localStorage.setItem("reviews", JSON.stringify(reviews));
+    renderReviews();
+    
+    // Clear inputs
+    document.getElementById("revUser").value = "";
+    document.getElementById("revRating").value = "";
+    document.getElementById("revComment").value = "";
+}
+
+function renderReviews() {
+    const tableBody = document.getElementById("reviewTable");
+    tableBody.innerHTML = reviews.map((r, i) => `
+        <tr class="border-t">
+            <td class="p-4 font-semibold">${r.user}</td>
+            <td class="p-4 text-yellow-500">${'★'.repeat(r.rating)}</td>
+            <td class="p-4 italic text-gray-600">"${r.comment}"</td>
+            <td class="p-4">
+                <button onclick="deleteReview(${i})" class="text-red-600 hover:text-red-800">Delete</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function deleteReview(index) {
+    reviews.splice(index, 1);
+    localStorage.setItem("reviews", JSON.stringify(reviews));
+    renderReviews();
+}
+function saveProduct() {
+        const name = document.getElementById("prodName").value;
+        const price = document.getElementById("prodPrice").value;
+        const desc = document.getElementById("prodDesc").value;
+
+        if(!name || !price) {
+            alert("Please enter Name and Price!");
+            return;
         }
+        
+        // Yahan aap apna backend ya localstorage logic add kar sakte hain
+        alert("Product '" + name + "' saved successfully!");
+    }
+    let customers = JSON.parse(localStorage.getItem("customers")) || [
+    { name: "prashant sengar", email: "thakurprashant9720@gmail.com", spent: "₹2,500", status: "Active" },
+    { name: "Priya Singh", email: "priya@example.com", spent: "₹4,200", status: "VIP" }
+];
 
-        function logout() { localStorage.clear(); window.location.href = "admin.html"; }
-        if(localStorage.getItem("adminLoggedIn") !== "true") window.location.href = "admin.html";
-        loadAdminData();
-    </script>
+function renderCustomers() {
+    const tableBody = document.getElementById("customerTable");
+    const emptyMsg = document.getElementById("emptyMsg");
+
+    if (customers.length === 0) {
+        emptyMsg.style.display = "block";
+        tableBody.innerHTML = "";
+    } else {
+        emptyMsg.style.display = "none";
+        tableBody.innerHTML = customers.map(c => `
+            <tr class="hover:bg-slate-50 transition-colors">
+                <td class="p-4 font-medium">${c.name}</td>
+                <td class="p-4 text-slate-600">${c.email}</td>
+                <td class="p-4 font-bold text-slate-900">${c.spent}</td>
+                <td class="p-4">
+                    <span class="px-2 py-1 rounded-full text-xs font-semibold ${c.status === 'VIP' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'}">
+                        ${c.status}
+                    </span>
+                </td>
+                <td class="p-4">
+                    <button class="text-blue-600 hover:underline">View</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+}
+
+// Page load par call karein
+renderCustomers();
+let inventory = JSON.parse(localStorage.getItem("inventory")) || [
+    { product: "Whey Protein", batch: "BT-9901", stock: 15, status: "Low Stock" },
+    { product: "Creatine", batch: "BT-8842", stock: 120, status: "In Stock" }
+];
+
+function renderInventory() {
+    const tbody = document.getElementById("inventoryTable");
+    tbody.innerHTML = inventory.map((item, index) => `
+        <tr class="hover:bg-slate-50 transition-colors">
+            <td class="p-4 font-medium">${item.product}</td>
+            <td class="p-4 text-slate-500">${item.batch}</td>
+            <td class="p-4 font-bold ${item.stock < 20 ? 'text-red-600' : 'text-slate-900'}">
+                ${item.stock} Units
+            </td>
+            <td class="p-4">
+                <span class="px-2 py-1 rounded-full text-xs font-semibold ${item.stock < 20 ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'}">
+                    ${item.status}
+                </span>
+            </td>
+            <td class="p-4">
+                <button onclick="updateStock(${index})" class="text-blue-600 hover:underline">Edit</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function updateStock(index) {
+    let newStock = prompt("Enter new stock level:", inventory[index].stock);
+    if (newStock !== null) {
+        inventory[index].stock = parseInt(newStock);
+        inventory[index].status = newStock < 20 ? "Low Stock" : "In Stock";
+        localStorage.setItem("inventory", JSON.stringify(inventory));
+        renderInventory();
+    }
+}
+
+renderInventory();
+let orders = JSON.parse(localStorage.getItem("orders")) || [
+    { id: "#ORD-001", customer: "Amit Singh", amount: "₹1,200", status: "Pending" },
+    { id: "#ORD-002", customer: "Neha Verma", amount: "₹3,500", status: "Shipped" }
+];
+
+function renderOrders() {
+    const tbody = document.getElementById("orderTable");
+    tbody.innerHTML = orders.map((order, index) => `
+        <tr class="hover:bg-slate-50 transition-colors">
+            <td class="p-4 font-mono font-bold text-slate-700">${order.id}</td>
+            <td class="p-4 font-medium">${order.customer}</td>
+            <td class="p-4 font-bold">${order.amount}</td>
+            <td class="p-4">
+                <span class="px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.status)}">
+                    ${order.status}
+                </span>
+            </td>
+            <td class="p-4">
+                <select onchange="updateOrderStatus(${index}, this.value)" class="border p-1 rounded text-sm">
+                    <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                    <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                    <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                </select>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function getStatusColor(status) {
+    if (status === 'Pending') return 'bg-yellow-100 text-yellow-700';
+    if (status === 'Shipped') return 'bg-blue-100 text-blue-700';
+    return 'bg-green-100 text-green-700';
+}
+
+function updateOrderStatus(index, newStatus) {
+    orders[index].status = newStatus;
+    localStorage.setItem("orders", JSON.stringify(orders));
+    renderOrders();
+}
+
+renderOrders();
+</script>
 </body>
 </html>
