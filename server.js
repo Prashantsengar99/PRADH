@@ -81,7 +81,7 @@ app.post('/api/orders', (req, res) => {
 app.use(express.static(path.join(__dirname)));
 
 // Catch-all route (Har request ko index.html par bhejo taaki React/Frontend routing kaam kare)
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 

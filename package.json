@@ -20,6 +20,6 @@
   "homepage": "https://github.com/Prashantsengar99/PRADH#readme",
   "dependencies": {
     "cors": "^2.8.6",
-    "express": "^5.2.1"
+    "express": "^4.21.0"
   }
 }
