@@ -80,12 +80,13 @@ async function handleFormSubmit(event) {
     // 1. Cart data validation
     let cart = JSON.parse(localStorage.getItem('pradh_cart')) || [];
     if (cart.length === 0) { 
-        alert("Cart khali hai!"); 
+        alert("Cart is empty!"); 
         return; 
     }
 
-    // 2. Form data collection
+    // 2. Form data collection (Username add kiya gaya hai)
     const orderData = {
+        username: localStorage.getItem('loggedInUser'), // <--- YE LINE ADD KI HAI
         name: document.getElementById('custName').value,
         phone: document.getElementById('custPhone').value,
         email: document.getElementById('custEmail').value,
@@ -102,18 +103,15 @@ async function handleFormSubmit(event) {
             body: JSON.stringify(orderData)
         });
 
-        // Agar response 200-299 ke beech hai
         if (response.ok) {
-            alert("Order placed successfully!"); // User ko feedback do
+            alert("Order placed successfully!");
             localStorage.removeItem('pradh_cart');
             window.location.href = "https://razorpay.me/@pradhfood";
         } else {
-            // Agar server ne error bheja hai
-            const result = await response.json();
-            alert("Error: " + (result.message || "Something went wrong"));
+            alert("Something went wrong!");
         }
     } catch (error) {
         console.error("Fetch Error:", error);
-        alert("Server se connection nahi ban pa raha. Check karein ki server chalu hai.");
+        alert("Server connection error!");
     }
 }

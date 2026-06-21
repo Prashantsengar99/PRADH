@@ -4,15 +4,13 @@ const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 
-
-// Middleware - Sirf ek baar
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// --- API Routes ---
+// --- ROUTES ---
 
-// Login Route
+// 1. Admin Login
 app.post('/admin-login', (req, res) => {
     const { username, password } = req.body;
     if (username === "pradh" && password === "1234") {
@@ -22,22 +20,52 @@ app.post('/admin-login', (req, res) => {
     }
 });
 
-// GET Orders Route (Data fetch karne ke liye)
+// 2. Signup
+app.post('/api/signup', (req, res) => {
+    const { username, password } = req.body;
+    const filePath = path.join(__dirname, 'users.json');
+    let users = [];
+    if (fs.existsSync(filePath)) {
+        users = JSON.parse(fs.readFileSync(filePath, 'utf8') || '[]');
+    }
+    if (users.find(u => u.username === username)) {
+        return res.status(400).send("User pehle se exist karta hai!");
+    }
+    users.push({ username, password });
+    fs.writeFileSync(filePath, JSON.stringify(users, null, 2));
+    res.status(201).send("Signup Successful!");
+});
+
+// 3. User Login
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    const filePath = path.join(__dirname, 'users.json');
+    if (!fs.existsSync(filePath)) return res.status(401).send("User nahi mila!");
+    
+    const users = JSON.parse(fs.readFileSync(filePath, 'utf8') || '[]');
+    const user = users.find(u => u.username === username && u.password === password);
+    
+    if (user) {
+        res.status(200).json({ message: "Login Successful" });
+    } else {
+        res.status(401).send("Galat Username ya Password!");
+    }
+});
+
+// 4. Get Orders
 app.get('/api/orders', (req, res) => {
     const filePath = path.join(__dirname, 'orders.json');
     if (!fs.existsSync(filePath)) return res.json([]);
-    
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) return res.status(500).json([]);
         res.json(JSON.parse(data || '[]'));
     });
 });
 
-// POST Orders Route (Data save karne ke liye)
+// 5. Post Orders
 app.post('/api/orders', (req, res) => {
     const newOrder = { id: Date.now(), ...req.body, date: new Date().toLocaleString() };
     const filePath = path.join(__dirname, 'orders.json');
-    
     let orders = [];
     if (fs.existsSync(filePath)) {
         try { orders = JSON.parse(fs.readFileSync(filePath, 'utf8') || '[]'); } catch (e) { orders = []; }
@@ -47,7 +75,6 @@ app.post('/api/orders', (req, res) => {
     res.status(201).json({ message: "Order saved!", order: newOrder });
 });
 
-// Static Files & Server Start
 app.use(express.static(__dirname));
 
 const PORT = process.env.PORT || 3000;

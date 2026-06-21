@@ -70,13 +70,23 @@
 </div>
 
 <script>
-    // Animation for Date
-    document.getElementById('date').innerText = new Date().toDateString();
+    // 1. Page load hote hi naam check karo
+    const loggedInUser = localStorage.getItem('loggedInUser');
     
-    // Dynamic Name
-    document.getElementById('userName').innerText = "Prashant";
+    if (!loggedInUser) {
+        // Agar koi login nahi hai, toh wapas login page par bhej do
+        window.location.href = 'userlogin.html';
+    } else {
+        // Naam mil gaya toh display karo
+        document.getElementById('userName').innerText = loggedInUser;
+    }
 
+    // 2. Date aur Baaki cheezein
+    document.getElementById('date').innerText = new Date().toDateString();
+
+    // 3. Logout function
     function logout() {
+        localStorage.removeItem('loggedInUser'); // Data delete kar do
         alert("Logging out...");
         window.location.href = 'userlogin.html';
     }

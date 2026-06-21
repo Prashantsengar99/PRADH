@@ -20,15 +20,11 @@
 <div class="container">
     <h2>Create Account</h2>
     <form id="signupForm">
-        <input type="text" id="username" placeholder="Username" required>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button type="submit">Sign Up</button>
-    </form>
-    <div class="link-text">
-        Already have an account? <a href="userlogin.html">Login here</a>
-    </div>
-</div>
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="submit">Sign Up</button>
+</form>
 
 <script>
     document.getElementById('signupForm').addEventListener('submit', async (e) => {
@@ -40,21 +36,28 @@
             password: document.getElementById('password').value
         };
 
-        const response = await fetch('/signup', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(userData)
-        });
+        try {
+            const response = await fetch('http://localhost:3000/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            });
 
-        const data = await response.json();
-        if (data.success) {
-            alert("Signup Successful! Now login.");
-            window.location.href = 'userlogin.html';
-        } else {
-            alert(data.message);
+            const result = await response.text();
+
+            if (response.ok) {
+                alert(result); 
+                window.location.href = 'userlogin.html';
+            } else {
+                alert(result); 
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Server down hai ya connect nahi ho raha!");
         }
     });
 </script>
+
 
 </body>
 </html>

@@ -1,40 +1,40 @@
 [
   {
-    "id": 1781972888810,
+    "id": 1782012124665,
     "name": "prashant",
     "phone": "7983874328",
     "email": "thakurprashant9720@gmail.com",
-    "address": "sasni",
-    "pincode": "202139",
+    "address": "mmm",
+    "pincode": "987890",
     "cart": [
       {
-        "id": "pdf-250g",
+        "id": "pdf-500g",
         "name": "PRADH Desi Fuel",
-        "price": 349,
-        "variant": "250g",
+        "price": 599,
+        "variant": "500g",
         "quantity": 1
       }
     ],
-    "totalAmount": 349,
-    "date": "6/20/2026, 9:58:08 PM"
+    "totalAmount": 599,
+    "date": "6/21/2026, 8:52:04 AM"
   },
   {
-    "id": 1781975357726,
-    "name": "priyanshu",
-    "phone": "9720343074",
-    "email": "prashant@gmail.com",
-    "address": "hathras",
-    "pincode": "202139",
+    "id": 1782015336722,
+    "name": "xyz",
+    "phone": "7865458799",
+    "email": "xyz@gmail.com",
+    "address": "japan",
+    "pincode": "678943",
     "cart": [
       {
-        "id": "pdf-1kg",
+        "id": "pdf-500g",
         "name": "PRADH Desi Fuel",
-        "price": 1099,
-        "variant": "1 KG",
+        "price": 599,
+        "variant": "500g",
         "quantity": 1
       }
     ],
-    "totalAmount": 1099,
-    "date": "6/20/2026, 10:39:17 PM"
+    "totalAmount": 599,
+    "date": "6/21/2026, 9:45:36 AM"
   }
 ]

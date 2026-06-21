@@ -22,7 +22,6 @@
         <button type="submit">Login</button>
     </form>
 </div>
-
 <script>
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -30,38 +29,28 @@
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
 
-        // Backend ko request bhej rahe hain
-        const response = await fetch('/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
+        try {
+            const response = await fetch('http://localhost:3000/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
 
-        const data = await response.json();
-
-        if (data.success) {
-            alert("Login Success!");
-            window.location.href = '/index.html'; // Login ke baad home page pe redirect
-        } else {
-            alert(data.message);
-        }
-    });
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        // Hardcoded check (Testing ke liye)
-        if (username === "prashantsengar99" && password === "0000") {
-            alert("Login Success!");
-            // Yahan apne dashboard ka naam likh de
-            window.location.href = 'user-dashboard.html'; 
-        } else {
-            alert("Galat username ya password hai bhai!");
+            if (response.ok) {
+                // Yahan humne username ko browser ki memory mein save kar liya
+                localStorage.setItem('loggedInUser', username);
+                
+                alert("Login Success!");
+                window.location.href = 'user-dashboard.html';
+            } else {
+                const errorMsg = await response.text();
+                alert(errorMsg); 
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Server se connection nahi ban pa raha!");
         }
     });
 </script>
-
 </body>
 </html>
