@@ -106,7 +106,7 @@ async function handleFormSubmit(event) {
         if (response.ok) {
             alert("Order placed successfully!");
             localStorage.removeItem('pradh_cart');
-            window.location.href = "#";
+            window.location.href = "https://razorpay.me/@pradhfood"; // Redirect to Razorpay payment page
         } else {
             alert("Something went wrong!");
         }
