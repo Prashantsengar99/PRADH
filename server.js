@@ -77,17 +77,15 @@ app.post('/api/orders', (req, res) => {
 
 // --- RENDER CONFIGURATION ---
 
-// Static folder ko join karo
 app.use(express.static(path.join(__dirname)));
 
-// Catch-all route (Har request ko index.html par bhejo taaki React/Frontend routing kaam kare)
+// Express 5 compatible catch-all route
 app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// PORT Setup
+// Server binding
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });
-users = JSON.parse(fs.readFileSync(filePath, 'utf8') || '[]');
