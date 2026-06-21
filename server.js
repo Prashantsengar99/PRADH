@@ -75,9 +75,18 @@ app.post('/api/orders', (req, res) => {
     res.status(201).json({ message: "Order saved!", order: newOrder });
 });
 
-app.use(express.static(__dirname));
+// --- RENDER CONFIGURATION ---
 
+// Static folder ko join karo
+app.use(express.static(path.join(__dirname)));
+
+// Catch-all route (Har request ko index.html par bhejo taaki React/Frontend routing kaam kare)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// PORT Setup
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
