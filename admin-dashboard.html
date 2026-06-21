@@ -120,6 +120,7 @@
                     <tr>
                         <th class="p-4 font-semibold text-slate-700">Order ID</th>
                         <th class="p-4 font-semibold text-slate-700">Customer</th>
+                        <th class="p-4 font-semibold text-slate-700">Address</th>
                         <th class="p-4 font-semibold text-slate-700">Amount</th>
                         <th class="p-4 font-semibold text-slate-700">Status</th>
                         <th class="p-4 font-semibold text-slate-700">Action</th>
@@ -588,28 +589,30 @@ async function loadOrders() {
         }
 
         orders.forEach(order => {
-            const name = order.name || 'Guest';
-            const amount = order.totalAmount || '0';
-            const orderId = order.id || 'N/A';
-            const status = order.status || 'Pending';
+    const name = order.name || 'Guest';
+    const amount = order.totalAmount || '0';
+    const orderId = order.id || 'N/A';
+    const status = order.status || 'Pending';
+    const address = order.address || 'N/A'; // Ye tumhara variable sahi hai
 
-            const row = `
-                <tr class="hover:bg-slate-50 transition-colors border-b">
-                    <td class="p-4 text-slate-600 font-mono">${orderId}</td>
-                    <td class="p-4 text-slate-700 font-medium">${name}</td>
-                    <td class="p-4 text-slate-600 font-bold">₹${amount}</td>
-                    <td class="p-4">
-                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-semibold">
-                            ${status}
-                        </span>
-                    </td>
-                    <td class="p-4">
-                        <button class="text-blue-600 hover:text-blue-800 font-medium text-sm">View</button>
-                    </td>
-                </tr>
-            `;
-            tableBody.innerHTML += row;
-        });
+    const row = `
+        <tr class="hover:bg-slate-50 transition-colors border-b">
+            <td class="p-4 text-slate-600 font-mono">${orderId}</td>
+            <td class="p-4 text-slate-700 font-medium">${name}</td>
+            <td class="p-4 text-slate-600 font-bold">₹${amount}</td>
+            <td class="p-4 text-slate-600 text-sm">${address}</td> 
+            <td class="p-4">
+                <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-semibold">
+                    ${status}
+                </span>
+            </td>
+            <td class="p-4">
+                <button class="text-blue-600 hover:text-blue-800 font-medium text-sm">View</button>
+            </td>
+        </tr>
+    `;
+    tableBody.innerHTML += row;
+});
     } catch (error) {
         console.error('Data load karne mein error:', error);
         document.getElementById('orderTable').innerHTML = '<tr><td colspan="5" class="p-4 text-center text-red-500">Error loading orders.</td></tr>';

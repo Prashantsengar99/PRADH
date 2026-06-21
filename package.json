@@ -20,6 +20,7 @@
   "homepage": "https://github.com/Prashantsengar99/PRADH#readme",
   "dependencies": {
     "cors": "^2.8.6",
-    "express": "^4.21.0"
+    "express": "^4.21.0",
+    "razorpay": "^2.9.6"
   }
 }
