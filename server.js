@@ -87,6 +87,7 @@ app.get('*', (req, res) => {
 
 // PORT Setup
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });
+users = JSON.parse(fs.readFileSync(filePath, 'utf8') || '[]');
