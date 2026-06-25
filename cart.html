@@ -356,77 +356,6 @@
             box-shadow: 0 8px 25px rgba(250, 204, 21, 0.3);
         }
         
-        /* Feature Products Suggestions */
-        .featured-suggestions {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 2px solid #334155;
-        }
-        
-        .featured-suggestions h3 {
-            color: #ffffff;
-            font-size: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .featured-suggestions h3 i {
-            color: #facc15;
-        }
-        
-        .suggestions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
-        }
-        
-        .suggestion-item {
-            background: #0f172a;
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            border: 1px solid #334155;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .suggestion-item:hover {
-            border-color: #facc15;
-            transform: translateY(-4px);
-        }
-        
-        .suggestion-item .suggestion-name {
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 600;
-            margin: 8px 0 4px;
-        }
-        
-        .suggestion-item .suggestion-price {
-            color: #facc15;
-            font-size: 16px;
-            font-weight: 700;
-        }
-        
-        .suggestion-item .add-suggestion-btn {
-            margin-top: 8px;
-            padding: 6px 16px;
-            background: #facc15;
-            color: #0f172a;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 12px;
-        }
-        
-        .suggestion-item .add-suggestion-btn:hover {
-            background: #eab308;
-        }
-        
         /* Responsive */
         @media (max-width: 768px) {
             .cart-container {
@@ -580,14 +509,6 @@
 
     <script src="main.js"></script>
     <script>
-        // Featured products suggestions
-        const featuredSuggestions = [
-            { id: 'sug1', name: 'PRADH Desi Fuel Blend', price: 599 },
-            { id: 'sug2', name: 'Whey Protein Isolate', price: 2499 },
-            { id: 'sug3', name: 'Mass Gainer Pro', price: 2999 },
-            { id: 'sug4', name: 'BCAA Complex', price: 1499 }
-        ];
-
         function loadCart() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             const container = document.getElementById('cartItemsContainer');
@@ -604,21 +525,6 @@
                         <a href="product.html" class="btn-shop-now">
                             <i class="fas fa-shopping-bag"></i> Start Shopping
                         </a>
-                        <div class="featured-suggestions" style="margin-top: 40px; border-top: none; padding-top: 0;">
-                            <h3><i class="fas fa-fire"></i> Popular Products</h3>
-                            <div class="suggestions-grid">
-                                ${featuredSuggestions.map(product => `
-                                    <div class="suggestion-item" onclick="addSuggestedProduct('${product.id}', '${product.name}', ${product.price})">
-                                        <div style="font-size: 30px; color: #facc15;">💪</div>
-                                        <div class="suggestion-name">${product.name}</div>
-                                        <div class="suggestion-price">₹${product.price}</div>
-                                        <button class="add-suggestion-btn">
-                                            <i class="fas fa-plus"></i> Add to Cart
-                                        </button>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
                     </div>
                 `;
                 return;
@@ -704,25 +610,6 @@
                 </div>
             `;
 
-            // Add suggestions
-            html += `
-                <div class="featured-suggestions">
-                    <h3><i class="fas fa-fire"></i> Complete Your Stack</h3>
-                    <div class="suggestions-grid">
-                        ${featuredSuggestions.map(product => `
-                            <div class="suggestion-item" onclick="addSuggestedProduct('${product.id}', '${product.name}', ${product.price})">
-                                <div style="font-size: 30px; color: #facc15;">💪</div>
-                                <div class="suggestion-name">${product.name}</div>
-                                <div class="suggestion-price">₹${product.price}</div>
-                                <button class="add-suggestion-btn">
-                                    <i class="fas fa-plus"></i> Add
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-
             container.innerHTML = html;
         }
 
@@ -773,27 +660,6 @@
                 return;
             }
             window.location.href = 'payment.html';
-        }
-
-        function addSuggestedProduct(id, name, price) {
-            if (window.addToCart) {
-                window.addToCart(id, name, price, 'Standard');
-                loadCart();
-            } else {
-                // Fallback
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                cart.push({
-                    id: id,
-                    name: name,
-                    price: price,
-                    quantity: 1,
-                    variant: 'Standard'
-                });
-                localStorage.setItem('cart', JSON.stringify(cart));
-                loadCart();
-                if (window.updateCartBadge) window.updateCartBadge();
-            }
-            showNotification(`${name} added to cart!`);
         }
 
         function showNotification(message) {

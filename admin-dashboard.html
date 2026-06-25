@@ -202,6 +202,77 @@
         .status-delivered { background: #8b5cf6; color: white; }
         .status-cancelled { background: #ef4444; color: white; }
         
+        .review-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+        .review-card:hover { border-color: #facc15; }
+        .review-card.pending { border-left: 4px solid #facc15; }
+        .review-card.approved { border-left: 4px solid #22c55e; }
+        .review-card.rejected { border-left: 4px solid #ef4444; opacity: 0.7; }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .review-product { color: #facc15; font-weight: 600; }
+        .review-rating { color: #facc15; font-size: 1.1rem; }
+        .review-user { color: #ffffff; font-weight: 500; font-size: 14px; }
+        .review-date { color: #94a3b8; font-size: 0.75rem; }
+        .review-comment { color: #e2e8f0; margin: 8px 0; line-height: 1.5; font-size: 14px; }
+        .review-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .btn-sm {
+            padding: 4px 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-sm:hover { transform: translateY(-1px); }
+        .btn-approve { background: #22c55e; color: #0f172a; }
+        .btn-approve:hover { background: #16a34a; }
+        .btn-reject { background: #ef4444; color: white; }
+        .btn-reject:hover { background: #dc2626; }
+        .btn-edit-sm { background: #3b82f6; color: white; }
+        .btn-edit-sm:hover { background: #2563eb; }
+        .btn-delete-sm { background: #ef4444; color: white; }
+        .btn-delete-sm:hover { background: #dc2626; }
+        
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            background: #1e293b;
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+        .filter-btn {
+            padding: 4px 16px;
+            border: 1px solid #334155;
+            border-radius: 20px;
+            background: transparent;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+        .filter-btn:hover { border-color: #facc15; color: #facc15; }
+        .filter-btn.active { background: #facc15; color: #0f172a; border-color: #facc15; }
+        
         .mobile-toggle {
             display: none;
             background: #1e293b;
@@ -256,26 +327,6 @@
         }
         .modal-close:hover { color: #ffffff; }
         
-        /* Status select dropdown */
-        .status-select {
-            padding: 6px 12px;
-            border-radius: 6px;
-            border: 1px solid #334155;
-            background: #0f172a;
-            color: #e2e8f0;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .status-select:hover {
-            border-color: #facc15;
-        }
-        .status-select:focus {
-            outline: none;
-            border-color: #facc15;
-            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.1);
-        }
-        
         @media (max-width: 1024px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
@@ -286,16 +337,20 @@
             .stat-grid { grid-template-columns: 1fr 1fr !important; }
             .main-content { padding: 12px; }
             .table-container { overflow-x: auto; }
+            .review-header { flex-direction: column; }
         }
         
         .sidebar::-webkit-scrollbar { width: 4px; }
         .sidebar::-webkit-scrollbar-track { background: #1e293b; }
         .sidebar::-webkit-scrollbar-thumb { background: #facc15; border-radius: 10px; }
+        .no-reviews { text-align: center; color: #94a3b8; padding: 30px; }
+        .no-reviews i { font-size: 40px; display: block; margin-bottom: 10px; color: #334155; }
     </style>
 </head>
 <body>
 
 <div class="admin-wrapper">
+    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
             <img src="logo.jpeg" alt="PRADH">
@@ -319,6 +374,10 @@
             <div class="nav-item" onclick="navigateTo('coupons')">
                 <i class="fas fa-ticket-alt"></i> Coupons
             </div>
+            <div class="nav-item" onclick="navigateTo('reviews')">
+                <i class="fas fa-star"></i> Reviews
+                <span class="badge" id="reviewBadge">0</span>
+            </div>
             <div class="nav-item" onclick="navigateTo('customers')">
                 <i class="fas fa-users"></i> Customers
                 <span class="badge" id="customerBadge">0</span>
@@ -329,6 +388,7 @@
         </nav>
     </aside>
 
+    <!-- Main Content -->
     <main class="main-content">
         <button class="mobile-toggle" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
@@ -363,9 +423,9 @@
                     <div class="stat-label">Total Revenue</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-users"></i></div>
-                    <div class="stat-value" id="totalCustomers">0</div>
-                    <div class="stat-label">Total Customers</div>
+                    <div class="stat-icon"><i class="fas fa-star"></i></div>
+                    <div class="stat-value" id="totalReviews">0</div>
+                    <div class="stat-label">Total Reviews</div>
                 </div>
             </div>
             
@@ -386,8 +446,8 @@
                     <button onclick="navigateTo('coupons')" class="btn-primary" style="width: 100%; background: #8b5cf6; color: white;">
                         <i class="fas fa-ticket-alt"></i> Create Coupon
                     </button>
-                    <button onclick="navigateTo('orders')" class="btn-primary" style="width: 100%; background: #3b82f6; color: white;">
-                        <i class="fas fa-eye"></i> View Orders
+                    <button onclick="navigateTo('reviews')" class="btn-primary" style="width: 100%; background: #f59e0b; color: #0f172a;">
+                        <i class="fas fa-star"></i> Manage Reviews
                     </button>
                 </div>
             </div>
@@ -429,28 +489,16 @@
             </div>
         </section>
 
-        <!-- Orders Section with Status Update -->
+        <!-- Orders Section -->
         <section id="orders" class="page-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <div>
-                    <h1 style="font-size: 24px; font-weight: 700;">🚚 Order Management</h1>
-                    <p style="color: #94a3b8;">View and update order delivery status</p>
+                    <h1 style="font-size: 24px; font-weight: 700;">🚚 Orders</h1>
+                    <p style="color: #94a3b8;">View and manage customer orders</p>
                 </div>
                 <button class="btn-primary" onclick="loadOrders()">
                     <i class="fas fa-sync"></i> Refresh
                 </button>
-            </div>
-            
-            <div style="margin-bottom: 15px; padding: 15px; background: #1e293b; border-radius: 10px; border: 1px solid #334155;">
-                <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: center;">
-                    <span style="color: #94a3b8;">Quick Filter:</span>
-                    <button class="btn-info" onclick="filterOrders('all')" style="padding: 4px 16px; font-size: 12px;">All</button>
-                    <button class="btn-warning" onclick="filterOrders('pending')" style="padding: 4px 16px; font-size: 12px;">Pending</button>
-                    <button class="btn-success" onclick="filterOrders('paid')" style="padding: 4px 16px; font-size: 12px;">Paid</button>
-                    <button class="btn-info" onclick="filterOrders('shipped')" style="padding: 4px 16px; font-size: 12px;">Shipped</button>
-                    <button class="btn-success" onclick="filterOrders('delivered')" style="padding: 4px 16px; font-size: 12px;">Delivered</button>
-                    <button class="btn-danger" onclick="filterOrders('cancelled')" style="padding: 4px 16px; font-size: 12px;">Cancelled</button>
-                </div>
             </div>
             
             <div class="table-container">
@@ -459,7 +507,6 @@
                         <tr>
                             <th>Order ID</th>
                             <th>Customer</th>
-                            <th>Phone</th>
                             <th>Items</th>
                             <th>Total</th>
                             <th>Status</th>
@@ -468,7 +515,7 @@
                         </tr>
                     </thead>
                     <tbody id="ordersTableBody">
-                        <tr><td colspan="8" style="text-align: center; color: #64748b; padding: 40px;">No orders found</td></tr>
+                        <tr><td colspan="7" style="text-align: center; color: #64748b; padding: 40px;">No orders found</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -500,6 +547,54 @@
                         <tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">No coupons</td></tr>
                     </tbody>
                 </table>
+            </div>
+        </section>
+
+        <!-- Reviews Section -->
+        <section id="reviews" class="page-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <h1 style="font-size: 24px; font-weight: 700;">⭐ Review Management</h1>
+                    <p style="color: #94a3b8;">Approve, edit, or delete customer reviews</p>
+                </div>
+                <button class="btn-primary" onclick="loadReviews()">
+                    <i class="fas fa-sync"></i> Refresh
+                </button>
+            </div>
+
+            <!-- Review Stats -->
+            <div class="stat-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                <div class="stat-card">
+                    <div class="stat-value" id="reviewTotal" style="font-size: 20px;">0</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat-card" style="border-color: #facc15;">
+                    <div class="stat-value" id="reviewPending" style="font-size: 20px; color: #facc15;">0</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card" style="border-color: #22c55e;">
+                    <div class="stat-value" id="reviewApproved" style="font-size: 20px; color: #22c55e;">0</div>
+                    <div class="stat-label">Approved</div>
+                </div>
+                <div class="stat-card" style="border-color: #ef4444;">
+                    <div class="stat-value" id="reviewRejected" style="font-size: 20px; color: #ef4444;">0</div>
+                    <div class="stat-label">Rejected</div>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <button class="filter-btn active" data-filter="all" onclick="filterReviews('all')">All</button>
+                <button class="filter-btn" data-filter="pending" onclick="filterReviews('pending')">Pending</button>
+                <button class="filter-btn" data-filter="approved" onclick="filterReviews('approved')">Approved</button>
+                <button class="filter-btn" data-filter="rejected" onclick="filterReviews('rejected')">Rejected</button>
+            </div>
+
+            <!-- Reviews List -->
+            <div id="reviewsContainer">
+                <div style="text-align: center; color: #94a3b8; padding: 40px;">
+                    <i class="fas fa-spinner fa-spin"></i> Loading reviews...
+                </div>
             </div>
         </section>
 
@@ -624,6 +719,57 @@
     </div>
 </div>
 
+<!-- Edit Review Modal -->
+<div class="modal-overlay" id="editReviewModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('editReviewModal')">&times;</button>
+        <h3><i class="fas fa-edit"></i> Edit Review</h3>
+        <input type="hidden" id="editReviewId">
+        
+        <div style="margin-bottom: 15px;">
+            <label class="form-label">Product</label>
+            <input type="text" id="editProductName" class="form-input" disabled style="opacity: 0.6;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label class="form-label">Customer Name</label>
+            <input type="text" id="editUserName" class="form-input" disabled style="opacity: 0.6;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label class="form-label">Rating</label>
+            <select id="editRating" class="form-input">
+                <option value="5">5 ★ - Excellent</option>
+                <option value="4">4 ★ - Great</option>
+                <option value="3">3 ★ - Good</option>
+                <option value="2">2 ★ - Fair</option>
+                <option value="1">1 ★ - Poor</option>
+            </select>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label class="form-label">Comment</label>
+            <textarea id="editComment" class="form-input" rows="4" placeholder="Edit review comment..."></textarea>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label class="form-label">Status</label>
+            <select id="editStatus" class="form-input">
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+            </select>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <button onclick="saveReviewEdit()" class="btn-primary" style="flex: 1; justify-content: center;">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+            <button onclick="closeModal('editReviewModal')" class="btn-danger">Cancel</button>
+        </div>
+    </div>
+</div>
+
 <script>
     // ============================================
     // NAVIGATION
@@ -634,7 +780,7 @@
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
         
         const navMap = {
-            'dashboard': 0, 'products': 1, 'orders': 2, 'coupons': 3, 'customers': 4
+            'dashboard': 0, 'products': 1, 'orders': 2, 'coupons': 3, 'reviews': 4, 'customers': 5
         };
         const navItems = document.querySelectorAll('.nav-item');
         if (navMap[section] !== undefined) {
@@ -646,6 +792,7 @@
         if (section === 'products') loadProducts();
         if (section === 'orders') loadOrders();
         if (section === 'coupons') loadCoupons();
+        if (section === 'reviews') loadReviews();
         if (section === 'dashboard') loadDashboard();
         if (section === 'customers') loadCustomers();
     }
@@ -721,7 +868,7 @@
                     <tr>
                         <td colspan="7" style="text-align: center; color: #64748b; padding: 40px;">
                             <i class="fas fa-box" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
-                            No products added yet. Click "Add New Product" to get started!
+                            No products added yet.
                         </td>
                     </tr>
                 `;
@@ -729,11 +876,6 @@
             }
         } catch (error) {
             console.error('Error loading products:', error);
-            document.getElementById('productsTableBody').innerHTML = `
-                <tr><td colspan="7" style="text-align: center; color: #ef4444; padding: 40px;">
-                    ❌ Error loading products: ${error.message}
-                </td></tr>
-            `;
         }
     }
 
@@ -748,7 +890,6 @@
         try {
             const response = await fetch('/api/admin/products');
             const data = await response.json();
-            
             if (data.success) {
                 const product = data.products.find(p => p.id === productId);
                 if (product) {
@@ -765,13 +906,11 @@
             }
         } catch (error) {
             console.error('Error editing product:', error);
-            alert('Error loading product details');
         }
     }
 
     async function saveProduct(event) {
         event.preventDefault();
-        
         const id = document.getElementById('productId').value;
         const productData = {
             name: document.getElementById('prodName').value.trim(),
@@ -792,11 +931,9 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(productData)
             });
-            
             const data = await response.json();
-            
             if (data.success) {
-                alert(isEdit ? '✅ Product updated successfully!' : '✅ Product added successfully!');
+                alert(isEdit ? '✅ Product updated!' : '✅ Product added!');
                 closeModal('productModal');
                 loadProducts();
                 loadDashboard();
@@ -805,30 +942,21 @@
             }
         } catch (error) {
             console.error('Error saving product:', error);
-            alert('❌ Error saving product: ' + error.message);
         }
     }
 
     async function deleteProduct(productId) {
-        if (!confirm('Are you sure you want to delete this product?')) return;
-        
+        if (!confirm('Delete this product?')) return;
         try {
-            const response = await fetch(`/api/admin/products/${productId}`, {
-                method: 'DELETE'
-            });
-            
+            const response = await fetch(`/api/admin/products/${productId}`, { method: 'DELETE' });
             const data = await response.json();
-            
             if (data.success) {
-                alert('✅ Product deleted successfully!');
+                alert('✅ Product deleted!');
                 loadProducts();
                 loadDashboard();
-            } else {
-                alert('❌ Error: ' + data.error);
             }
         } catch (error) {
             console.error('Error deleting product:', error);
-            alert('❌ Error deleting product: ' + error.message);
         }
     }
 
@@ -840,7 +968,6 @@
         try {
             const response = await fetch('/api/coupons');
             const data = await response.json();
-            
             const tbody = document.getElementById('couponsTableBody');
             
             if (data.success && data.coupons && data.coupons.length > 0) {
@@ -865,7 +992,7 @@
                     `;
                 }).join('');
             } else {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">No coupons created</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">No coupons</td></tr>`;
             }
         } catch (error) {
             console.error('Error loading coupons:', error);
@@ -878,13 +1005,12 @@
 
     async function saveCoupon(event) {
         event.preventDefault();
-        
         const code = document.getElementById('couponCode').value.trim().toUpperCase();
         const discount = document.getElementById('couponDiscount').value.trim();
         const expiry = document.getElementById('couponExpiry').value;
         
         if (!code || !discount) {
-            alert('Please fill in all required fields');
+            alert('Please fill all fields');
             return;
         }
         
@@ -894,210 +1020,301 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ code, discount: parseInt(discount), expiry })
             });
-            
             const data = await response.json();
-            
             if (data.success) {
-                alert('✅ Coupon created successfully!');
+                alert('✅ Coupon created!');
                 closeModal('couponModal');
-                document.getElementById('couponCode').value = '';
-                document.getElementById('couponDiscount').value = '';
-                document.getElementById('couponExpiry').value = '';
                 loadCoupons();
                 loadDashboard();
-            } else {
-                alert('❌ Error: ' + data.error);
             }
         } catch (error) {
             console.error('Error creating coupon:', error);
-            alert('❌ Error creating coupon: ' + error.message);
         }
     }
 
     async function deleteCoupon(code) {
         if (!confirm(`Delete coupon "${code}"?`)) return;
+        try {
+            const response = await fetch(`/api/coupons/${code}`, { method: 'DELETE' });
+            const data = await response.json();
+            if (data.success) {
+                alert('✅ Coupon deleted!');
+                loadCoupons();
+                loadDashboard();
+            }
+        } catch (error) {
+            console.error('Error deleting coupon:', error);
+        }
+    }
+
+    // ============================================
+    // REVIEWS MANAGEMENT
+    // ============================================
+    let allReviews = [];
+    let currentFilter = 'all';
+
+    async function loadReviews() {
+        try {
+            const response = await fetch('/api/reviews');
+            const data = await response.json();
+            
+            if (data.success) {
+                allReviews = data.reviews;
+                updateReviewStats(allReviews);
+                filterReviews('all');
+                document.getElementById('reviewBadge').textContent = allReviews.filter(r => r.status === 'pending').length;
+            }
+        } catch (error) {
+            console.error('Error loading reviews:', error);
+            document.getElementById('reviewsContainer').innerHTML = `
+                <div class="no-reviews">
+                    <i class="fas fa-exclamation-circle" style="color: #ef4444;"></i>
+                    Error loading reviews: ${error.message}
+                </div>
+            `;
+        }
+    }
+
+    function updateReviewStats(reviews) {
+        const total = reviews.length;
+        const pending = reviews.filter(r => r.status === 'pending').length;
+        const approved = reviews.filter(r => r.status === 'approved').length;
+        const rejected = reviews.filter(r => r.status === 'rejected').length;
+        
+        document.getElementById('reviewTotal').textContent = total;
+        document.getElementById('reviewPending').textContent = pending;
+        document.getElementById('reviewApproved').textContent = approved;
+        document.getElementById('reviewRejected').textContent = rejected;
+        document.getElementById('reviewBadge').textContent = pending;
+    }
+
+    function filterReviews(status) {
+        currentFilter = status;
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.filter === status);
+        });
+        
+        let filtered = allReviews;
+        if (status !== 'all') {
+            filtered = allReviews.filter(r => r.status === status);
+        }
+        displayReviews(filtered);
+    }
+
+    function displayReviews(reviews) {
+        const container = document.getElementById('reviewsContainer');
+        
+        if (reviews.length === 0) {
+            container.innerHTML = `
+                <div class="no-reviews">
+                    <i class="fas fa-comment"></i>
+                    No reviews found
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = reviews.map(review => `
+            <div class="review-card ${review.status}">
+                <div class="review-header">
+                    <div>
+                        <div class="review-product">
+                            <i class="fas fa-box"></i> ${review.productName || 'Product'}
+                        </div>
+                        <div class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
+                        <div class="review-user">
+                            <i class="fas fa-user"></i> ${review.userName || 'Anonymous'}
+                        </div>
+                        <div class="review-date">
+                            <i class="far fa-calendar-alt"></i> ${new Date(review.createdAt).toLocaleDateString()}
+                        </div>
+                    </div>
+                    <div>
+                        <span class="status-badge status-${review.status}">
+                            ${review.status.toUpperCase()}
+                        </span>
+                    </div>
+                </div>
+                <div class="review-comment">${review.comment}</div>
+                <div class="review-actions">
+                    ${review.status === 'pending' ? `
+                        <button class="btn-sm btn-approve" onclick="updateReviewStatus('${review.id}', 'approved')">
+                            <i class="fas fa-check"></i> Approve
+                        </button>
+                        <button class="btn-sm btn-reject" onclick="updateReviewStatus('${review.id}', 'rejected')">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                    ` : `
+                        ${review.status === 'approved' ? `
+                            <button class="btn-sm btn-reject" onclick="updateReviewStatus('${review.id}', 'rejected')">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                        ` : `
+                            <button class="btn-sm btn-approve" onclick="updateReviewStatus('${review.id}', 'approved')">
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                        `}
+                    `}
+                    <button class="btn-sm btn-edit-sm" onclick="openEditReviewModal('${review.id}')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn-sm btn-delete-sm" onclick="deleteReview('${review.id}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function updateReviewStatus(reviewId, status) {
+        if (!confirm(`Are you sure you want to ${status} this review?`)) return;
         
         try {
-            const response = await fetch(`/api/coupons/${code}`, {
-                method: 'DELETE'
+            const response = await fetch(`/api/reviews/${reviewId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            });
+            const data = await response.json();
+            if (data.success) {
+                alert(`✅ Review ${status} successfully!`);
+                loadReviews();
+            }
+        } catch (error) {
+            console.error('Error updating review:', error);
+        }
+    }
+
+    // Open Edit Review Modal with full details
+    function openEditReviewModal(reviewId) {
+        const review = allReviews.find(r => r.id === reviewId);
+        if (!review) {
+            alert('Review not found');
+            return;
+        }
+        
+        document.getElementById('editReviewId').value = reviewId;
+        document.getElementById('editProductName').value = review.productName || 'Product';
+        document.getElementById('editUserName').value = review.userName || 'Anonymous';
+        document.getElementById('editRating').value = review.rating;
+        document.getElementById('editComment').value = review.comment;
+        document.getElementById('editStatus').value = review.status;
+        
+        document.getElementById('editReviewModal').classList.add('show');
+    }
+
+    // Save Review Edit
+    async function saveReviewEdit() {
+        const reviewId = document.getElementById('editReviewId').value;
+        const rating = document.getElementById('editRating').value;
+        const comment = document.getElementById('editComment').value.trim();
+        const status = document.getElementById('editStatus').value;
+        
+        if (!comment) {
+            alert('Please enter a comment');
+            return;
+        }
+        
+        if (!confirm('Save changes to this review?')) return;
+        
+        try {
+            const response = await fetch(`/api/reviews/${reviewId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    rating: parseInt(rating),
+                    comment: comment,
+                    status: status
+                })
             });
             
             const data = await response.json();
             
             if (data.success) {
-                alert('✅ Coupon deleted successfully!');
-                loadCoupons();
-                loadDashboard();
+                alert('✅ Review updated successfully!');
+                closeModal('editReviewModal');
+                loadReviews();
             } else {
                 alert('❌ Error: ' + data.error);
             }
         } catch (error) {
-            console.error('Error deleting coupon:', error);
-            alert('❌ Error deleting coupon: ' + error.message);
+            console.error('Error saving review edit:', error);
+            alert('❌ Error updating review: ' + error.message);
+        }
+    }
+
+    async function deleteReview(reviewId) {
+        if (!confirm('Delete this review?')) return;
+        
+        try {
+            const response = await fetch(`/api/reviews/${reviewId}`, { method: 'DELETE' });
+            const data = await response.json();
+            if (data.success) {
+                alert('✅ Review deleted!');
+                loadReviews();
+            }
+        } catch (error) {
+            console.error('Error deleting review:', error);
         }
     }
 
     // ============================================
-    // ORDERS - WITH STATUS UPDATE
+    // ORDERS
     // ============================================
-    let allOrders = [];
-    let currentFilter = 'all';
-
     async function loadOrders() {
         try {
             const response = await fetch('/get-orders');
             const data = await response.json();
-            
             const tbody = document.getElementById('ordersTableBody');
             
             if (data.success && data.orders && data.orders.length > 0) {
-                allOrders = data.orders;
                 document.getElementById('orderBadge').textContent = data.orders.length;
-                displayOrders(allOrders);
+                tbody.innerHTML = data.orders.map(o => `
+                    <tr>
+                        <td><span style="color: #facc15; font-family: monospace;">#${o.id || o.order_id}</span></td>
+                        <td>${o.customer?.name || 'Guest'}</td>
+                        <td style="color: #94a3b8; font-size: 13px;">${o.items ? o.items.length : 0} items</td>
+                        <td style="color: #facc15; font-weight: 600;">₹${(o.total || 0).toFixed(2)}</td>
+                        <td><span class="status-badge status-${o.status || 'pending'}">${o.status || 'Pending'}</span></td>
+                        <td style="color: #94a3b8; font-size: 13px;">${o.date ? new Date(o.date).toLocaleDateString() : 'N/A'}</td>
+                        <td>
+                            <select onchange="updateOrderStatus('${o.id || o.order_id}', this.value)" 
+                                    style="background: #0f172a; color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 4px 8px;">
+                                <option value="pending" ${(o.status || 'pending') === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="paid" ${o.status === 'paid' ? 'selected' : ''}>Paid</option>
+                                <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                                <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </td>
+                    </tr>
+                `).join('');
             } else {
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #64748b; padding: 40px;">No orders found</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #64748b; padding: 40px;">No orders found</td></tr>`;
                 document.getElementById('orderBadge').textContent = '0';
             }
         } catch (error) {
             console.error('Error loading orders:', error);
-            document.getElementById('ordersTableBody').innerHTML = `
-                <tr><td colspan="8" style="text-align: center; color: #ef4444; padding: 40px;">
-                    ❌ Error loading orders: ${error.message}
-                </td></tr>
-            `;
         }
     }
 
-    function displayOrders(orders) {
-        const tbody = document.getElementById('ordersTableBody');
-        
-        if (orders.length > 0) {
-            tbody.innerHTML = orders.map(o => `
-                <tr>
-                    <td><span style="color: #facc15; font-family: monospace;">#${o.id || o.order_id}</span></td>
-                    <td><strong>${o.customer?.name || 'Guest'}</strong></td>
-                    <td style="color: #94a3b8;">${o.customer?.phone || 'N/A'}</td>
-                    <td style="color: #94a3b8; font-size: 13px;">${o.items ? o.items.length : 0} items</td>
-                    <td style="color: #facc15; font-weight: 600;">₹${(o.total || 0).toFixed(2)}</td>
-                    <td>
-                        <select class="status-select" onchange="updateOrderStatus('${o.id || o.order_id}', this.value)" 
-                                style="background: ${getStatusColor(o.status || 'pending')}; color: ${getStatusTextColor(o.status || 'pending')};">
-                            <option value="pending" ${(o.status || 'pending') === 'pending' ? 'selected' : ''}>Pending</option>
-                            <option value="paid" ${o.status === 'paid' ? 'selected' : ''}>Paid</option>
-                            <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Shipped</option>
-                            <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Delivered</option>
-                            <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
-                        </select>
-                    </td>
-                    <td style="color: #94a3b8; font-size: 13px;">${o.date ? new Date(o.date).toLocaleDateString() : 'N/A'}</td>
-                    <td>
-                        <button class="btn-success" onclick="updateOrderStatus('${o.id || o.order_id}', 'delivered')" style="padding: 4px 12px; font-size: 12px; margin-right: 4px;" title="Mark as Delivered">
-                            <i class="fas fa-check"></i>
-                        </button>
-                        <button class="btn-danger" onclick="deleteOrder('${o.id || o.order_id}')" style="padding: 4px 12px; font-size: 12px;" title="Delete Order">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        } else {
-            tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #64748b; padding: 40px;">No orders found</td></tr>`;
-        }
-    }
-
-    function getStatusColor(status) {
-        const colors = {
-            'pending': '#facc15',
-            'paid': '#22c55e',
-            'shipped': '#3b82f6',
-            'delivered': '#8b5cf6',
-            'cancelled': '#ef4444'
-        };
-        return colors[status] || '#64748b';
-    }
-
-    function getStatusTextColor(status) {
-        const colors = {
-            'pending': '#0f172a',
-            'paid': '#0f172a',
-            'shipped': '#ffffff',
-            'delivered': '#ffffff',
-            'cancelled': '#ffffff'
-        };
-        return colors[status] || '#ffffff';
-    }
-
-    function filterOrders(status) {
-        currentFilter = status;
-        if (status === 'all') {
-            displayOrders(allOrders);
-        } else {
-            const filtered = allOrders.filter(o => (o.status || 'pending') === status);
-            displayOrders(filtered);
-        }
-    }
-
-    // Update Order Status
     async function updateOrderStatus(orderId, newStatus) {
-        if (!confirm(`Update order ${orderId} status to "${newStatus.toUpperCase()}"?`)) return;
-        
-        try {
-            // First, get current orders
-            const response = await fetch('/get-orders');
-            const data = await response.json();
-            
-            if (data.success && data.orders) {
-                const orders = data.orders;
-                const orderIndex = orders.findIndex(o => o.id === orderId || o.order_id === orderId);
-                
-                if (orderIndex > -1) {
-                    // Update status
-                    orders[orderIndex].status = newStatus;
-                    
-                    // Save back to server using PUT
-                    const updateResponse = await fetch(`/api/orders/${orderId}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(orders[orderIndex])
-                    });
-                    
-                    // Since we don't have a PUT endpoint yet, we'll simulate by saving to file
-                    // For now, we'll update the orders.json file directly
-                    const saveResponse = await fetch('/api/orders/update', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(orders)
-                    });
-                    
-                    alert(`✅ Order ${orderId} status updated to "${newStatus.toUpperCase()}"`);
-                    loadOrders();
-                    loadDashboard();
-                } else {
-                    alert('❌ Order not found');
-                }
-            }
-        } catch (error) {
-            console.error('Error updating order:', error);
-            alert('❌ Error updating order status: ' + error.message);
-        }
-    }
-
-    // Delete Order
-    async function deleteOrder(orderId) {
-        if (!confirm(`Are you sure you want to delete order ${orderId}?`)) return;
+        if (!confirm(`Update order ${orderId} status to "${newStatus}"?`)) return;
         
         try {
             const response = await fetch(`/api/orders/${orderId}`, {
-                method: 'DELETE'
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
             });
-            
-            // For now, we'll just reload
-            alert(`✅ Order ${orderId} deleted successfully`);
-            loadOrders();
-            loadDashboard();
+            const data = await response.json();
+            if (data.success) {
+                alert(`✅ Order ${orderId} status updated!`);
+                loadOrders();
+                loadDashboard();
+            }
         } catch (error) {
-            console.error('Error deleting order:', error);
-            alert('❌ Error deleting order: ' + error.message);
+            console.error('Error updating order:', error);
         }
     }
 
@@ -1106,113 +1323,62 @@
     // ============================================
     async function loadCustomers() {
         try {
-            const tbody = document.getElementById('customersTableBody');
-            
             const response = await fetch('/get-orders');
             const data = await response.json();
+            const tbody = document.getElementById('customersTableBody');
             
             if (data.success && data.orders && data.orders.length > 0) {
                 const customerMap = new Map();
-                
                 data.orders.forEach(order => {
                     if (order.customer && order.customer.phone) {
                         const phone = order.customer.phone;
-                        
                         if (!customerMap.has(phone)) {
                             customerMap.set(phone, {
                                 name: order.customer.name || 'Guest',
                                 email: order.customer.email || 'N/A',
                                 phone: order.customer.phone,
                                 orders: 0,
-                                totalSpent: 0,
-                                lastOrder: order.date || new Date().toISOString()
+                                totalSpent: 0
                             });
                         }
-                        
                         const customer = customerMap.get(phone);
                         customer.orders += 1;
                         customer.totalSpent += parseFloat(order.total) || 0;
-                        
-                        if (order.date && new Date(order.date) > new Date(customer.lastOrder)) {
-                            customer.lastOrder = order.date;
-                        }
                     }
                 });
                 
                 const customers = Array.from(customerMap.values());
-                
                 document.getElementById('customerBadge').textContent = customers.length;
-                document.getElementById('totalCustomers').textContent = customers.length;
                 
                 if (customers.length > 0) {
                     customers.sort((a, b) => b.totalSpent - a.totalSpent);
-                    
                     tbody.innerHTML = customers.map(c => {
                         let status = 'Active';
                         let statusClass = 'status-active';
-                        
                         if (c.totalSpent > 5000) {
                             status = 'VIP';
                             statusClass = 'status-vip';
                         } else if (c.totalSpent > 1000) {
                             status = 'Regular';
                             statusClass = 'status-active';
-                        } else if (c.orders > 0) {
-                            status = 'New';
-                            statusClass = 'status-paid';
                         }
-                        
                         return `
                             <tr>
-                                <td>
-                                    <strong>${c.name}</strong>
-                                    <br>
-                                    <small style="color: #64748b; font-size: 11px;">${c.orders} order${c.orders > 1 ? 's' : ''}</small>
-                                </td>
+                                <td><strong>${c.name}</strong></td>
                                 <td style="color: #94a3b8;">${c.email}</td>
                                 <td style="color: #94a3b8;">${c.phone}</td>
                                 <td style="color: #facc15; font-weight: 600;">${c.orders}</td>
                                 <td style="color: #facc15; font-weight: 600;">₹${c.totalSpent.toFixed(2)}</td>
-                                <td>
-                                    <span class="status-badge ${statusClass}">
-                                        ${status}
-                                    </span>
-                                </td>
+                                <td><span class="status-badge ${statusClass}">${status}</span></td>
                             </tr>
                         `;
                     }).join('');
                 } else {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: #64748b; padding: 40px;">
-                                <i class="fas fa-users" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
-                                No customers yet.
-                            </td>
-                        </tr>
-                    `;
-                    document.getElementById('customerBadge').textContent = '0';
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #64748b; padding: 40px;">No customers</td></tr>`;
                 }
-            } else {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center; color: #64748b; padding: 40px;">
-                            <i class="fas fa-users" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
-                            No orders placed yet.
-                        </td>
-                    </tr>
-                `;
-                document.getElementById('customerBadge').textContent = '0';
-                document.getElementById('totalCustomers').textContent = '0';
             }
         } catch (error) {
             console.error('Error loading customers:', error);
-            document.getElementById('customersTableBody').innerHTML = `
-                <tr>
-                    <td colspan="6" style="text-align: center; color: #ef4444; padding: 40px;">
-                        ❌ Error loading customers: ${error.message}
-                    </td>
-                </tr>
-            `;
         }
     }
 
@@ -1229,7 +1395,6 @@
             
             const orderResponse = await fetch('/get-orders');
             const orderData = await orderResponse.json();
-            
             if (orderData.success && orderData.orders) {
                 const orders = orderData.orders;
                 document.getElementById('totalOrders').textContent = orders.length;
@@ -1237,15 +1402,6 @@
                 
                 const revenue = orders.reduce((sum, o) => sum + (parseFloat(o.total) || 0), 0);
                 document.getElementById('totalRevenue').textContent = '₹' + revenue.toFixed(2);
-                
-                const uniqueCustomers = new Set();
-                orders.forEach(o => {
-                    if (o.customer && o.customer.phone) {
-                        uniqueCustomers.add(o.customer.phone);
-                    }
-                });
-                document.getElementById('totalCustomers').textContent = uniqueCustomers.size;
-                document.getElementById('customerBadge').textContent = uniqueCustomers.size;
                 
                 const recent = orders.slice(-5).reverse();
                 const recentHtml = recent.length > 0 ? recent.map(o => `
@@ -1263,14 +1419,11 @@
                 document.getElementById('recentOrders').innerHTML = recentHtml;
             }
             
-            const couponResponse = await fetch('/api/coupons');
-            const couponData = await couponResponse.json();
-            if (couponData.success) {
-                const active = couponData.coupons.filter(c => {
-                    if (!c.expiry) return true;
-                    return new Date(c.expiry) > new Date();
-                });
-                document.getElementById('totalCoupons').textContent = active.length;
+            const reviewResponse = await fetch('/api/reviews');
+            const reviewData = await reviewResponse.json();
+            if (reviewData.success) {
+                document.getElementById('totalReviews').textContent = reviewData.reviews.length;
+                document.getElementById('reviewBadge').textContent = reviewData.reviews.filter(r => r.status === 'pending').length;
             }
         } catch (error) {
             console.error('Dashboard error:', error);
@@ -1290,8 +1443,34 @@
         loadProducts();
         loadOrders();
         loadCoupons();
+        loadReviews();
         loadCustomers();
     });
+
+    // Make functions global
+    window.navigateTo = navigateTo;
+    window.toggleSidebar = toggleSidebar;
+    window.logout = logout;
+    window.closeModal = closeModal;
+    window.showAddProductModal = showAddProductModal;
+    window.editProduct = editProduct;
+    window.saveProduct = saveProduct;
+    window.deleteProduct = deleteProduct;
+    window.showAddCouponModal = showAddCouponModal;
+    window.saveCoupon = saveCoupon;
+    window.deleteCoupon = deleteCoupon;
+    window.loadReviews = loadReviews;
+    window.filterReviews = filterReviews;
+    window.updateReviewStatus = updateReviewStatus;
+    window.openEditReviewModal = openEditReviewModal;
+    window.saveReviewEdit = saveReviewEdit;
+    window.deleteReview = deleteReview;
+    window.loadOrders = loadOrders;
+    window.updateOrderStatus = updateOrderStatus;
+    window.loadCustomers = loadCustomers;
+    window.loadProducts = loadProducts;
+    window.loadCoupons = loadCoupons;
+    window.loadDashboard = loadDashboard;
 </script>
 </body>
 </html>

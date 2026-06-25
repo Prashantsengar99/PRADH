@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details | PRADH DESI FUEL</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .p-detail-container {
             max-width: 1200px;
@@ -13,7 +14,6 @@
             gap: 3rem;
             padding: 0 1rem;
         }
-        /* Left Side: Images */
         .p-image-section {
             flex: 1;
             display: flex;
@@ -43,7 +43,6 @@
         .thumb-img.active {
             border-color: var(--accent-green, #2e7d32);
         }
-        /* Right Side: Details */
         .p-info-section {
             flex: 1;
             text-align: left;
@@ -51,7 +50,6 @@
         .p-title { font-size: 2rem; margin-bottom: 0.5rem; color: #333; }
         .p-description { font-size: 1rem; color: #555; line-height: 1.6; margin-bottom: 1.5rem; }
         
-        /* Specifications Styling (Soft & Clean) */
         .specs-table {
             width: 100%;
             border-collapse: collapse;
@@ -71,8 +69,6 @@
             color: #777;
             font-weight: 500;
         }
-
-        /* Read More / Read Less Logic CSS */
         .specs-collapsed {
             position: relative;
             max-height: 150px;
@@ -82,7 +78,6 @@
         .specs-expanded {
             max-height: 1200px;
         }
-        
         .specs-collapsed .specs-fade {
             position: absolute;
             bottom: 0;
@@ -94,7 +89,6 @@
         .specs-expanded .specs-fade {
             display: none;
         }
-
         .read-more-btn {
             background: none;
             border: none;
@@ -112,8 +106,6 @@
             color: #0043aa;
             text-decoration: underline;
         }
-
-        /* FAQ Accordion Styling */
         .faq-item {
             border: 1px solid #eaeaea;
             border-radius: 6px;
@@ -146,8 +138,6 @@
         .faq-answer p { padding: 15px 20px; margin: 0; font-size: 0.92rem; color: #555; line-height: 1.6; border-top: 1px solid #f5f5f5; }
         .faq-item.active .faq-icon { transform: rotate(45deg); color: #ff9f00; }
         .faq-item.active { border-color: #e0e0e0; }
-
-        /* Flipkart Style Review Elements */
         .rating-summary-box {
             display: flex;
             align-items: center;
@@ -241,8 +231,6 @@
             border-radius: 3px;
             border: 1px solid #d4eedd;
         }
-        
-        /* Modal Background popup styles */
         .review-modal {
             display: none;
             position: fixed;
@@ -273,8 +261,245 @@
             font-weight: bold;
             cursor: pointer;
         }
+        
+        /* ===== REVIEW SECTION DARK THEME FIXES ===== */
+        .reviews-section {
+            margin-top: 3rem;
+            border-top: 1px solid #334155;
+            padding-top: 2rem;
+        }
+        .reviews-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #facc15;
+        }
+        .review-summary-container {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .review-summary-container .avg-rating {
+            text-align: center;
+        }
+        .review-summary-container .avg-rating .number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #facc15;
+        }
+        .review-summary-container .avg-rating .stars {
+            color: #facc15;
+            font-size: 1.5rem;
+        }
+        .review-summary-container .avg-rating .count {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        .review-summary-container .rating-bars {
+            flex: 1;
+            min-width: 150px;
+        }
+        .review-summary-container .rating-bars .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 4px 0;
+        }
+        .review-summary-container .rating-bars .bar-row .label {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            width: 30px;
+        }
+        .review-summary-container .rating-bars .bar-row .bar-track {
+            flex: 1;
+            height: 6px;
+            background: #1e293b;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .review-summary-container .rating-bars .bar-row .bar-track .bar-fill {
+            height: 100%;
+            background: #facc15;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .review-summary-container .rating-bars .bar-row .count {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            width: 30px;
+        }
+        
+        .review-form-container {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 2rem;
+        }
+        .review-form-container h4 {
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        .review-form-container label {
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .review-form-container .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .review-form-container .form-input:focus {
+            outline: none;
+            border-color: #facc15;
+            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.1);
+        }
+        .review-form-container .form-input::placeholder {
+            color: #64748b;
+        }
+        .btn-submit-review {
+            background: #facc15;
+            color: #0f172a;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-submit-review:hover {
+            background: #eab308;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3);
+        }
+        .rating-text {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        /* STAR RATING STYLES - FIXED FOR DARK THEME */
+        .star-rating-container {
+            display: flex;
+            gap: 8px;
+            font-size: 2.5rem;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+        .star-rating-container .star {
+            color: #334155;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-size: 2.5rem;
+            line-height: 1;
+            user-select: none;
+        }
+        .star-rating-container .star.active {
+            color: #facc15;
+        }
+        .star-rating-container .star:hover {
+            transform: scale(1.2);
+            color: #facc15;
+        }
+        .star-rating-container .star.hover {
+            color: #facc15;
+        }
+        
+        .review-card-dark {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        .review-card-dark:hover {
+            border-color: #facc15;
+        }
+        .review-card-dark .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .review-card-dark .review-rating {
+            color: #facc15;
+            font-size: 1.2rem;
+        }
+        .review-card-dark .review-user {
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .review-card-dark .review-date {
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+        .review-card-dark .review-comment {
+            color: #e2e8f0;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+        .review-card-dark .review-verified {
+            color: #22c55e;
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+        #reviewMessage {
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        .review-loading {
+            text-align: center;
+            color: #94a3b8;
+            padding: 30px 0;
+        }
+        .review-loading i {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+            color: #facc15;
+        }
+        .no-reviews {
+            text-align: center;
+            color: #94a3b8;
+            padding: 30px 0;
+        }
+        .no-reviews i {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+            color: #334155;
+        }
+        .review-error {
+            text-align: center;
+            color: #ef4444;
+            padding: 30px 0;
+        }
+        
         @media (max-width: 768px) {
             .p-detail-container { flex-direction: column; gap: 1.5rem; }
+            .review-summary-container { flex-direction: column; align-items: center; }
+            .star-rating-container { font-size: 2rem; }
+            .star-rating-container .star { font-size: 2rem; }
         }
     </style>
 </head>
@@ -302,7 +527,6 @@
         <div class="p-info-section">
             <h1 class="p-title" id="pTitle">Product Name</h1>
             
-            <!-- FLIPKART STYLE PRICE BOX -->
             <div class="main-price-box" style="margin: 1rem 0; display: flex; flex-direction: column; gap: 4px;">
                 <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
                     <span id="pPrice" style="font-size: 2.2rem; font-weight: bold; color: #212121;">₹0</span>
@@ -320,25 +544,21 @@
                 🛒 ADD TO CART
             </button>
 
-            <!-- ================= SPECIFICATIONS SECTION ================= -->
+            <!-- SPECIFICATIONS SECTION -->
             <div class="specs-section" style="margin-top: 2rem;">
                 <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: #222; font-weight: 600;">Product Specifications</h3>
-                
                 <div id="specsContainer" class="specs-collapsed">
                     <table class="specs-table">
-                        <tbody id="specsBody">
-                            <!-- Dynamically loaded rows via JS -->
-                        </tbody>
+                        <tbody id="specsBody"></tbody>
                     </table>
                     <div class="specs-fade"></div>
                 </div>
-
                 <button id="toggleSpecsBtn" onclick="toggleSpecifications()" class="read-more-btn">
                     Read More ↓
                 </button>
             </div>
 
-            <!-- ================= FAQ SECTION ================= -->
+            <!-- FAQ SECTION -->
             <div class="faq-section" style="margin-top: 3rem; border-top: 1px solid #eee; padding-top: 2rem;">
                 <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem; color: #222; font-weight: 600;">Frequently Asked Questions (FAQs)</h3>
                 <div class="faq-container" style="display: flex; flex-direction: column; gap: 10px;">
@@ -373,82 +593,85 @@
                 </div>
             </div>
 
-            <!-- ================= CUSTOMER REVIEWS SECTION WITH IMAGES (RESTORED) ================= -->
-            <div class="reviews-section" style="margin-top: 3rem; border-top: 1px solid #eee; padding-top: 2rem;">
-                <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Customer Reviews & Ratings ⭐</h3>
+            <!-- ====== REVIEWS SECTION - COMPLETE FIX ====== -->
+            <div class="reviews-section">
+                <h3><i class="fas fa-star"></i> Customer Reviews & Ratings</h3>
                 
-                <!-- Ratings Summary Box -->
-                <div class="rating-summary-box">
-                    <div class="rating-big-number">
-                        4.8 <span style="font-size: 1.2rem; color: #fff;">★</span>
+                <!-- Rating Summary -->
+                <div class="review-summary-container" id="reviewSummary">
+                    <div class="avg-rating">
+                        <div class="number" id="avgRating">0</div>
+                        <div class="stars" id="starDisplay">☆☆☆☆☆</div>
+                        <div class="count"><span id="totalReviews">0</span> Reviews</div>
                     </div>
-                    <div class="rating-summary-text">
-                        <strong>142 Ratings & 38 Reviews</strong><br>
-                        <span style="color: #666; font-size: 0.9rem;">100% Verified Customers from Hathras & Across India</span>
+                    <div class="rating-bars">
+                        <div class="bar-row">
+                            <span class="label">5 ★</span>
+                            <div class="bar-track"><div class="bar-fill" id="bar5"></div></div>
+                            <span class="count" id="count5">0</span>
+                        </div>
+                        <div class="bar-row">
+                            <span class="label">4 ★</span>
+                            <div class="bar-track"><div class="bar-fill" id="bar4"></div></div>
+                            <span class="count" id="count4">0</span>
+                        </div>
+                        <div class="bar-row">
+                            <span class="label">3 ★</span>
+                            <div class="bar-track"><div class="bar-fill" id="bar3"></div></div>
+                            <span class="count" id="count3">0</span>
+                        </div>
+                        <div class="bar-row">
+                            <span class="label">2 ★</span>
+                            <div class="bar-track"><div class="bar-fill" id="bar2"></div></div>
+                            <span class="count" id="count2">0</span>
+                        </div>
+                        <div class="bar-row">
+                            <span class="label">1 ★</span>
+                            <div class="bar-track"><div class="bar-fill" id="bar1"></div></div>
+                            <span class="count" id="count1">0</span>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Customer Photos Gallery -->
-                <div class="customer-photos-gallery" style="margin-top: 1.5rem;">
-                    <p style="font-size: 0.95rem; font-weight: bold; margin-bottom: 0.5rem; color: #212121;">Images Uploaded by Customers (6)</p>
-                    <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px;">
-                        <img src="product1.jpeg" class="customer-gallery-img" onclick="openReviewModal(this.src)">
-                        <img src="product2.jpeg" class="customer-gallery-img" onclick="openReviewModal(this.src)">
-                        <img src="product1.jpeg" class="customer-gallery-img" onclick="openReviewModal(this.src)">
-                        <img src="product2.jpeg" class="customer-gallery-img" onclick="openReviewModal(this.src)">
-                    </div>
-                </div>
-
-                <!-- Individual Review Cards -->
-                <div class="review-cards-container" style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1.5rem;">
+                
+                <!-- Submit Review Form -->
+                <div class="review-form-container">
+                    <h4><i class="fas fa-pen"></i> Write a Review</h4>
                     
-                    <!-- Review 1 -->
-                    <div class="review-card">
-                        <div class="review-header">
-                            <span class="review-badge">5 ★</span>
-                            <strong class="review-title">Kamaal ka swad aur energy! Original product h.</strong>
+                    <div style="margin-bottom: 15px;">
+                        <label>Your Rating</label>
+                        <div class="star-rating-container" id="starRating">
+                            <span class="star" data-value="1" onclick="setRating(1)" onmouseover="hoverStar(1)" onmouseout="resetStars()">☆</span>
+                            <span class="star" data-value="2" onclick="setRating(2)" onmouseover="hoverStar(2)" onmouseout="resetStars()">☆</span>
+                            <span class="star" data-value="3" onclick="setRating(3)" onmouseover="hoverStar(3)" onmouseout="resetStars()">☆</span>
+                            <span class="star" data-value="4" onclick="setRating(4)" onmouseover="hoverStar(4)" onmouseout="resetStars()">☆</span>
+                            <span class="star" data-value="5" onclick="setRating(5)" onmouseover="hoverStar(5)" onmouseout="resetStars()">☆</span>
                         </div>
-                        <p class="review-body">Bhai maine 500g ka pack order kiya tha. Doodh me mila kar peene me chocolate flavour ekdum natural lagta hai. Koi artificial sugar nahi h sabse achhi baat yhi h. Gym ke baad mast recovery hoti h!</p>
-                        
-                        <!-- Review Image -->
-                        <div class="review-attached-images">
-                            <img src="product1.jpeg" alt="Customer review image" class="review-img-click" onclick="openReviewModal(this.src)">
-                        </div>
-
-                        <div class="review-footer">
-                            <span class="customer-name">✓ Rahul Sharma</span>
-                            <span class="verified-buyer-badge">Verified Purchaser</span>
-                            <span class="review-date">12 June 2026</span>
-                        </div>
+                        <div class="rating-text" id="ratingText">Select a rating</div>
                     </div>
-
-                    <!-- Review 2 -->
-                    <div class="review-card">
-                        <div class="review-header">
-                            <span class="review-badge">5 ★</span>
-                            <strong class="review-title">Family ke liye ekdum best healthy option</strong>
-                        </div>
-                        <p class="review-body">Bacchon ko ragi aur chana khilana bohot mushkil tha, par PRADH desi fuel ko vo doodh me khushi-khushi pee lete hain. Dhaga mishri ki vajah se mithaas bhi ekdum safe h. Delivery bhi 3 din me ho gyi thi.</p>
-                        
-                        <!-- Review Image -->
-                        <div class="review-attached-images">
-                            <img src="product2.jpeg" alt="Customer review image" class="review-img-click" onclick="openReviewModal(this.src)">
-                        </div>
-
-                        <div class="review-footer">
-                            <span class="customer-name">✓ Amit Verma</span>
-                            <span class="verified-buyer-badge">Verified Purchaser</span>
-                            <span class="review-date">05 June 2026</span>
-                        </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label>Your Name</label>
+                        <input type="text" id="reviewerName" class="form-input" placeholder="Enter your name">
                     </div>
-
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label>Your Review</label>
+                        <textarea id="reviewComment" class="form-input" rows="4" placeholder="Share your experience with this product..."></textarea>
+                    </div>
+                    
+                    <button onclick="submitReview()" class="btn-submit-review">
+                        <i class="fas fa-paper-plane"></i> Submit Review
+                    </button>
+                    <div id="reviewMessage"></div>
                 </div>
-            </div>
-
-            <!-- Image Badi Karke Dekhne Ke Liye Modal Popup -->
-            <div id="reviewImageModal" class="review-modal" onclick="this.style.display='none'">
-                <span class="close-modal">&times;</span>
-                <img class="review-modal-content" id="imgModalTarget">
+                
+                <!-- Reviews List -->
+                <div id="reviewsList">
+                    <div class="review-loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        Loading reviews...
+                    </div>
+                </div>
             </div>
         </div>
     </main>
