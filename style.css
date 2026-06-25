@@ -1092,3 +1092,12 @@ footer p span {
     padding: 2px 8px;
     border-radius: 4px;
 }
+.order-item {
+    transition: transform 0.2s;
+}
+.order-item:hover {
+    transform: scale(1.02);
+}
+body {
+    background-color: #f0f0f0 !important;
+}

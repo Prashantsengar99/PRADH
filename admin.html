@@ -5,88 +5,152 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login | PRADH</title>
     <style>
-       /* Admin Login Section Styling */
-.admin-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f4f4f4;
-}
-
-.login-card {
-    background: #ffffff;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    width: 100%;
-    max-width: 350px;
-}
-
-.login-card h2 {
-    margin-bottom: 25px;
-    color: #333;
-    text-align: center;
-}
-
-.input-group { margin-bottom: 20px; }
-.input-group label { display: block; margin-bottom: 8px; color: #555; }
-.input-group input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    outline: none;
-}
-
-.login-btn {
-    width: 100%;
-    padding: 12px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.login-btn:hover { background: #0056b3; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .login-container {
+            background: #1e293b;
+            padding: 48px;
+            border-radius: 20px;
+            border: 1px solid #334155;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .login-container .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-container .logo img {
+            height: 60px;
+            width: auto;
+        }
+        .login-container .logo h1 {
+            color: #facc15;
+            font-size: 28px;
+            margin-top: 10px;
+        }
+        .login-container .logo p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            color: #94a3b8;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #facc15;
+            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.1);
+        }
+        .form-group input::placeholder {
+            color: #64748b;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #facc15, #eab308);
+            color: #0f172a;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(250, 204, 21, 0.3);
+        }
+        .error-msg {
+            color: #ef4444;
+            text-align: center;
+            margin-top: 12px;
+            font-size: 14px;
+            display: none;
+        }
+        .error-msg.show {
+            display: block;
+        }
+        .footer-text {
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 20px;
+        }
+        .footer-text a {
+            color: #facc15;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
-
-<div class="login-card">
-    <h2>Admin Login</h2>
-    <form action="/admin-login" method="POST">
-        <div class="input-group">
-            <label>Username</label>
-            <input type="text" name="username" placeholder="Admin username" required>
+    <div class="login-container">
+        <div class="logo">
+            <img src="logo.jpeg" alt="PRADH">
+            <h1>PRADH</h1>
+            <p>Admin Control Panel</p>
         </div>
-        <div class="input-group">
-            <label>Password</label>
-            <input type="password" name="password" placeholder="Password" required>
+        
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label>👤 Username</label>
+                <input type="text" id="username" placeholder="Enter admin username" required>
+            </div>
+            <div class="form-group">
+                <label>🔒 Password</label>
+                <input type="password" id="password" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+            <div class="error-msg" id="errorMsg">❌ Invalid username or password</div>
+        </form>
+        
+        <div class="footer-text">
+            Secure Admin Access • PRADH Desi Fuel
         </div>
-       <button type="submit" class="login-btn">Login</button>
-    </form>
-</div>
-<script>
-const loginForm = document.querySelector("form");
+    </div>
 
-loginForm.addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    const username = document.querySelector("input[name='username']").value;
-    const password = document.querySelector("input[name='password']").value;
-
-    if(username === "pradh" && password === "1234") {
-
-        localStorage.setItem("adminLoggedIn", "true");
-
-      window.location.href = "admin-dashboard.html";
-    } else {
-        alert("Invalid Username or Password");
-    }
-});
-</script>
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            
+            // Admin credentials
+            if (username === 'pradh' && password === '1234') {
+                localStorage.setItem('adminLoggedIn', 'true');
+                window.location.href = 'admin-dashboard.html';
+            } else {
+                errorMsg.classList.add('show');
+                setTimeout(() => {
+                    errorMsg.classList.remove('show');
+                }, 3000);
+            }
+        }
+    </script>
 </body>
 </html>
