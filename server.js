@@ -76,7 +76,6 @@ app.post('/api/signup', (req, res) => {
         const { username, email, password } = req.body;
         console.log('📝 Signup attempt:', { username, email });
         
-        // Validation
         if (!username || !email || !password) {
             return res.status(400).send('All fields are required');
         }
@@ -89,26 +88,23 @@ app.post('/api/signup', (req, res) => {
             return res.status(400).send('Password must be at least 4 characters');
         }
         
-        // Get existing users
         let users = getUsers();
         
-        // Check if user already exists
         const existingUser = users.find(u => u.username === username || u.email === email);
         if (existingUser) {
             return res.status(400).send('Username or email already exists');
         }
         
-        // Create new user
         const newUser = {
             id: Date.now(),
             username: username,
             email: email,
             password: password,
+            phone: '',
             createdAt: new Date().toISOString(),
             orders: [],
             rewards: 0,
-            level: 'Bronze',
-            phone: ''
+            level: 'Bronze'
         };
         
         users.push(newUser);
@@ -133,11 +129,7 @@ app.post('/api/login', (req, res) => {
             return res.status(400).send('Username and password are required');
         }
         
-        // Get users
         const users = getUsers();
-        console.log('📋 Users found:', users.length);
-        
-        // Find user
         const user = users.find(u => u.username === username && u.password === password);
         
         if (!user) {
@@ -158,8 +150,6 @@ app.post('/api/login', (req, res) => {
 app.get('/api/user/:username', (req, res) => {
     try {
         const { username } = req.params;
-        console.log('👤 Fetching user:', username);
-        
         const users = getUsers();
         const user = users.find(u => u.username === username);
         
@@ -167,7 +157,6 @@ app.get('/api/user/:username', (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
         
-        // Don't send password
         const { password, ...userData } = user;
         res.json(userData);
         
@@ -177,38 +166,7 @@ app.get('/api/user/:username', (req, res) => {
     }
 });
 
-// Update user profile
-app.put('/api/user/:username', (req, res) => {
-    try {
-        const { username } = req.params;
-        const { email, password, phone, rewards, level } = req.body;
-        
-        let users = getUsers();
-        const index = users.findIndex(u => u.username === username);
-        
-        if (index === -1) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        
-        // Update user data
-        if (email) users[index].email = email;
-        if (password) users[index].password = password;
-        if (phone) users[index].phone = phone;
-        if (rewards !== undefined) users[index].rewards = rewards;
-        if (level) users[index].level = level;
-        
-        saveUsers(users);
-        
-        console.log(`✅ User updated: ${username}`);
-        res.json({ success: true, message: 'User updated successfully' });
-        
-    } catch (error) {
-        console.error('Error updating user:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
-});
-
-// Get all users (admin)
+// Get all users
 app.get('/api/users', (req, res) => {
     try {
         const users = getUsers();
@@ -253,7 +211,6 @@ function saveProducts(products) {
 // GET all products (admin)
 app.get('/api/admin/products', (req, res) => {
     try {
-        console.log('📋 GET /api/admin/products');
         const products = getProducts();
         res.json({ success: true, products: products });
     } catch (error) {
@@ -265,8 +222,6 @@ app.get('/api/admin/products', (req, res) => {
 // POST create product
 app.post('/api/admin/products', (req, res) => {
     try {
-        console.log('📝 POST /api/admin/products', req.body);
-        
         const { name, price, description, category, image, stock } = req.body;
         
         if (!name || !price) {
@@ -310,8 +265,6 @@ app.post('/api/admin/products', (req, res) => {
 app.put('/api/admin/products/:id', (req, res) => {
     try {
         const { id } = req.params;
-        console.log('✏️ PUT /api/admin/products/', id, req.body);
-        
         const { name, price, description, category, image, stock } = req.body;
         
         let products = getProducts();
@@ -353,7 +306,6 @@ app.put('/api/admin/products/:id', (req, res) => {
 app.delete('/api/admin/products/:id', (req, res) => {
     try {
         const { id } = req.params;
-        console.log('🗑️ DELETE /api/admin/products/', id);
         
         let products = getProducts();
         const filtered = products.filter(p => p.id !== id);
@@ -422,7 +374,6 @@ function saveCoupons(coupons) {
 // GET all coupons
 app.get('/api/coupons', (req, res) => {
     try {
-        console.log('📋 GET /api/coupons');
         const coupons = getCoupons();
         res.json({ success: true, coupons: coupons });
     } catch (error) {
@@ -434,8 +385,6 @@ app.get('/api/coupons', (req, res) => {
 // POST create coupon
 app.post('/api/coupons', (req, res) => {
     try {
-        console.log('📝 POST /api/coupons', req.body);
-        
         const { code, discount, expiry } = req.body;
         
         if (!code || !discount) {
@@ -482,7 +431,6 @@ app.post('/api/coupons', (req, res) => {
 app.delete('/api/coupons/:code', (req, res) => {
     try {
         const { code } = req.params;
-        console.log('🗑️ DELETE /api/coupons/', code);
         
         let coupons = getCoupons();
         const filtered = coupons.filter(c => c.code.toUpperCase() !== code.toUpperCase());
@@ -511,7 +459,6 @@ app.delete('/api/coupons/:code', (req, res) => {
 app.post('/api/coupons/validate', (req, res) => {
     try {
         const { code, amount } = req.body;
-        console.log('🔍 POST /api/coupons/validate', { code, amount });
         
         if (!code) {
             return res.status(400).json({
@@ -579,8 +526,6 @@ app.post('/create-order', async (req, res) => {
             payment_capture: 1
         };
 
-        console.log('Creating order:', options);
-        
         const order = await razorpay.orders.create(options);
         
         res.json({
@@ -708,7 +653,7 @@ app.put('/api/orders/:id', (req, res) => {
         orders[index] = { ...orders[index], ...updatedOrder };
         fs.writeFileSync('orders.json', JSON.stringify(orders, null, 2));
         
-        console.log(`✅ Order ${id} status updated to:`, orders[index].status);
+        console.log(`✅ Order ${id} status updated`);
         res.json({
             success: true,
             message: 'Order updated successfully',
@@ -720,68 +665,212 @@ app.put('/api/orders/:id', (req, res) => {
     }
 });
 
-// Delete order
-app.delete('/api/orders/:id', (req, res) => {
+// ============================================
+// REVIEWS ROUTES
+// ============================================
+
+// Get all reviews
+app.get('/api/reviews', (req, res) => {
+    try {
+        let reviews = [];
+        if (fs.existsSync('reviews.json')) {
+            const data = fs.readFileSync('reviews.json', 'utf8');
+            reviews = JSON.parse(data);
+        }
+        res.json({ success: true, reviews });
+    } catch (error) {
+        console.error('Error fetching reviews:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Get reviews for a product
+app.get('/api/reviews/product/:productId', (req, res) => {
+    try {
+        const { productId } = req.params;
+        let reviews = [];
+        if (fs.existsSync('reviews.json')) {
+            const data = fs.readFileSync('reviews.json', 'utf8');
+            reviews = JSON.parse(data);
+        }
+        
+        const productReviews = reviews.filter(r => 
+            r.productId === productId && r.status === 'approved'
+        );
+        
+        res.json({ success: true, reviews: productReviews });
+    } catch (error) {
+        console.error('Error fetching product reviews:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Submit review
+app.post('/api/reviews', (req, res) => {
+    try {
+        const { productId, productName, rating, comment, userName, userEmail } = req.body;
+        
+        if (!productId || !rating || !comment) {
+            return res.status(400).json({
+                success: false,
+                error: 'Product ID, rating and comment are required'
+            });
+        }
+        
+        let reviews = [];
+        if (fs.existsSync('reviews.json')) {
+            const data = fs.readFileSync('reviews.json', 'utf8');
+            reviews = JSON.parse(data);
+        }
+        
+        const newReview = {
+            id: 'REV' + Date.now().toString().slice(-8),
+            productId: productId,
+            productName: productName || 'Product',
+            rating: parseInt(rating),
+            comment: comment,
+            userName: userName || 'Anonymous',
+            userEmail: userEmail || '',
+            status: 'pending',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            helpful: 0,
+            images: []
+        };
+        
+        reviews.push(newReview);
+        fs.writeFileSync('reviews.json', JSON.stringify(reviews, null, 2));
+        
+        console.log(`✅ New review submitted for product ${productId}`);
+        res.json({
+            success: true,
+            message: 'Review submitted successfully! Waiting for admin approval.',
+            review: newReview
+        });
+    } catch (error) {
+        console.error('Error submitting review:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Update review status
+app.put('/api/reviews/:id', (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status, comment, rating } = req.body;
+        
+        let reviews = [];
+        if (fs.existsSync('reviews.json')) {
+            const data = fs.readFileSync('reviews.json', 'utf8');
+            reviews = JSON.parse(data);
+        }
+        
+        const index = reviews.findIndex(r => r.id === id);
+        if (index === -1) {
+            return res.status(404).json({
+                success: false,
+                error: 'Review not found'
+            });
+        }
+        
+        if (status) reviews[index].status = status;
+        if (comment) reviews[index].comment = comment;
+        if (rating) reviews[index].rating = parseInt(rating);
+        reviews[index].updatedAt = new Date().toISOString();
+        
+        fs.writeFileSync('reviews.json', JSON.stringify(reviews, null, 2));
+        
+        console.log(`✅ Review ${id} updated`);
+        res.json({
+            success: true,
+            message: 'Review updated successfully',
+            review: reviews[index]
+        });
+    } catch (error) {
+        console.error('Error updating review:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Delete review
+app.delete('/api/reviews/:id', (req, res) => {
     try {
         const { id } = req.params;
         
-        let orders = [];
-        if (fs.existsSync('orders.json')) {
-            const data = fs.readFileSync('orders.json', 'utf8');
-            orders = JSON.parse(data);
+        let reviews = [];
+        if (fs.existsSync('reviews.json')) {
+            const data = fs.readFileSync('reviews.json', 'utf8');
+            reviews = JSON.parse(data);
         }
         
-        const filtered = orders.filter(o => o.id !== id && o.order_id !== id);
+        const filtered = reviews.filter(r => r.id !== id);
         
-        if (filtered.length === orders.length) {
+        if (filtered.length === reviews.length) {
             return res.status(404).json({
                 success: false,
-                error: 'Order not found'
+                error: 'Review not found'
             });
         }
         
-        fs.writeFileSync('orders.json', JSON.stringify(filtered, null, 2));
+        fs.writeFileSync('reviews.json', JSON.stringify(filtered, null, 2));
         
-        console.log(`✅ Order ${id} deleted successfully`);
+        console.log(`✅ Review ${id} deleted`);
         res.json({
             success: true,
-            message: 'Order deleted successfully'
+            message: 'Review deleted successfully'
         });
     } catch (error) {
-        console.error('Error deleting order:', error);
+        console.error('Error deleting review:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-// Bulk update orders
-app.post('/api/orders/update', (req, res) => {
+// Get review stats
+app.get('/api/reviews/stats/:productId', (req, res) => {
     try {
-        const orders = req.body;
+        const { productId } = req.params;
+        let reviews = [];
+        if (fs.existsSync('reviews.json')) {
+            const data = fs.readFileSync('reviews.json', 'utf8');
+            reviews = JSON.parse(data);
+        }
         
-        if (!Array.isArray(orders)) {
-            return res.status(400).json({
-                success: false,
-                error: 'Invalid data format'
+        const productReviews = reviews.filter(r => 
+            r.productId === productId && r.status === 'approved'
+        );
+        
+        const stats = {
+            total: productReviews.length,
+            averageRating: 0,
+            ratingDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+        };
+        
+        if (productReviews.length > 0) {
+            const totalRating = productReviews.reduce((sum, r) => sum + r.rating, 0);
+            stats.averageRating = (totalRating / productReviews.length).toFixed(1);
+            
+            productReviews.forEach(r => {
+                if (stats.ratingDistribution[r.rating]) {
+                    stats.ratingDistribution[r.rating]++;
+                }
             });
         }
         
-        fs.writeFileSync('orders.json', JSON.stringify(orders, null, 2));
-        
-        console.log(`✅ All orders updated (${orders.length} orders)`);
-        res.json({
-            success: true,
-            message: 'All orders updated successfully'
-        });
+        res.json({ success: true, stats });
     } catch (error) {
-        console.error('Error updating orders:', error);
+        console.error('Error fetching review stats:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
 // ============================================
-// SERVE HTML FILES
+// SERVE HTML FILES - ROOT ROUTES
 // ============================================
 app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/index.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
@@ -791,6 +880,30 @@ app.get('/admin.html', (req, res) => {
 
 app.get('/admin-dashboard.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin-dashboard.html'));
+});
+
+app.get('/admin-reviews.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'admin-reviews.html'));
+});
+
+app.get('/product.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'product.html'));
+});
+
+app.get('/product-detail.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'product-detail.html'));
+});
+
+app.get('/cart.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'cart.html'));
+});
+
+app.get('/payment.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'payment.html'));
+});
+
+app.get('/order.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'order.html'));
 });
 
 app.get('/userlogin.html', (req, res) => {
@@ -805,15 +918,35 @@ app.get('/user-dashboard.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'user-dashboard.html'));
 });
 
+app.get('/about.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'about.html'));
+});
+
+app.get('/contact.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'contact.html'));
+});
+
+app.get('/myaccount.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'myaccount.html'));
+});
+
+app.get('/profile.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'profile.html'));
+});
+
 // ============================================
-// 404 HANDLER FOR API
+// 404 HANDLER
 // ============================================
-app.use('/api/*', (req, res) => {
-    console.log('❌ API not found:', req.url);
-    res.status(404).json({
-        success: false,
-        error: `API endpoint not found: ${req.url}`
-    });
+app.use((req, res) => {
+    console.log('❌ 404 Not Found:', req.url);
+    if (req.url.startsWith('/api/')) {
+        res.status(404).json({
+            success: false,
+            error: `API endpoint not found: ${req.url}`
+        });
+    } else {
+        res.status(404).sendFile(path.join(__dirname, '404.html'));
+    }
 });
 
 // ============================================
@@ -828,5 +961,6 @@ app.listen(PORT, () => {
     console.log(`📦 Product API at http://localhost:${PORT}/api/admin/products`);
     console.log(`👤 User login at http://localhost:${PORT}/userlogin.html`);
     console.log(`📝 User signup at http://localhost:${PORT}/signup.html`);
+    console.log(`⭐ Reviews at http://localhost:${PORT}/admin-reviews.html`);
     console.log(`✅ Server is ready!\n`);
 });
