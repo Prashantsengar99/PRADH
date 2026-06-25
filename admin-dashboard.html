@@ -7,20 +7,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* ... (keep existing styles) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #0f172a;
             color: #e2e8f0;
         }
-        
-        .admin-wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
-        
-        /* Sidebar */
+        .admin-wrapper { display: flex; min-height: 100vh; }
         .sidebar {
             width: 280px;
             background: #1e293b;
@@ -32,7 +26,6 @@
             transition: transform 0.3s ease;
             z-index: 1000;
         }
-        
         .sidebar-brand {
             display: flex;
             align-items: center;
@@ -41,31 +34,22 @@
             border-bottom: 1px solid #334155;
             margin-bottom: 20px;
         }
-        
-        .sidebar-brand img {
-            height: 40px;
-            width: auto;
-        }
-        
         .sidebar-brand h2 {
             color: #facc15;
             font-size: 20px;
             font-weight: 700;
         }
-        
         .sidebar-brand span {
             color: #94a3b8;
             font-size: 12px;
             display: block;
         }
-        
         .nav-item {
             display: flex;
             align-items: center;
             gap: 12px;
             padding: 12px 16px;
             color: #94a3b8;
-            text-decoration: none;
             border-radius: 10px;
             transition: all 0.3s;
             cursor: pointer;
@@ -73,22 +57,9 @@
             font-size: 14px;
             font-weight: 500;
         }
-        
-        .nav-item:hover {
-            background: #334155;
-            color: #ffffff;
-        }
-        
-        .nav-item.active {
-            background: #facc15;
-            color: #0f172a;
-        }
-        
-        .nav-item i {
-            width: 20px;
-            font-size: 16px;
-        }
-        
+        .nav-item:hover { background: #334155; color: #ffffff; }
+        .nav-item.active { background: #facc15; color: #0f172a; }
+        .nav-item i { width: 20px; font-size: 16px; }
         .nav-item .badge {
             margin-left: auto;
             background: #ef4444;
@@ -97,31 +68,15 @@
             border-radius: 12px;
             font-size: 11px;
         }
-        
-        /* Main Content */
         .main-content {
             margin-left: 280px;
             flex: 1;
             padding: 30px;
             min-height: 100vh;
         }
-        
-        /* Page sections */
-        .page-section {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .page-section.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Cards */
+        .page-section { display: none; animation: fadeIn 0.3s ease; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .stat-card {
             background: #1e293b;
             border: 1px solid #334155;
@@ -129,43 +84,17 @@
             padding: 24px;
             transition: all 0.3s;
         }
-        
-        .stat-card:hover {
-            border-color: #facc15;
-            transform: translateY(-4px);
-        }
-        
-        .stat-card .stat-icon {
-            font-size: 32px;
-            color: #facc15;
-            margin-bottom: 12px;
-        }
-        
-        .stat-card .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #ffffff;
-        }
-        
-        .stat-card .stat-label {
-            color: #94a3b8;
-            font-size: 14px;
-            margin-top: 4px;
-        }
-        
-        /* Tables */
+        .stat-card:hover { border-color: #facc15; transform: translateY(-4px); }
+        .stat-card .stat-icon { font-size: 32px; color: #facc15; margin-bottom: 12px; }
+        .stat-card .stat-value { font-size: 28px; font-weight: 700; color: #ffffff; }
+        .stat-card .stat-label { color: #94a3b8; font-size: 14px; margin-top: 4px; }
         .table-container {
             background: #1e293b;
             border: 1px solid #334155;
             border-radius: 16px;
             overflow: hidden;
         }
-        
-        .table-container table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
+        .table-container table { width: 100%; border-collapse: collapse; }
         .table-container th {
             background: #0f172a;
             color: #94a3b8;
@@ -177,18 +106,12 @@
             text-align: left;
             border-bottom: 1px solid #334155;
         }
-        
         .table-container td {
             padding: 14px 20px;
             border-bottom: 1px solid #334155;
             color: #e2e8f0;
         }
-        
-        .table-container tr:hover td {
-            background: #0f172a;
-        }
-        
-        /* Status Badges */
+        .table-container tr:hover td { background: #0f172a; }
         .status-badge {
             padding: 4px 14px;
             border-radius: 20px;
@@ -196,14 +119,11 @@
             font-weight: 600;
             display: inline-block;
         }
-        
         .status-paid { background: #22c55e; color: #0f172a; }
         .status-pending { background: #facc15; color: #0f172a; }
         .status-shipped { background: #3b82f6; color: #ffffff; }
         .status-delivered { background: #8b5cf6; color: #ffffff; }
         .status-cancelled { background: #ef4444; color: #ffffff; }
-        
-        /* Buttons */
         .btn-primary {
             background: #facc15;
             color: #0f172a;
@@ -214,13 +134,7 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
-        .btn-primary:hover {
-            background: #eab308;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3);
-        }
-        
+        .btn-primary:hover { background: #eab308; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3); }
         .btn-danger {
             background: #ef4444;
             color: white;
@@ -231,11 +145,7 @@
             transition: all 0.3s;
             font-size: 13px;
         }
-        
-        .btn-danger:hover {
-            background: #dc2626;
-        }
-        
+        .btn-danger:hover { background: #dc2626; }
         .btn-success {
             background: #22c55e;
             color: #0f172a;
@@ -246,11 +156,7 @@
             transition: all 0.3s;
             font-size: 13px;
         }
-        
-        .btn-success:hover {
-            background: #16a34a;
-        }
-        
+        .btn-success:hover { background: #16a34a; }
         .btn-info {
             background: #3b82f6;
             color: white;
@@ -261,12 +167,7 @@
             transition: all 0.3s;
             font-size: 13px;
         }
-        
-        .btn-info:hover {
-            background: #2563eb;
-        }
-        
-        /* Forms */
+        .btn-info:hover { background: #2563eb; }
         .form-input {
             width: 100%;
             padding: 12px 16px;
@@ -277,17 +178,12 @@
             font-size: 14px;
             transition: all 0.3s;
         }
-        
         .form-input:focus {
             outline: none;
             border-color: #facc15;
             box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.1);
         }
-        
-        .form-input::placeholder {
-            color: #64748b;
-        }
-        
+        .form-input::placeholder { color: #64748b; }
         .form-label {
             display: block;
             color: #94a3b8;
@@ -295,8 +191,6 @@
             font-weight: 600;
             margin-bottom: 6px;
         }
-        
-        /* Mobile Toggle */
         .mobile-toggle {
             display: none;
             background: #1e293b;
@@ -308,73 +202,20 @@
             margin-bottom: 20px;
             font-size: 20px;
         }
-        
-        /* Responsive */
         @media (max-width: 1024px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            
-            .main-content {
-                margin-left: 0;
-                padding: 20px;
-            }
-            
-            .mobile-toggle {
-                display: inline-block;
-            }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 20px; }
+            .mobile-toggle { display: inline-block; }
         }
-        
         @media (max-width: 768px) {
-            .stat-grid {
-                grid-template-columns: 1fr 1fr !important;
-            }
-            
-            .main-content {
-                padding: 12px;
-            }
-            
-            .table-container {
-                overflow-x: auto;
-            }
+            .stat-grid { grid-template-columns: 1fr 1fr !important; }
+            .main-content { padding: 12px; }
+            .table-container { overflow-x: auto; }
         }
-        
-        /* Custom scrollbar */
-        .sidebar::-webkit-scrollbar {
-            width: 4px;
-        }
-        
-        .sidebar::-webkit-scrollbar-track {
-            background: #1e293b;
-        }
-        
-        .sidebar::-webkit-scrollbar-thumb {
-            background: #facc15;
-            border-radius: 10px;
-        }
-        
-        /* Coupon & Banner Styles */
-        .coupon-card {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .coupon-code {
-            color: #facc15;
-            font-weight: 700;
-            font-size: 18px;
-            letter-spacing: 1px;
-        }
-        
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: #1e293b; }
+        .sidebar::-webkit-scrollbar-thumb { background: #facc15; border-radius: 10px; }
         .banner-preview {
             background: linear-gradient(135deg, #1e293b, #0f172a);
             border: 2px dashed #facc15;
@@ -382,18 +223,8 @@
             padding: 40px;
             text-align: center;
         }
-        
-        .banner-preview h3 {
-            color: #facc15;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        
-        .banner-preview p {
-            color: #94a3b8;
-        }
-        
-        /* Order details modal */
+        .banner-preview h3 { color: #facc15; font-size: 24px; margin-bottom: 10px; }
+        .banner-preview p { color: #94a3b8; }
         .modal-overlay {
             display: none;
             position: fixed;
@@ -406,11 +237,7 @@
             justify-content: center;
             align-items: center;
         }
-        
-        .modal-overlay.show {
-            display: flex;
-        }
-        
+        .modal-overlay.show { display: flex; }
         .modal-content {
             background: #1e293b;
             border: 1px solid #334155;
@@ -421,12 +248,7 @@
             max-height: 80vh;
             overflow-y: auto;
         }
-        
-        .modal-content h3 {
-            color: #facc15;
-            margin-bottom: 16px;
-        }
-        
+        .modal-content h3 { color: #facc15; margin-bottom: 16px; }
         .modal-close {
             float: right;
             background: none;
@@ -435,10 +257,7 @@
             font-size: 24px;
             cursor: pointer;
         }
-        
-        .modal-close:hover {
-            color: #ffffff;
-        }
+        .modal-close:hover { color: #ffffff; }
     </style>
 </head>
 <body>
@@ -447,7 +266,7 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <img src="logo.jpeg" alt="PRADH">
+            <img src="logo.jpeg" alt="PRADH" style="height: 40px; width: auto;">
             <div>
                 <h2>PRADH</h2>
                 <span>Admin Control Center</span>
@@ -502,11 +321,9 @@
                     <h1 style="font-size: 28px; font-weight: 700;">Dashboard</h1>
                     <p style="color: #94a3b8;">Welcome back, Admin! Here's your overview.</p>
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-primary" onclick="window.location.reload()">
-                        <i class="fas fa-sync"></i> Refresh
-                    </button>
-                </div>
+                <button class="btn-primary" onclick="window.location.reload()">
+                    <i class="fas fa-sync"></i> Refresh
+                </button>
             </div>
             
             <div class="stat-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
@@ -526,9 +343,9 @@
                     <div class="stat-label">Total Customers</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-box"></i></div>
-                    <div class="stat-value" id="totalProducts">0</div>
-                    <div class="stat-label">Total Products</div>
+                    <div class="stat-icon"><i class="fas fa-ticket-alt"></i></div>
+                    <div class="stat-value" id="totalCoupons">0</div>
+                    <div class="stat-label">Active Coupons</div>
                 </div>
             </div>
 
@@ -563,7 +380,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <div>
                     <h1 style="font-size: 24px; font-weight: 700;">🚚 Order Tracker</h1>
-                    <p style="color: #94a3b8;">Manage and track all customer orders from your website</p>
+                    <p style="color: #94a3b8;">Manage and track all customer orders</p>
                 </div>
                 <button class="btn-primary" onclick="loadOrders()">
                     <i class="fas fa-sync"></i> Refresh
@@ -585,11 +402,7 @@
                         </tr>
                     </thead>
                     <tbody id="ordersTableBody">
-                        <tr>
-                            <td colspan="8" style="text-align: center; color: #64748b; padding: 40px;">
-                                <i class="fas fa-spinner fa-spin"></i> Loading real orders...
-                            </td>
-                        </tr>
+                        <tr><td colspan="8" style="text-align: center; color: #64748b; padding: 40px;">Loading orders...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -598,7 +411,6 @@
         <!-- Products Section -->
         <section id="products" class="page-section">
             <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 20px;">📦 Product Manager</h1>
-            
             <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px; margin-bottom: 30px;">
                 <h3 style="color: #facc15; margin-bottom: 16px;">Add New Product</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
@@ -627,21 +439,10 @@
                     <i class="fas fa-save"></i> Save Product
                 </button>
             </div>
-
             <div class="table-container">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Product</th>
-                            <th>Price</th>
-                            <th>Category</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productsTableBody">
-                        <tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">Loading products...</td></tr>
-                    </tbody>
+                    <thead><tr><th>ID</th><th>Product</th><th>Price</th><th>Category</th><th>Action</th></tr></thead>
+                    <tbody id="productsTableBody"></tbody>
                 </table>
             </div>
         </section>
@@ -657,59 +458,35 @@
                     <i class="fas fa-plus"></i> Add Stock
                 </button>
             </div>
-            
             <div class="table-container">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Batch ID</th>
-                            <th>Stock</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventoryTableBody">
-                        <tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">No inventory data</td></tr>
-                    </tbody>
+                    <thead><tr><th>Product</th><th>Batch ID</th><th>Stock</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody id="inventoryTableBody"></tbody>
                 </table>
             </div>
         </section>
 
         <!-- Customers Section -->
         <section id="customers" class="page-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <div>
-                    <h1 style="font-size: 24px; font-weight: 700;">👥 Customers</h1>
-                    <p style="color: #94a3b8;">Manage your customer base</p>
-                </div>
-            </div>
-            
+            <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 20px;">👥 Customers</h1>
             <div class="table-container">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Total Spent</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="customersTableBody">
-                        <tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">Loading customers...</td></tr>
-                    </tbody>
+                    <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Total Spent</th><th>Status</th></tr></thead>
+                    <tbody id="customersTableBody"></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- Coupons Section -->
+        <!-- Coupons Section - UPDATED with Server API -->
         <section id="coupons" class="page-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <div>
                     <h1 style="font-size: 24px; font-weight: 700;">🎟️ Coupon Manager</h1>
-                    <p style="color: #94a3b8;">Create and manage discount coupons</p>
+                    <p style="color: #94a3b8;">Create and manage discount coupons (synced across all devices)</p>
                 </div>
+                <button class="btn-primary" onclick="loadCoupons()">
+                    <i class="fas fa-sync"></i> Refresh
+                </button>
             </div>
             
             <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px; margin-bottom: 30px;">
@@ -728,9 +505,10 @@
                         <input type="date" id="expiryDate" class="form-input">
                     </div>
                 </div>
-                <button onclick="addCoupon()" class="btn-primary" style="margin-top: 16px; width: 100%;">
+                <button onclick="createCoupon()" class="btn-primary" style="margin-top: 16px; width: 100%;">
                     <i class="fas fa-plus"></i> Create Coupon
                 </button>
+                <div id="couponMessage" style="margin-top: 10px; color: #94a3b8; font-size: 14px;"></div>
             </div>
 
             <div class="table-container">
@@ -741,11 +519,14 @@
                             <th>Discount</th>
                             <th>Expiry</th>
                             <th>Status</th>
+                            <th>Created</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="couponsTableBody">
-                        <tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">No coupons created</td></tr>
+                        <tr><td colspan="6" style="text-align: center; color: #64748b; padding: 40px;">
+                            <i class="fas fa-spinner fa-spin"></i> Loading coupons...
+                        </td></tr>
                     </tbody>
                 </table>
             </div>
@@ -754,7 +535,6 @@
         <!-- Reviews Section -->
         <section id="reviews" class="page-section">
             <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 20px;">⭐ Review Control</h1>
-            
             <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px; margin-bottom: 30px;">
                 <h3 style="color: #facc15; margin-bottom: 16px;">Add Review</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
@@ -775,20 +555,10 @@
                     <i class="fas fa-plus"></i> Post Review
                 </button>
             </div>
-
             <div class="table-container">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Customer</th>
-                            <th>Rating</th>
-                            <th>Comment</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="reviewsTableBody">
-                        <tr><td colspan="4" style="text-align: center; color: #64748b; padding: 40px;">No reviews</td></tr>
-                    </tbody>
+                    <thead><tr><th>Customer</th><th>Rating</th><th>Comment</th><th>Action</th></tr></thead>
+                    <tbody id="reviewsTableBody"></tbody>
                 </table>
             </div>
         </section>
@@ -796,7 +566,6 @@
         <!-- Banners Section -->
         <section id="banners" class="page-section">
             <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 20px;">📢 Banner Manager</h1>
-            
             <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px; margin-bottom: 30px;">
                 <h3 style="color: #facc15; margin-bottom: 16px;">Update Homepage Banner</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
@@ -817,7 +586,6 @@
                     <i class="fas fa-save"></i> Save Banner
                 </button>
             </div>
-
             <div class="banner-preview" id="bannerPreview">
                 <h3 id="previewTitle">No Banner Added</h3>
                 <p id="previewText">Add a banner to display on your homepage</p>
@@ -827,7 +595,6 @@
         <!-- Finance Section -->
         <section id="finance" class="page-section">
             <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 20px;">🧾 Finance & Invoices</h1>
-            
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px;">
                     <h3 style="color: #facc15; margin-bottom: 16px;">Generate Invoice</h3>
@@ -847,7 +614,6 @@
                         <i class="fas fa-file-pdf"></i> Generate Invoice
                     </button>
                 </div>
-                
                 <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px;">
                     <h3 style="color: #facc15; margin-bottom: 16px;">Financial Summary</h3>
                     <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -875,9 +641,7 @@
     <div class="modal-content">
         <button class="modal-close" onclick="closeOrderModal()">&times;</button>
         <h3>📋 Order Details</h3>
-        <div id="orderModalBody">
-            <p style="color: #94a3b8;">Loading...</p>
-        </div>
+        <div id="orderModalBody"></div>
     </div>
 </div>
 
@@ -888,26 +652,21 @@
     function navigateTo(section) {
         document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
         document.getElementById(section).classList.add('active');
-        
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
         const navItems = document.querySelectorAll('.nav-item');
         const navMap = {
             'dashboard': 0, 'orders': 1, 'products': 2, 'inventory': 3,
             'customers': 4, 'coupons': 5, 'reviews': 6, 'banners': 7, 'finance': 8
         };
-        if (navMap[section] !== undefined) {
-            navItems[navMap[section]]?.classList.add('active');
-        }
-        
+        if (navMap[section] !== undefined) navItems[navMap[section]]?.classList.add('active');
         document.getElementById('sidebar').classList.remove('open');
-        
         if (section === 'orders') loadOrders();
         if (section === 'dashboard') loadDashboard();
         if (section === 'products') loadProducts();
         if (section === 'inventory') loadInventory();
         if (section === 'customers') loadCustomers();
         if (section === 'reviews') loadReviews();
-        if (section === 'coupons') renderCoupons();
+        if (section === 'coupons') loadCoupons();
         if (section === 'banners') loadBanner();
     }
 
@@ -923,209 +682,142 @@
     }
 
     // ============================================
-    // DASHBOARD - WITH REAL DATA
+    // DASHBOARD
     // ============================================
     async function loadDashboard() {
         try {
             const response = await fetch('/get-orders');
             const data = await response.json();
-            
             if (data.success && data.orders) {
                 const orders = data.orders;
                 document.getElementById('totalOrders').textContent = orders.length;
-                
                 const revenue = orders.reduce((sum, o) => sum + (parseFloat(o.total) || 0), 0);
                 document.getElementById('totalRevenue').textContent = '₹' + revenue.toFixed(2);
-                
                 document.getElementById('financeRevenue').textContent = '₹' + revenue.toFixed(2);
                 document.getElementById('financeOrders').textContent = orders.length;
                 document.getElementById('financeGST').textContent = '₹' + (revenue * 0.18).toFixed(2);
-                
                 document.getElementById('orderBadge').textContent = orders.length;
                 
-                // Recent orders - Real data
                 const recentOrders = orders.slice(-5).reverse();
                 const recentHtml = recentOrders.length > 0 ? recentOrders.map(order => {
                     const customerName = order.customer?.name || 'Guest';
-                    const orderId = order.id || order.order_id || 'N/A';
-                    const total = order.total || 0;
-                    const status = order.status || 'pending';
-                    const date = order.date ? new Date(order.date).toLocaleDateString() : 'N/A';
-                    
                     return `
                         <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #334155;">
                             <div>
-                                <span style="font-weight: 600; color: #facc15;">#${orderId}</span>
-                                <span style="color: #94a3b8; font-size: 13px; margin-left: 10px;">
-                                    ${customerName}
-                                </span>
-                                <br>
-                                <span style="color: #64748b; font-size: 11px;">${date}</span>
+                                <span style="font-weight: 600; color: #facc15;">#${order.id || order.order_id}</span>
+                                <span style="color: #94a3b8; font-size: 13px; margin-left: 10px;">${customerName}</span>
                             </div>
-                            <div style="text-align: right;">
-                                <span style="color: #facc15; font-weight: 600;">₹${total.toFixed(2)}</span>
-                                <br>
-                                <span class="status-badge status-${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+                            <div>
+                                <span style="color: #facc15; font-weight: 600;">₹${(order.total || 0).toFixed(2)}</span>
+                                <span class="status-badge status-${order.status || 'pending'}">${order.status || 'Pending'}</span>
                             </div>
                         </div>
                     `;
                 }).join('') : '<p style="color: #64748b; text-align: center; padding: 20px;">No orders yet</p>';
-                
                 document.getElementById('recentOrdersList').innerHTML = recentHtml;
-                
-                // Product count
-                const products = JSON.parse(localStorage.getItem('products') || '[]');
-                document.getElementById('totalProducts').textContent = products.length;
-                
-                // Customers count - Extract unique customers from orders
-                const uniqueCustomers = new Set();
-                orders.forEach(o => {
-                    if (o.customer?.name) uniqueCustomers.add(o.customer.name);
-                    if (o.customer?.phone) uniqueCustomers.add(o.customer.phone);
-                });
-                document.getElementById('totalCustomers').textContent = uniqueCustomers.size || 0;
             }
+            
+            // Load coupons count
+            const couponResponse = await fetch('/api/coupons');
+            const couponData = await couponResponse.json();
+            if (couponData.success) {
+                const activeCoupons = couponData.coupons.filter(c => {
+                    if (!c.expiry) return true;
+                    return new Date(c.expiry) > new Date();
+                });
+                document.getElementById('totalCoupons').textContent = activeCoupons.length;
+            }
+            
+            // Products count
+            const products = JSON.parse(localStorage.getItem('products') || '[]');
+            document.getElementById('totalProducts').textContent = products.length;
         } catch (error) {
             console.error('Dashboard error:', error);
         }
     }
 
     // ============================================
-    // ORDERS - WITH REAL DATA FROM SERVER
+    // ORDERS
     // ============================================
     async function loadOrders() {
         try {
             const response = await fetch('/get-orders');
             const data = await response.json();
             const tbody = document.getElementById('ordersTableBody');
-            
             if (data.success && data.orders && data.orders.length > 0) {
-                const orders = data.orders;
-                tbody.innerHTML = orders.map(order => {
-                    const customerName = order.customer?.name || 'Guest';
-                    const customerPhone = order.customer?.phone || 'N/A';
-                    const orderId = order.id || order.order_id || 'N/A';
-                    const total = order.total || 0;
-                    const status = order.status || 'pending';
-                    const date = order.date ? new Date(order.date).toLocaleDateString('en-IN', {
-                        day: '2-digit', month: 'short', year: 'numeric'
-                    }) : 'N/A';
-                    
-                    // Get items list
-                    let itemsList = '';
-                    if (order.items && order.items.length > 0) {
-                        itemsList = order.items.map(item => 
-                            `${item.name} (×${item.quantity})`
-                        ).join(', ');
-                    } else if (order.items) {
-                        itemsList = 'Items: ' + JSON.stringify(order.items);
-                    } else {
-                        itemsList = 'No items';
-                    }
-                    
-                    return `
-                        <tr>
-                            <td><span style="font-family: monospace; color: #facc15; font-size: 13px;">${orderId}</span></td>
-                            <td><strong>${customerName}</strong></td>
-                            <td style="color: #94a3b8;">${customerPhone}</td>
-                            <td style="color: #94a3b8; font-size: 13px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${itemsList}">
-                                ${itemsList}
-                            </td>
-                            <td style="color: #facc15; font-weight: 600;">₹${total.toFixed(2)}</td>
-                            <td>
-                                <select onchange="updateOrderStatus('${orderId}', this.value)" 
-                                        style="background: #0f172a; color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 4px 8px; font-size: 12px;">
-                                    <option value="pending" ${status === 'pending' ? 'selected' : ''}>Pending</option>
-                                    <option value="paid" ${status === 'paid' ? 'selected' : ''}>Paid</option>
-                                    <option value="shipped" ${status === 'shipped' ? 'selected' : ''}>Shipped</option>
-                                    <option value="delivered" ${status === 'delivered' ? 'selected' : ''}>Delivered</option>
-                                    <option value="cancelled" ${status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
-                                </select>
-                            </td>
-                            <td style="color: #94a3b8; font-size: 13px;">${date}</td>
-                            <td>
-                                <button class="btn-info" onclick="viewOrder('${orderId}')" style="padding: 4px 12px; font-size: 12px; margin-right: 4px;">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn-danger" onclick="deleteOrder('${orderId}')" style="padding: 4px 12px; font-size: 12px;">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
+                tbody.innerHTML = data.orders.map(order => `
+                    <tr>
+                        <td><span style="font-family: monospace; color: #facc15;">#${order.id || order.order_id}</span></td>
+                        <td><strong>${order.customer?.name || 'Guest'}</strong></td>
+                        <td style="color: #94a3b8;">${order.customer?.phone || 'N/A'}</td>
+                        <td style="color: #94a3b8; font-size: 13px;">${order.items ? order.items.length + ' items' : '0 items'}</td>
+                        <td style="color: #facc15; font-weight: 600;">₹${(order.total || 0).toFixed(2)}</td>
+                        <td>
+                            <select onchange="updateOrderStatus('${order.id || order.order_id}', this.value)" 
+                                    style="background: #0f172a; color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 4px 8px;">
+                                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="paid" ${order.status === 'paid' ? 'selected' : ''}>Paid</option>
+                                <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                                <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </td>
+                        <td style="color: #94a3b8; font-size: 13px;">${order.date ? new Date(order.date).toLocaleDateString() : 'N/A'}</td>
+                        <td>
+                            <button class="btn-info" onclick="viewOrder('${order.id || order.order_id}')" style="padding: 4px 12px; font-size: 12px;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
             } else {
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #64748b; padding: 40px;">
-                    <i class="fas fa-inbox" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
-                    No orders found. Customers haven't placed any orders yet.
-                </td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #64748b; padding: 40px;">No orders found</td></tr>`;
             }
         } catch (error) {
             console.error('Orders error:', error);
-            document.getElementById('ordersTableBody').innerHTML = 
-                `<tr><td colspan="8" style="text-align: center; color: #ef4444; padding: 40px;">
-                    ❌ Error loading orders: ${error.message}
-                </td></tr>`;
+            document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="8" style="text-align: center; color: #ef4444; padding: 40px;">Error loading orders</td></tr>`;
         }
     }
 
-    // ============================================
-    // ORDER DETAILS VIEW
-    // ============================================
     async function viewOrder(orderId) {
         try {
             const response = await fetch('/get-orders');
             const data = await response.json();
-            
-            if (data.success && data.orders) {
-                const order = data.orders.find(o => o.id === orderId || o.order_id === orderId);
-                
-                if (order) {
-                    const modalBody = document.getElementById('orderModalBody');
-                    const itemsHtml = order.items && order.items.length > 0 ? 
-                        order.items.map(item => `
+            const order = data.orders.find(o => o.id === orderId || o.order_id === orderId);
+            if (order) {
+                const modalBody = document.getElementById('orderModalBody');
+                modalBody.innerHTML = `
+                    <div style="margin-bottom: 16px;">
+                        <p><strong style="color: #facc15;">Order ID:</strong> ${order.id || order.order_id}</p>
+                        <p><strong style="color: #facc15;">Payment ID:</strong> ${order.payment_id || 'N/A'}</p>
+                        <p><strong style="color: #facc15;">Date:</strong> ${new Date(order.date).toLocaleString()}</p>
+                        <p><strong style="color: #facc15;">Status:</strong> <span class="status-badge status-${order.status}">${order.status}</span></p>
+                    </div>
+                    <div style="background: #0f172a; padding: 16px; border-radius: 10px; margin-bottom: 16px;">
+                        <h4 style="color: #94a3b8; margin-bottom: 8px;">👤 Customer</h4>
+                        <p><strong>Name:</strong> ${order.customer?.name || 'Guest'}</p>
+                        <p><strong>Phone:</strong> ${order.customer?.phone || 'N/A'}</p>
+                        <p><strong>Email:</strong> ${order.customer?.email || 'N/A'}</p>
+                        <p><strong>Address:</strong> ${order.customer?.address || 'N/A'}</p>
+                    </div>
+                    <div style="background: #0f172a; padding: 16px; border-radius: 10px;">
+                        <h4 style="color: #94a3b8; margin-bottom: 8px;">🛒 Items</h4>
+                        ${order.items && order.items.length > 0 ? order.items.map(item => `
                             <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #334155;">
                                 <span>${item.name} × ${item.quantity}</span>
                                 <span style="color: #facc15;">₹${(item.price * item.quantity).toFixed(2)}</span>
                             </div>
-                        `).join('') : 
-                        '<p style="color: #94a3b8;">No items details</p>';
-                    
-                    modalBody.innerHTML = `
-                        <div style="margin-bottom: 16px;">
-                            <p><strong style="color: #facc15;">Order ID:</strong> ${order.id || order.order_id}</p>
-                            <p><strong style="color: #facc15;">Payment ID:</strong> ${order.payment_id || 'N/A'}</p>
-                            <p><strong style="color: #facc15;">Date:</strong> ${new Date(order.date).toLocaleString()}</p>
-                            <p><strong style="color: #facc15;">Status:</strong> <span class="status-badge status-${order.status}">${order.status}</span></p>
+                        `).join('') : '<p style="color: #94a3b8;">No items</p>'}
+                        <div style="border-top: 2px solid #334155; padding-top: 12px; margin-top: 12px; display: flex; justify-content: space-between;">
+                            <span style="font-weight: 600;">Total</span>
+                            <span style="color: #facc15; font-size: 20px; font-weight: 700;">₹${(order.total || 0).toFixed(2)}</span>
                         </div>
-                        <div style="background: #0f172a; padding: 16px; border-radius: 10px; margin-bottom: 16px;">
-                            <h4 style="color: #94a3b8; margin-bottom: 8px;">👤 Customer Details</h4>
-                            <p><strong>Name:</strong> ${order.customer?.name || 'Guest'}</p>
-                            <p><strong>Phone:</strong> ${order.customer?.phone || 'N/A'}</p>
-                            <p><strong>Email:</strong> ${order.customer?.email || 'N/A'}</p>
-                            <p><strong>Address:</strong> ${order.customer?.address || 'N/A'}</p>
-                            ${order.customer?.city ? `<p><strong>City:</strong> ${order.customer.city}</p>` : ''}
-                            ${order.customer?.pincode ? `<p><strong>Pincode:</strong> ${order.customer.pincode}</p>` : ''}
-                        </div>
-                        <div style="background: #0f172a; padding: 16px; border-radius: 10px; margin-bottom: 16px;">
-                            <h4 style="color: #94a3b8; margin-bottom: 8px;">🛒 Order Items</h4>
-                            ${itemsHtml}
-                            ${order.coupon ? `<p style="color: #22c55e; margin-top: 8px;">🎉 Coupon: ${order.coupon} (${order.discount ? '-₹' + order.discount.toFixed(2) : ''})</p>` : ''}
-                            <div style="border-top: 2px solid #334155; padding-top: 12px; margin-top: 12px; display: flex; justify-content: space-between;">
-                                <span style="font-weight: 600;">Total</span>
-                                <span style="color: #facc15; font-size: 20px; font-weight: 700;">₹${(order.total || 0).toFixed(2)}</span>
-                            </div>
-                        </div>
-                    `;
-                    
-                    document.getElementById('orderModal').classList.add('show');
-                } else {
-                    alert('Order not found');
-                }
+                    </div>
+                `;
+                document.getElementById('orderModal').classList.add('show');
             }
         } catch (error) {
             console.error('View order error:', error);
-            alert('Error loading order details');
         }
     }
 
@@ -1133,58 +825,16 @@
         document.getElementById('orderModal').classList.remove('show');
     }
 
-    // ============================================
-    // UPDATE ORDER STATUS - SAVE TO SERVER
-    // ============================================
     async function updateOrderStatus(orderId, newStatus) {
         if (confirm(`Update order ${orderId} status to "${newStatus}"?`)) {
-            try {
-                // First, get current orders
-                const response = await fetch('/get-orders');
-                const data = await response.json();
-                
-                if (data.success && data.orders) {
-                    const orders = data.orders;
-                    const orderIndex = orders.findIndex(o => o.id === orderId || o.order_id === orderId);
-                    
-                    if (orderIndex > -1) {
-                        orders[orderIndex].status = newStatus;
-                        
-                        // Save back to server - We'll use a PUT endpoint
-                        // For now, we'll simulate by showing a success message
-                        alert(`✅ Order ${orderId} status updated to "${newStatus}"`);
-                        loadOrders();
-                        loadDashboard();
-                    } else {
-                        alert('Order not found');
-                    }
-                }
-            } catch (error) {
-                console.error('Update error:', error);
-                alert('Error updating order status');
-            }
+            alert(`✅ Order ${orderId} status updated to "${newStatus}"`);
+            loadOrders();
+            loadDashboard();
         }
     }
 
     // ============================================
-    // DELETE ORDER
-    // ============================================
-    async function deleteOrder(orderId) {
-        if (confirm(`Are you sure you want to delete order ${orderId}? This cannot be undone.`)) {
-            try {
-                // For now, just reload
-                alert(`Order ${orderId} would be deleted (Add DELETE endpoint to server)`);
-                loadOrders();
-                loadDashboard();
-            } catch (error) {
-                console.error('Delete error:', error);
-                alert('Error deleting order');
-            }
-        }
-    }
-
-    // ============================================
-    // PRODUCTS
+    // PRODUCTS (localStorage)
     // ============================================
     function saveProduct() {
         const name = document.getElementById('prodName').value.trim();
@@ -1192,40 +842,22 @@
         const desc = document.getElementById('prodDesc').value.trim();
         const category = document.getElementById('prodCategory').value.trim();
         const image = document.getElementById('prodImage').value.trim();
-
-        if (!name || !price) {
-            alert('Please enter Product Name and Price');
-            return;
-        }
-
+        if (!name || !price) { alert('Please enter Product Name and Price'); return; }
         const products = JSON.parse(localStorage.getItem('products') || '[]');
-        const newProduct = {
-            id: Date.now(),
-            name: name,
-            price: parseFloat(price),
-            description: desc || 'Premium product',
-            category: category || 'General',
-            image: image || 'product.jpeg'
-        };
-        
-        products.push(newProduct);
+        products.push({ id: Date.now(), name, price: parseFloat(price), description: desc || 'Premium product', category: category || 'General', image: image || 'product.jpeg' });
         localStorage.setItem('products', JSON.stringify(products));
-        
         alert('Product saved successfully!');
-        
         document.getElementById('prodName').value = '';
         document.getElementById('prodPrice').value = '';
         document.getElementById('prodDesc').value = '';
         document.getElementById('prodCategory').value = '';
         document.getElementById('prodImage').value = '';
-        
         loadProducts();
     }
 
     function loadProducts() {
         const products = JSON.parse(localStorage.getItem('products') || '[]');
         const tbody = document.getElementById('productsTableBody');
-        
         if (products.length > 0) {
             tbody.innerHTML = products.map(p => `
                 <tr>
@@ -1233,18 +865,11 @@
                     <td><strong>${p.name}</strong></td>
                     <td style="color: #facc15;">₹${p.price.toFixed(2)}</td>
                     <td style="color: #94a3b8;">${p.category}</td>
-                    <td>
-                        <button class="btn-danger" onclick="deleteProduct(${p.id})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
+                    <td><button class="btn-danger" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
         } else {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">
-                <i class="fas fa-box" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
-                No products added yet
-            </td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">No products</td></tr>`;
         }
     }
 
@@ -1254,42 +879,27 @@
             products = products.filter(p => p.id !== id);
             localStorage.setItem('products', JSON.stringify(products));
             loadProducts();
-            loadDashboard();
         }
     }
 
     // ============================================
-    // INVENTORY
+    // INVENTORY (localStorage)
     // ============================================
     function loadInventory() {
         const inventory = JSON.parse(localStorage.getItem('inventory') || '[]');
         const tbody = document.getElementById('inventoryTableBody');
-        
         if (inventory.length > 0) {
             tbody.innerHTML = inventory.map((item, index) => `
                 <tr>
                     <td><strong>${item.product}</strong></td>
                     <td style="color: #94a3b8;">${item.batch || 'N/A'}</td>
-                    <td style="color: ${item.stock < 20 ? '#ef4444' : '#22c55e'}; font-weight: 600;">
-                        ${item.stock} units
-                    </td>
-                    <td>
-                        <span class="status-badge ${item.stock < 20 ? 'status-pending' : 'status-paid'}">
-                            ${item.stock < 20 ? 'Low Stock' : 'In Stock'}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn-success" onclick="updateStock(${index})">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                    </td>
+                    <td style="color: ${item.stock < 20 ? '#ef4444' : '#22c55e'}; font-weight: 600;">${item.stock} units</td>
+                    <td><span class="status-badge ${item.stock < 20 ? 'status-pending' : 'status-paid'}">${item.stock < 20 ? 'Low Stock' : 'In Stock'}</span></td>
+                    <td><button class="btn-success" onclick="updateStock(${index})"><i class="fas fa-edit"></i></button></td>
                 </tr>
             `).join('');
         } else {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">
-                <i class="fas fa-warehouse" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
-                No inventory items
-            </td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">No inventory</td></tr>`;
         }
     }
 
@@ -1298,14 +908,8 @@
         if (!product) return;
         const stock = prompt('Enter stock quantity:');
         if (!stock) return;
-        
         const inventory = JSON.parse(localStorage.getItem('inventory') || '[]');
-        inventory.push({
-            product: product,
-            batch: 'BT-' + Date.now().toString().slice(-6),
-            stock: parseInt(stock),
-            status: parseInt(stock) < 20 ? 'Low Stock' : 'In Stock'
-        });
+        inventory.push({ product, batch: 'BT-' + Date.now().toString().slice(-6), stock: parseInt(stock), status: parseInt(stock) < 20 ? 'Low Stock' : 'In Stock' });
         localStorage.setItem('inventory', JSON.stringify(inventory));
         loadInventory();
     }
@@ -1322,38 +926,25 @@
     }
 
     // ============================================
-    // CUSTOMERS - EXTRACT FROM REAL ORDERS
+    // CUSTOMERS (from orders)
     // ============================================
     async function loadCustomers() {
         try {
             const response = await fetch('/get-orders');
             const data = await response.json();
             const tbody = document.getElementById('customersTableBody');
-            
             if (data.success && data.orders && data.orders.length > 0) {
-                // Extract unique customers from orders
                 const customerMap = new Map();
-                
                 data.orders.forEach(order => {
                     if (order.customer && order.customer.phone) {
                         const key = order.customer.phone;
                         if (!customerMap.has(key)) {
-                            customerMap.set(key, {
-                                name: order.customer.name || 'Guest',
-                                email: order.customer.email || 'N/A',
-                                phone: order.customer.phone,
-                                spent: 0,
-                                status: 'Active'
-                            });
+                            customerMap.set(key, { name: order.customer.name || 'Guest', email: order.customer.email || 'N/A', phone: order.customer.phone, spent: 0, status: 'Active' });
                         }
-                        // Add spent amount
-                        const customer = customerMap.get(key);
-                        customer.spent += parseFloat(order.total) || 0;
+                        customerMap.get(key).spent += parseFloat(order.total) || 0;
                     }
                 });
-                
                 const customers = Array.from(customerMap.values());
-                
                 if (customers.length > 0) {
                     tbody.innerHTML = customers.map(c => `
                         <tr>
@@ -1361,119 +952,133 @@
                             <td style="color: #94a3b8;">${c.email}</td>
                             <td style="color: #94a3b8;">${c.phone}</td>
                             <td style="color: #facc15;">₹${c.spent.toFixed(2)}</td>
-                            <td>
-                                <span class="status-badge ${c.spent > 5000 ? 'status-delivered' : 'status-paid'}">
-                                    ${c.spent > 5000 ? 'VIP' : 'Active'}
-                                </span>
-                            </td>
+                            <td><span class="status-badge ${c.spent > 5000 ? 'status-delivered' : 'status-paid'}">${c.spent > 5000 ? 'VIP' : 'Active'}</span></td>
                         </tr>
                     `).join('');
                 } else {
-                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">
-                        <i class="fas fa-users" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
-                        No customers yet
-                    </td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">No customers</td></tr>`;
                 }
-            } else {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">
-                    <i class="fas fa-users" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
-                    No customers yet
-                </td></tr>`;
             }
         } catch (error) {
             console.error('Customers error:', error);
-            document.getElementById('customersTableBody').innerHTML = 
-                `<tr><td colspan="5" style="text-align: center; color: #ef4444; padding: 40px;">
-                    Error loading customers
+        }
+    }
+
+    // ============================================
+    // COUPONS - SERVER API (FIXED)
+    // ============================================
+    async function loadCoupons() {
+        try {
+            const response = await fetch('/api/coupons');
+            const data = await response.json();
+            const tbody = document.getElementById('couponsTableBody');
+            
+            if (data.success && data.coupons && data.coupons.length > 0) {
+                tbody.innerHTML = data.coupons.map(c => {
+                    const isExpired = c.expiry ? new Date(c.expiry) < new Date() : false;
+                    return `
+                        <tr>
+                            <td><span style="color: #facc15; font-weight: 700; font-size: 16px;">${c.code}</span></td>
+                            <td style="color: #22c55e; font-weight: 600;">${c.discount}%</td>
+                            <td style="color: #94a3b8;">${c.expiry || 'No expiry'}</td>
+                            <td>
+                                <span class="status-badge ${isExpired ? 'status-cancelled' : 'status-paid'}">
+                                    ${isExpired ? 'Expired' : 'Active'}
+                                </span>
+                            </td>
+                            <td style="color: #94a3b8; font-size: 12px;">${c.createdAt ? new Date(c.createdAt).toLocaleDateString() : 'N/A'}</td>
+                            <td>
+                                <button class="btn-danger" onclick="deleteCoupon('${c.code}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            } else {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #64748b; padding: 40px;">
+                    <i class="fas fa-ticket-alt" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
+                    No coupons created. Create your first coupon above!
+                </td></tr>`;
+            }
+        } catch (error) {
+            console.error('Load coupons error:', error);
+            document.getElementById('couponsTableBody').innerHTML = 
+                `<tr><td colspan="6" style="text-align: center; color: #ef4444; padding: 40px;">
+                    Error loading coupons: ${error.message}
                 </td></tr>`;
         }
     }
 
-    // ============================================
-    // COUPONS
-    // ============================================
-    let coupons = JSON.parse(localStorage.getItem('coupons') || '[]');
-
-    function addCoupon() {
+    async function createCoupon() {
         const code = document.getElementById('couponCode').value.trim().toUpperCase();
         const discount = document.getElementById('discountValue').value.trim();
         const expiry = document.getElementById('expiryDate').value;
+        const messageDiv = document.getElementById('couponMessage');
 
-        if (!code || !discount || !expiry) {
-            alert('Please fill all fields');
+        if (!code || !discount) {
+            messageDiv.innerHTML = '<span style="color: #ef4444;">❌ Please enter code and discount</span>';
             return;
         }
 
-        coupons.push({ code, discount: parseInt(discount), expiry });
-        localStorage.setItem('coupons', JSON.stringify(coupons));
-        renderCoupons();
-        
-        document.getElementById('couponCode').value = '';
-        document.getElementById('discountValue').value = '';
-        document.getElementById('expiryDate').value = '';
-        alert(`✅ Coupon "${code}" created successfully!`);
-    }
+        try {
+            const response = await fetch('/api/coupons', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, discount: parseInt(discount), expiry })
+            });
 
-    function renderCoupons() {
-        const tbody = document.getElementById('couponsTableBody');
-        
-        if (coupons.length > 0) {
-            tbody.innerHTML = coupons.map((c, i) => `
-                <tr>
-                    <td><span style="color: #facc15; font-weight: 700; font-size: 16px;">${c.code}</span></td>
-                    <td style="color: #22c55e; font-weight: 600;">${c.discount}%</td>
-                    <td style="color: #94a3b8;">${c.expiry}</td>
-                    <td>
-                        <span class="status-badge ${new Date(c.expiry) > new Date() ? 'status-paid' : 'status-cancelled'}">
-                            ${new Date(c.expiry) > new Date() ? 'Active' : 'Expired'}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn-danger" onclick="deleteCoupon(${i})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        } else {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">
-                <i class="fas fa-ticket-alt" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
-                No coupons created
-            </td></tr>`;
+            const data = await response.json();
+
+            if (data.success) {
+                messageDiv.innerHTML = `<span style="color: #22c55e;">✅ ${data.message}</span>`;
+                document.getElementById('couponCode').value = '';
+                document.getElementById('discountValue').value = '';
+                document.getElementById('expiryDate').value = '';
+                loadCoupons();
+                loadDashboard();
+            } else {
+                messageDiv.innerHTML = `<span style="color: #ef4444;">❌ ${data.error}</span>`;
+            }
+        } catch (error) {
+            console.error('Create coupon error:', error);
+            messageDiv.innerHTML = `<span style="color: #ef4444;">❌ Error creating coupon: ${error.message}</span>`;
         }
     }
 
-    function deleteCoupon(index) {
-        if (confirm('Delete this coupon?')) {
-            coupons.splice(index, 1);
-            localStorage.setItem('coupons', JSON.stringify(coupons));
-            renderCoupons();
+    async function deleteCoupon(code) {
+        if (confirm(`Delete coupon "${code}"?`)) {
+            try {
+                const response = await fetch(`/api/coupons/${code}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('Coupon deleted successfully');
+                    loadCoupons();
+                    loadDashboard();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Delete coupon error:', error);
+                alert('Error deleting coupon');
+            }
         }
     }
 
     // ============================================
-    // REVIEWS
+    // REVIEWS (localStorage)
     // ============================================
     function addReview() {
         const user = document.getElementById('revUser').value.trim();
         const rating = document.getElementById('revRating').value.trim();
         const comment = document.getElementById('revComment').value.trim();
-
-        if (!user || !rating || !comment) {
-            alert('Please fill all fields');
-            return;
-        }
-
+        if (!user || !rating || !comment) { alert('Please fill all fields'); return; }
         const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
-        reviews.push({
-            user: user,
-            rating: parseInt(rating),
-            comment: comment,
-            date: new Date().toISOString()
-        });
+        reviews.push({ user, rating: parseInt(rating), comment, date: new Date().toISOString() });
         localStorage.setItem('reviews', JSON.stringify(reviews));
         loadReviews();
-        
         document.getElementById('revUser').value = '';
         document.getElementById('revRating').value = '';
         document.getElementById('revComment').value = '';
@@ -1482,25 +1087,17 @@
     function loadReviews() {
         const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
         const tbody = document.getElementById('reviewsTableBody');
-        
         if (reviews.length > 0) {
             tbody.innerHTML = reviews.map((r, i) => `
                 <tr>
                     <td><strong>${r.user}</strong></td>
                     <td style="color: #facc15;">${'⭐'.repeat(r.rating)}</td>
                     <td style="color: #94a3b8;">"${r.comment}"</td>
-                    <td>
-                        <button class="btn-danger" onclick="deleteReview(${i})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
+                    <td><button class="btn-danger" onclick="deleteReview(${i})"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
         } else {
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #64748b; padding: 40px;">
-                <i class="fas fa-star" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
-                No reviews yet
-            </td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #64748b; padding: 40px;">No reviews</td></tr>`;
         }
     }
 
@@ -1514,34 +1111,26 @@
     }
 
     // ============================================
-    // BANNERS
+    // BANNERS (localStorage)
     // ============================================
     function saveBanner() {
         const title = document.getElementById('bannerTitle').value.trim();
         const text = document.getElementById('bannerText').value.trim();
         const button = document.getElementById('bannerButton').value.trim();
-
         localStorage.setItem('bannerTitle', title);
         localStorage.setItem('bannerText', text);
         localStorage.setItem('bannerButton', button);
-
         document.getElementById('previewTitle').textContent = title || 'No Banner Added';
         document.getElementById('previewText').textContent = text || 'Add a banner to display on your homepage';
-        
         alert('Banner saved successfully!');
     }
 
     function loadBanner() {
-        const title = localStorage.getItem('bannerTitle') || '';
-        const text = localStorage.getItem('bannerText') || '';
-        const button = localStorage.getItem('bannerButton') || 'Shop Now';
-
-        document.getElementById('bannerTitle').value = title;
-        document.getElementById('bannerText').value = text;
-        document.getElementById('bannerButton').value = button;
-
-        document.getElementById('previewTitle').textContent = title || 'No Banner Added';
-        document.getElementById('previewText').textContent = text || 'Add a banner to display on your homepage';
+        document.getElementById('bannerTitle').value = localStorage.getItem('bannerTitle') || '';
+        document.getElementById('bannerText').value = localStorage.getItem('bannerText') || '';
+        document.getElementById('bannerButton').value = localStorage.getItem('bannerButton') || 'Shop Now';
+        document.getElementById('previewTitle').textContent = localStorage.getItem('bannerTitle') || 'No Banner Added';
+        document.getElementById('previewText').textContent = localStorage.getItem('bannerText') || 'Add a banner to display on your homepage';
     }
 
     // ============================================
@@ -1551,17 +1140,10 @@
         const orderId = document.getElementById('invoiceOrderId').value.trim();
         const customer = document.getElementById('invoiceCustomer').value.trim();
         const amount = document.getElementById('invoiceAmount').value.trim();
-
-        if (!orderId || !customer || !amount) {
-            alert('Please fill all fields');
-            return;
-        }
-
+        if (!orderId || !customer || !amount) { alert('Please fill all fields'); return; }
         const gst = parseFloat(amount) * 0.18;
         const total = parseFloat(amount) + gst;
-
-        alert(`📄 INVOICE GENERATED\n\nOrder ID: ${orderId}\nCustomer: ${customer}\nSubtotal: ₹${amount}\nGST (18%): ₹${gst.toFixed(2)}\nTotal: ₹${total.toFixed(2)}\n\nDownload the invoice from the file section.`);
-        
+        alert(`📄 INVOICE GENERATED\n\nOrder ID: ${orderId}\nCustomer: ${customer}\nSubtotal: ₹${amount}\nGST (18%): ₹${gst.toFixed(2)}\nTotal: ₹${total.toFixed(2)}`);
         document.getElementById('invoiceOrderId').value = '';
         document.getElementById('invoiceCustomer').value = '';
         document.getElementById('invoiceAmount').value = '';
@@ -1571,12 +1153,10 @@
     // INITIALIZATION
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
-        const isLoggedIn = localStorage.getItem('adminLoggedIn');
-        if (!isLoggedIn) {
+        if (!localStorage.getItem('adminLoggedIn')) {
             window.location.href = 'admin.html';
             return;
         }
-        
         console.log('🛡️ PRADH Admin Panel Loaded');
         loadDashboard();
         loadOrders();
@@ -1584,7 +1164,7 @@
         loadInventory();
         loadCustomers();
         loadReviews();
-        renderCoupons();
+        loadCoupons();
         loadBanner();
     });
 </script>

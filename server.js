@@ -232,3 +232,158 @@ app.post('/api/orders', (req, res) => {
         });
     }
 });
+
+// ============================================
+// COUPON MANAGEMENT ENDPOINTS
+// ============================================
+
+// Get all coupons
+app.get('/api/coupons', (req, res) => {
+    try {
+        let coupons = [];
+        if (fs.existsSync('coupons.json')) {
+            const data = fs.readFileSync('coupons.json', 'utf8');
+            coupons = JSON.parse(data);
+        }
+        res.json({ success: true, coupons });
+    } catch (error) {
+        console.error('Error fetching coupons:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Create a new coupon
+app.post('/api/coupons', (req, res) => {
+    try {
+        const { code, discount, expiry } = req.body;
+        
+        if (!code || !discount) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Code and discount are required' 
+            });
+        }
+        
+        let coupons = [];
+        if (fs.existsSync('coupons.json')) {
+            const data = fs.readFileSync('coupons.json', 'utf8');
+            coupons = JSON.parse(data);
+        }
+        
+        // Check if coupon already exists
+        const existing = coupons.find(c => c.code.toUpperCase() === code.toUpperCase());
+        if (existing) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Coupon code already exists' 
+            });
+        }
+        
+        const newCoupon = {
+            id: Date.now(),
+            code: code.toUpperCase(),
+            discount: parseInt(discount),
+            expiry: expiry || null,
+            createdAt: new Date().toISOString()
+        };
+        
+        coupons.push(newCoupon);
+        fs.writeFileSync('coupons.json', JSON.stringify(coupons, null, 2));
+        
+        res.json({ 
+            success: true, 
+            message: 'Coupon created successfully',
+            coupon: newCoupon
+        });
+    } catch (error) {
+        console.error('Error creating coupon:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Delete a coupon
+app.delete('/api/coupons/:code', (req, res) => {
+    try {
+        const { code } = req.params;
+        
+        let coupons = [];
+        if (fs.existsSync('coupons.json')) {
+            const data = fs.readFileSync('coupons.json', 'utf8');
+            coupons = JSON.parse(data);
+        }
+        
+        const filtered = coupons.filter(c => c.code.toUpperCase() !== code.toUpperCase());
+        
+        if (filtered.length === coupons.length) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Coupon not found' 
+            });
+        }
+        
+        fs.writeFileSync('coupons.json', JSON.stringify(filtered, null, 2));
+        
+        res.json({ 
+            success: true, 
+            message: 'Coupon deleted successfully' 
+        });
+    } catch (error) {
+        console.error('Error deleting coupon:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Validate a coupon
+app.post('/api/coupons/validate', (req, res) => {
+    try {
+        const { code, amount } = req.body;
+        
+        if (!code) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Coupon code is required' 
+            });
+        }
+        
+        let coupons = [];
+        if (fs.existsSync('coupons.json')) {
+            const data = fs.readFileSync('coupons.json', 'utf8');
+            coupons = JSON.parse(data);
+        }
+        
+        const coupon = coupons.find(c => c.code.toUpperCase() === code.toUpperCase());
+        
+        if (!coupon) {
+            return res.json({ 
+                valid: false, 
+                message: 'Invalid coupon code' 
+            });
+        }
+        
+        // Check expiry
+        if (coupon.expiry) {
+            const expiryDate = new Date(coupon.expiry);
+            const today = new Date();
+            if (expiryDate < today) {
+                return res.json({ 
+                    valid: false, 
+                    message: 'Coupon has expired' 
+                });
+            }
+        }
+        
+        // Calculate discount
+        const discountAmount = amount ? (amount * (coupon.discount / 100)) : 0;
+        
+        res.json({
+            valid: true,
+            coupon: coupon,
+            discount: coupon.discount,
+            discountAmount: discountAmount,
+            message: `Coupon applied! ${coupon.discount}% off`
+        });
+    } catch (error) {
+        console.error('Error validating coupon:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
