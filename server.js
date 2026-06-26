@@ -1,10 +1,9 @@
 require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
-const fs = require('fs');
 const path = require('path');
-const PDFDocument = require('pdfkit');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,36 +15,97 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('.'));
 
-app.use((req, res, next) => {
-    console.log(`📡 ${req.method} ${req.url}`);
-    next();
+// ============================================
+// MONGODB CONNECTION
+// ============================================
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/pradh_db';
+
+mongoose.connect(MONGODB_URI)
+.then(() => {
+    console.log('✅ MongoDB Atlas Connected Successfully!');
+    console.log(`📦 Database: ${mongoose.connection.db.databaseName}`);
+})
+.catch(err => {
+    console.error('❌ MongoDB Connection Error:', err);
+    process.exit(1);
 });
 
 // ============================================
-// DATABASE HELPERS
+// SCHEMAS
 // ============================================
-function readDB(filename) {
-    try {
-        if (fs.existsSync(filename)) {
-            const data = fs.readFileSync(filename, 'utf8');
-            return JSON.parse(data);
-        }
-        return [];
-    } catch (e) {
-        console.error(`Error reading ${filename}:`, e);
-        return [];
-    }
-}
+const userSchema = new mongoose.Schema({
+    username: { type: String, unique: true, required: true },
+    email: { type: String, unique: true, required: true },
+    password: { type: String, required: true },
+    phone: { type: String, default: '' },
+    createdAt: { type: Date, default: Date.now },
+    rewards: { type: Number, default: 0 },
+    level: { type: String, default: 'Bronze' }
+});
 
-function writeDB(filename, data) {
-    try {
-        fs.writeFileSync(filename, JSON.stringify(data, null, 2));
-        return true;
-    } catch (e) {
-        console.error(`Error writing ${filename}:`, e);
-        return false;
-    }
-}
+const productSchema = new mongoose.Schema({
+    id: { type: String, unique: true },
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    description: String,
+    category: String,
+    image: String,
+    stock: { type: Number, default: 0 },
+    status: { type: String, default: 'active' },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
+});
+
+const orderSchema = new mongoose.Schema({
+    id: { type: String, unique: true },
+    order_id: String,
+    payment_id: String,
+    status: { type: String, default: 'pending' },
+    date: { type: Date, default: Date.now },
+    items: [{ id: String, name: String, price: Number, quantity: Number }],
+    total: Number,
+    deliveryCharge: Number,
+    coupon: String,
+    discount: Number,
+    customer: {
+        name: String,
+        phone: String,
+        email: String,
+        address: String,
+        city: String,
+        pincode: String,
+        paymentMethod: String
+    },
+    cancellation_reason: String,
+    cancelled_at: Date,
+    createdAt: { type: Date, default: Date.now }
+});
+
+const couponSchema = new mongoose.Schema({
+    code: { type: String, unique: true, required: true },
+    discount: { type: Number, required: true },
+    expiry: Date,
+    createdAt: { type: Date, default: Date.now }
+});
+
+const reviewSchema = new mongoose.Schema({
+    id: { type: String, unique: true },
+    productId: { type: String, required: true },
+    productName: String,
+    rating: { type: Number, min: 1, max: 5, required: true },
+    comment: { type: String, required: true },
+    userName: String,
+    userEmail: String,
+    status: { type: String, default: 'pending' },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
+});
+
+const User = mongoose.model('User', userSchema);
+const Product = mongoose.model('Product', productSchema);
+const Order = mongoose.model('Order', orderSchema);
+const Coupon = mongoose.model('Coupon', couponSchema);
+const Review = mongoose.model('Review', reviewSchema);
 
 // ============================================
 // RAZORPAY SETUP
@@ -63,26 +123,94 @@ const razorpay = new Razorpay({
 console.log('✅ Razorpay initialized');
 
 // ============================================
-// PRODUCT ROUTES
+// USER ROUTES
 // ============================================
-app.get('/api/products', (req, res) => {
-    const products = readDB('products.json');
-    res.json(products);
+app.post('/api/signup', async (req, res) => {
+    try {
+        const { username, email, password } = req.body;
+        if (!username || !email || !password) {
+            return res.status(400).send('All fields required');
+        }
+        const existing = await User.findOne({ $or: [{ username }, { email }] });
+        if (existing) {
+            return res.status(400).send('Username or email already exists');
+        }
+        const user = new User({ username, email, password });
+        await user.save();
+        console.log('✅ User created:', username);
+        res.status(201).send('Signup successful! Please login.');
+    } catch (error) {
+        console.error('Signup error:', error);
+        res.status(500).send('Server error');
+    }
 });
 
-app.get('/api/admin/products', (req, res) => {
-    const products = readDB('products.json');
-    res.json({ success: true, products });
+app.post('/api/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        if (!username || !password) {
+            return res.status(400).send('Username and password required');
+        }
+        const user = await User.findOne({ username, password });
+        if (!user) {
+            return res.status(401).send('Invalid username or password');
+        }
+        console.log('✅ User logged in:', username);
+        res.status(200).send('Login successful');
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).send('Server error');
+    }
 });
 
-app.post('/api/admin/products', (req, res) => {
+app.get('/api/users', async (req, res) => {
+    try {
+        const users = await User.find().select('-password');
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/user/:username', async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username }).select('-password');
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ============================================
+// PRODUCT ROUTES - FULL CRUD
+// ============================================
+app.get('/api/admin/products', async (req, res) => {
+    try {
+        const products = await Product.find();
+        res.json({ success: true, products });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/products/:id', async (req, res) => {
+    try {
+        const product = await Product.findOne({ id: req.params.id });
+        if (!product) return res.status(404).json({ success: false, error: 'Product not found' });
+        res.json({ success: true, product });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/admin/products', async (req, res) => {
     try {
         const { name, price, description, category, image, stock } = req.body;
         if (!name || !price) {
             return res.status(400).json({ success: false, error: 'Name and price are required' });
         }
-        const products = readDB('products.json');
-        const newProduct = {
+        const product = new Product({
             id: 'PROD' + Date.now().toString().slice(-6),
             name,
             price: parseFloat(price),
@@ -90,27 +218,45 @@ app.post('/api/admin/products', (req, res) => {
             category: category || 'General',
             image: image || 'product.jpeg',
             stock: parseInt(stock) || 0,
-            status: 'active',
-            createdAt: new Date().toISOString()
-        };
-        products.push(newProduct);
-        writeDB('products.json', products);
-        console.log('✅ Product added:', newProduct.name);
-        res.json({ success: true, message: 'Product added successfully!', product: newProduct });
+            status: 'active'
+        });
+        await product.save();
+        console.log('✅ Product added:', product.name);
+        res.json({ success: true, message: 'Product added successfully!', product });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-app.delete('/api/admin/products/:id', (req, res) => {
+app.put('/api/admin/products/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        let products = readDB('products.json');
-        const filtered = products.filter(p => p.id !== id);
-        if (filtered.length === products.length) {
+        const { name, price, description, category, image, stock, status } = req.body;
+        const product = await Product.findOne({ id: id });
+        if (!product) {
             return res.status(404).json({ success: false, error: 'Product not found' });
         }
-        writeDB('products.json', filtered);
+        if (name) product.name = name;
+        if (price) product.price = parseFloat(price);
+        if (description) product.description = description;
+        if (category) product.category = category;
+        if (image) product.image = image;
+        if (stock !== undefined) product.stock = parseInt(stock);
+        if (status) product.status = status;
+        product.updatedAt = new Date();
+        await product.save();
+        console.log('✅ Product updated:', product.name);
+        res.json({ success: true, message: 'Product updated successfully!', product });
+    } catch (error) {
+        console.error('Error updating product:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.delete('/api/admin/products/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Product.deleteOne({ id });
         console.log('✅ Product deleted:', id);
         res.json({ success: true, message: 'Product deleted!' });
     } catch (error) {
@@ -121,162 +267,75 @@ app.delete('/api/admin/products/:id', (req, res) => {
 // ============================================
 // ORDER ROUTES
 // ============================================
-app.get('/get-orders', (req, res) => {
-    const orders = readDB('orders.json');
-    res.json({ success: true, orders });
-});
-
-app.put('/api/orders/:id', (req, res) => {
+app.get('/get-orders', async (req, res) => {
     try {
-        const { id } = req.params;
-        const { status, cancellation_reason, cancelled_at } = req.body;
-        let orders = readDB('orders.json');
-        const index = orders.findIndex(o => o.id === id || o.order_id === id);
-        if (index === -1) {
-            return res.status(404).json({ success: false, error: 'Order not found' });
-        }
-        if (status) orders[index].status = status;
-        if (cancellation_reason) orders[index].cancellation_reason = cancellation_reason;
-        if (cancelled_at) orders[index].cancelled_at = cancelled_at;
-        writeDB('orders.json', orders);
-        console.log(`✅ Order ${id} status updated to: ${status}`);
-        res.json({ success: true, message: 'Order updated!', order: orders[index] });
+        const orders = await Order.find().sort({ createdAt: -1 });
+        res.json({ success: true, orders });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-// ============================================
-// USER ROUTES
-// ============================================
-app.get('/api/users', (req, res) => {
-    const users = readDB('users.json');
-    const safeUsers = users.map(({ password, ...user }) => user);
-    res.json(safeUsers);
-});
-
-app.get('/api/user/:username', (req, res) => {
-    const users = readDB('users.json');
-    const user = users.find(u => u.username === req.params.username);
-    if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-    }
-    const { password, ...safeUser } = user;
-    res.json(safeUser);
-});
-
-app.post('/api/signup', (req, res) => {
+app.put('/api/orders/:id', async (req, res) => {
     try {
-        const { username, email, password } = req.body;
-        if (!username || !email || !password) {
-            return res.status(400).send('All fields required');
-        }
-        let users = readDB('users.json');
-        if (users.find(u => u.username === username || u.email === email)) {
-            return res.status(400).send('Username or email already exists');
-        }
-        const newUser = {
-            id: Date.now(),
-            username,
-            email,
-            password,
-            phone: '',
-            createdAt: new Date().toISOString(),
-            rewards: 0,
-            level: 'Bronze'
-        };
-        users.push(newUser);
-        writeDB('users.json', users);
-        console.log(`✅ New user signed up: ${username}`);
-        res.status(201).send('Signup successful! Please login.');
+        const { id } = req.params;
+        const { status, cancellation_reason } = req.body;
+        const order = await Order.findOne({ id });
+        if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
+        if (status) order.status = status;
+        if (cancellation_reason) order.cancellation_reason = cancellation_reason;
+        await order.save();
+        res.json({ success: true, message: 'Order updated!', order });
     } catch (error) {
-        res.status(500).send('Server error');
-    }
-});
-
-app.post('/api/login', (req, res) => {
-    try {
-        const { username, password } = req.body;
-        const users = readDB('users.json');
-        const user = users.find(u => u.username === username && u.password === password);
-        if (!user) {
-            return res.status(401).send('Invalid username or password');
-        }
-        console.log(`✅ User logged in: ${username}`);
-        res.status(200).send('Login successful');
-    } catch (error) {
-        res.status(500).send('Server error');
+        res.status(500).json({ success: false, error: error.message });
     }
 });
 
 // ============================================
 // COUPON ROUTES
 // ============================================
-app.get('/api/coupons', (req, res) => {
-    const coupons = readDB('coupons.json');
-    res.json({ success: true, coupons });
-});
-
-app.post('/api/coupons', (req, res) => {
+app.get('/api/coupons', async (req, res) => {
     try {
-        const { code, discount, expiry } = req.body;
-        if (!code || !discount) {
-            return res.status(400).json({ success: false, error: 'Code and discount required' });
-        }
-        let coupons = readDB('coupons.json');
-        if (coupons.find(c => c.code === code.toUpperCase())) {
-            return res.status(400).json({ success: false, error: 'Coupon already exists' });
-        }
-        const newCoupon = {
-            id: Date.now(),
-            code: code.toUpperCase(),
-            discount: parseInt(discount),
-            expiry: expiry || null,
-            createdAt: new Date().toISOString()
-        };
-        coupons.push(newCoupon);
-        writeDB('coupons.json', coupons);
-        console.log('✅ Coupon created:', newCoupon.code);
-        res.json({ success: true, message: 'Coupon created!', coupon: newCoupon });
+        const coupons = await Coupon.find();
+        res.json({ success: true, coupons });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-app.post('/api/coupons/validate', (req, res) => {
+app.post('/api/coupons', async (req, res) => {
+    try {
+        const { code, discount, expiry } = req.body;
+        if (!code || !discount) return res.status(400).json({ success: false, error: 'Code and discount required' });
+        const existing = await Coupon.findOne({ code: code.toUpperCase() });
+        if (existing) return res.status(400).json({ success: false, error: 'Coupon already exists' });
+        const coupon = new Coupon({ code: code.toUpperCase(), discount: parseInt(discount), expiry: expiry || null });
+        await coupon.save();
+        res.json({ success: true, message: 'Coupon created!', coupon });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/coupons/validate', async (req, res) => {
     try {
         const { code, amount } = req.body;
-        const coupons = readDB('coupons.json');
-        const coupon = coupons.find(c => c.code === code.toUpperCase());
-        if (!coupon) {
-            return res.json({ valid: false, message: 'Invalid coupon' });
-        }
+        const coupon = await Coupon.findOne({ code: code.toUpperCase() });
+        if (!coupon) return res.json({ valid: false, message: 'Invalid coupon' });
         if (coupon.expiry && new Date(coupon.expiry) < new Date()) {
             return res.json({ valid: false, message: 'Coupon expired' });
         }
         const discountAmount = amount ? (amount * (coupon.discount / 100)) : 0;
-        res.json({
-            valid: true,
-            coupon,
-            discount: coupon.discount,
-            discountAmount,
-            message: `${coupon.discount}% off applied!`
-        });
+        res.json({ valid: true, coupon, discount: coupon.discount, discountAmount, message: `${coupon.discount}% off applied!` });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-app.delete('/api/coupons/:code', (req, res) => {
+app.delete('/api/coupons/:code', async (req, res) => {
     try {
         const { code } = req.params;
-        let coupons = readDB('coupons.json');
-        const filtered = coupons.filter(c => c.code !== code.toUpperCase());
-        if (filtered.length === coupons.length) {
-            return res.status(404).json({ success: false, error: 'Coupon not found' });
-        }
-        writeDB('coupons.json', filtered);
-        console.log('✅ Coupon deleted:', code);
+        await Coupon.deleteOne({ code: code.toUpperCase() });
         res.json({ success: true, message: 'Coupon deleted!' });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
@@ -284,68 +343,105 @@ app.delete('/api/coupons/:code', (req, res) => {
 });
 
 // ============================================
-// REVIEW ROUTES
+// REVIEW ROUTES - FULL CRUD WITH EDIT
 // ============================================
-app.get('/api/reviews', (req, res) => {
-    const reviews = readDB('reviews.json');
-    res.json({ success: true, reviews });
+
+// GET all reviews
+app.get('/api/reviews', async (req, res) => {
+    try {
+        const reviews = await Review.find();
+        res.json({ success: true, reviews });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
 
-app.post('/api/reviews', (req, res) => {
+// GET review by ID
+app.get('/api/reviews/:id', async (req, res) => {
+    try {
+        const review = await Review.findOne({ id: req.params.id });
+        if (!review) {
+            return res.status(404).json({ success: false, error: 'Review not found' });
+        }
+        res.json({ success: true, review });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// GET reviews by product
+app.get('/api/reviews/product/:productId', async (req, res) => {
+    try {
+        const reviews = await Review.find({ productId: req.params.productId, status: 'approved' });
+        res.json({ success: true, reviews });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// CREATE review (User)
+app.post('/api/reviews', async (req, res) => {
     try {
         const { productId, productName, rating, comment, userName } = req.body;
         if (!productId || !rating || !comment) {
             return res.status(400).json({ success: false, error: 'Product ID, rating and comment required' });
         }
-        let reviews = readDB('reviews.json');
-        const newReview = {
+        const review = new Review({
             id: 'REV' + Date.now().toString().slice(-8),
             productId,
             productName: productName || 'Product',
             rating: parseInt(rating),
             comment,
             userName: userName || 'Anonymous',
-            status: 'pending',
-            createdAt: new Date().toISOString()
-        };
-        reviews.push(newReview);
-        writeDB('reviews.json', reviews);
+            status: 'pending'
+        });
+        await review.save();
         console.log('✅ New review submitted');
-        res.json({ success: true, message: 'Review submitted! Waiting for approval.', review: newReview });
+        res.json({ success: true, message: 'Review submitted successfully! Waiting for admin approval.', review });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-app.put('/api/reviews/:id', (req, res) => {
+// UPDATE review - Admin can EDIT (FIXED)
+app.put('/api/reviews/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { status, comment, rating } = req.body;
-        let reviews = readDB('reviews.json');
-        const index = reviews.findIndex(r => r.id === id);
-        if (index === -1) {
+        
+        console.log('✏️ Admin editing review:', id);
+        console.log('📝 New data:', { status, comment, rating });
+        
+        const review = await Review.findOne({ id: id });
+        if (!review) {
             return res.status(404).json({ success: false, error: 'Review not found' });
         }
-        if (status) reviews[index].status = status;
-        if (comment) reviews[index].comment = comment;
-        if (rating) reviews[index].rating = parseInt(rating);
-        reviews[index].updatedAt = new Date().toISOString();
-        writeDB('reviews.json', reviews);
-        res.json({ success: true, message: 'Review updated!', review: reviews[index] });
+        
+        // Update fields
+        if (status !== undefined) review.status = status;
+        if (comment !== undefined) review.comment = comment;
+        if (rating !== undefined) review.rating = parseInt(rating);
+        review.updatedAt = new Date();
+        
+        await review.save();
+        
+        console.log('✅ Review updated:', review.id);
+        res.json({ 
+            success: true, 
+            message: 'Review updated successfully!', 
+            review: review 
+        });
     } catch (error) {
+        console.error('Error updating review:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-app.delete('/api/reviews/:id', (req, res) => {
+// DELETE review
+app.delete('/api/reviews/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        let reviews = readDB('reviews.json');
-        const filtered = reviews.filter(r => r.id !== id);
-        if (filtered.length === reviews.length) {
-            return res.status(404).json({ success: false, error: 'Review not found' });
-        }
-        writeDB('reviews.json', filtered);
+        await Review.deleteOne({ id });
         console.log('✅ Review deleted:', id);
         res.json({ success: true, message: 'Review deleted!' });
     } catch (error) {
@@ -353,20 +449,19 @@ app.delete('/api/reviews/:id', (req, res) => {
     }
 });
 
-app.get('/api/reviews/stats/:productId', (req, res) => {
+// GET review stats
+app.get('/api/reviews/stats/:productId', async (req, res) => {
     try {
-        const { productId } = req.params;
-        const reviews = readDB('reviews.json');
-        const productReviews = reviews.filter(r => r.productId === productId && r.status === 'approved');
+        const reviews = await Review.find({ productId: req.params.productId, status: 'approved' });
         const stats = {
-            total: productReviews.length,
+            total: reviews.length,
             averageRating: 0,
             ratingDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
         };
-        if (productReviews.length > 0) {
-            const totalRating = productReviews.reduce((sum, r) => sum + r.rating, 0);
-            stats.averageRating = (totalRating / productReviews.length).toFixed(1);
-            productReviews.forEach(r => {
+        if (reviews.length > 0) {
+            const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
+            stats.averageRating = (totalRating / reviews.length).toFixed(1);
+            reviews.forEach(r => {
                 if (stats.ratingDistribution[r.rating]) {
                     stats.ratingDistribution[r.rating]++;
                 }
@@ -375,339 +470,6 @@ app.get('/api/reviews/stats/:productId', (req, res) => {
         res.json({ success: true, stats });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// ============================================
-// ORDER TRACKING API
-// ============================================
-
-// Get tracking status for an order
-app.get('/api/track/:orderId', (req, res) => {
-    try {
-        const { orderId } = req.params;
-        const orders = readDB('orders.json');
-        const order = orders.find(o => o.id === orderId || o.order_id === orderId);
-        
-        if (!order) {
-            return res.status(404).json({
-                success: false,
-                error: 'Order not found'
-            });
-        }
-        
-        // Generate tracking timeline based on order status
-        const trackingSteps = [
-            {
-                status: 'Order Placed',
-                icon: '📦',
-                completed: true,
-                date: order.date || new Date().toISOString(),
-                description: 'Your order has been placed successfully'
-            },
-            {
-                status: 'Payment Confirmed',
-                icon: '✅',
-                completed: order.status !== 'pending',
-                date: order.status !== 'pending' ? order.date : null,
-                description: 'Payment has been confirmed'
-            },
-            {
-                status: 'Processing',
-                icon: '⚙️',
-                completed: order.status === 'shipped' || order.status === 'delivered',
-                date: order.status === 'shipped' || order.status === 'delivered' ? order.date : null,
-                description: 'Your order is being processed'
-            },
-            {
-                status: 'Shipped',
-                icon: '🚚',
-                completed: order.status === 'shipped' || order.status === 'delivered',
-                date: order.status === 'shipped' || order.status === 'delivered' ? order.date : null,
-                description: 'Your order has been shipped'
-            },
-            {
-                status: 'Delivered',
-                icon: '🏠',
-                completed: order.status === 'delivered',
-                date: order.status === 'delivered' ? order.date : null,
-                description: 'Your order has been delivered successfully'
-            }
-        ];
-        
-        // For cancelled orders
-        if (order.status === 'cancelled') {
-            trackingSteps.push({
-                status: 'Cancelled',
-                icon: '❌',
-                completed: true,
-                date: order.cancelled_at || new Date().toISOString(),
-                description: order.cancellation_reason || 'Order was cancelled'
-            });
-        }
-        
-        res.json({
-            success: true,
-            order: order,
-            tracking: trackingSteps,
-            currentStatus: order.status
-        });
-        
-    } catch (error) {
-        console.error('Error tracking order:', error);
-        res.status(500).json({
-            success: false,
-            error: error.message
-        });
-    }
-});
-
-// ============================================
-// INVOICE PDF GENERATION
-// ============================================
-app.get('/api/invoice/:orderId', async (req, res) => {
-    try {
-        const { orderId } = req.params;
-        const orders = readDB('orders.json');
-        const order = orders.find(o => o.id === orderId || o.order_id === orderId);
-        
-        if (!order) {
-            return res.status(404).json({ success: false, error: 'Order not found' });
-        }
-
-        const doc = new PDFDocument({ size: 'A4', margin: 50 });
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename=invoice-${order.id}.pdf`);
-        doc.pipe(res);
-
-        // Colors
-        const gold = '#facc15';
-        const dark = '#0f172a';
-        const gray = '#64748b';
-        const lightGray = '#f8fafc';
-        const border = '#e2e8f0';
-        const success = '#22c55e';
-        const danger = '#ef4444';
-
-        let y = 40;
-
-        // HEADER
-        doc.fontSize(26)
-           .font('Helvetica-Bold')
-           .fillColor(gold)
-           .text('PRADH DESI FUEL', 50, y, { align: 'center' });
-        y += 30;
-
-        doc.fontSize(12)
-           .font('Helvetica')
-           .fillColor(gray)
-           .text('Pure Desi Protein Fuel', 50, y, { align: 'center' });
-        y += 25;
-
-        doc.fontSize(22)
-           .font('Helvetica-Bold')
-           .fillColor(dark)
-           .text('INVOICE', 50, y, { align: 'center' });
-        y += 15;
-
-        doc.fontSize(10)
-           .font('Helvetica')
-           .fillColor(gray)
-           .text(`Invoice #: ${order.id}`, 50, y, { align: 'center' });
-        y += 25;
-
-        // DIVIDER
-        doc.moveTo(50, y).lineTo(550, y).strokeColor(gold).lineWidth(2).stroke();
-        y += 20;
-
-        // ORDER INFO
-        doc.fontSize(11)
-           .font('Helvetica-Bold')
-           .fillColor(dark)
-           .text('ORDER DETAILS', 50, y);
-        y += 15;
-
-        doc.font('Helvetica')
-           .fontSize(9)
-           .fillColor(gray);
-        const infoLines = [
-            `Order Date: ${new Date(order.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`,
-            `Payment ID: ${order.payment_id || 'N/A'}`,
-            `Payment Method: ${order.customer?.paymentMethod || 'N/A'}`,
-            `Status: ${(order.status || 'Pending').toUpperCase()}`
-        ];
-        infoLines.forEach(line => {
-            doc.text(line, 50, y);
-            y += 16;
-        });
-
-        // CUSTOMER INFO
-        y += 5;
-        doc.font('Helvetica-Bold')
-           .fontSize(11)
-           .fillColor(dark)
-           .text('BILL TO', 350, y - 25);
-        y -= 10;
-
-        doc.font('Helvetica')
-           .fontSize(9)
-           .fillColor(gray);
-        const cust = order.customer || {};
-        const custLines = [
-            cust.name || 'Guest',
-            cust.address || 'N/A',
-            `${cust.city || ''} ${cust.pincode || ''}`,
-            `Phone: ${cust.phone || 'N/A'}`,
-            `Email: ${cust.email || 'N/A'}`
-        ];
-        custLines.forEach(line => {
-            if (line.trim()) {
-                doc.text(line, 350, y);
-                y += 16;
-            }
-        });
-
-        y += 10;
-
-        // DIVIDER
-        doc.moveTo(50, y).lineTo(550, y).strokeColor(border).lineWidth(1).stroke();
-        y += 15;
-
-        // ITEMS TABLE
-        const tableX = 50;
-        const col1 = 60;
-        const col2 = 280;
-        const col3 = 380;
-        const col4 = 460;
-
-        // Table Header
-        doc.fillColor(lightGray)
-           .rect(tableX, y, 500, 20)
-           .fill();
-        doc.fillColor(dark)
-           .font('Helvetica-Bold')
-           .fontSize(9);
-        doc.text('Product', col1, y + 5);
-        doc.text('Qty', col2, y + 5);
-        doc.text('Price', col3, y + 5);
-        doc.text('Total', col4, y + 5);
-        y += 20;
-
-        // Table Rows
-        let subtotal = 0;
-        order.items?.forEach((item, idx) => {
-            const total = item.price * item.quantity;
-            subtotal += total;
-
-            if (idx % 2 === 0) {
-                doc.fillColor('#fafafa').rect(tableX, y, 500, 18).fill();
-            }
-            doc.fillColor(dark)
-               .font('Helvetica')
-               .fontSize(9);
-            const name = item.name.length > 25 ? item.name.substring(0, 23) + '...' : item.name;
-            doc.text(name || 'Product', col1, y + 3);
-            doc.text(item.quantity || 1, col2, y + 3);
-            doc.text(`₹${item.price.toFixed(0)}`, col3, y + 3);
-            doc.text(`₹${total.toFixed(0)}`, col4, y + 3);
-            y += 18;
-        });
-
-        // Table Bottom Line
-        doc.moveTo(50, y).lineTo(550, y).strokeColor(border).lineWidth(1).stroke();
-        y += 20;
-
-        // TOTALS
-        const deliveryCharge = order.deliveryCharge || 0;
-        const discount = order.discount || 0;
-        const grandTotal = subtotal + deliveryCharge - discount;
-
-        const totalX = 450;
-        const labelX = 350;
-
-        doc.font('Helvetica')
-           .fontSize(10);
-        
-        // Subtotal
-        doc.fillColor(gray).text('Subtotal:', labelX, y, { align: 'right' });
-        doc.fillColor(dark).text(`₹${subtotal.toFixed(0)}`, totalX, y, { align: 'right' });
-        y += 20;
-
-        // Delivery
-        doc.fillColor(gray).text('Delivery:', labelX, y, { align: 'right' });
-        doc.fillColor(deliveryCharge === 0 ? success : dark)
-           .text(deliveryCharge === 0 ? 'FREE' : `₹${deliveryCharge.toFixed(0)}`, totalX, y, { align: 'right' });
-        y += 20;
-
-        // Discount
-        if (order.coupon) {
-            doc.fillColor(gray).text(`Discount (${order.coupon}):`, labelX, y, { align: 'right' });
-            doc.fillColor(success).text(`-₹${discount.toFixed(0)}`, totalX, y, { align: 'right' });
-            y += 20;
-        }
-
-        // Grand Total
-        doc.moveTo(300, y).lineTo(550, y).strokeColor(gold).lineWidth(1.5).stroke();
-        y += 15;
-
-        doc.font('Helvetica-Bold')
-           .fontSize(16)
-           .fillColor(gold)
-           .text('Grand Total:', labelX - 20, y, { align: 'right' })
-           .text(`₹${grandTotal.toFixed(0)}`, totalX - 10, y, { align: 'right' });
-        y += 40;
-
-        // COUPON BADGE
-        if (order.coupon) {
-            doc.fillColor(success)
-               .font('Helvetica')
-               .fontSize(9)
-               .text(`🎉 Coupon Applied: ${order.coupon} (${order.discount || 0}% off)`, 50, y);
-            y += 20;
-        }
-
-        // CANCELLATION REASON
-        if (order.cancellation_reason) {
-            doc.fillColor(danger)
-               .font('Helvetica-Bold')
-               .fontSize(9)
-               .text('⚠️ Cancellation Reason:', 50, y);
-            doc.fillColor(gray)
-               .font('Helvetica')
-               .fontSize(9)
-               .text(order.cancellation_reason, 50, y + 14);
-            y += 35;
-        }
-
-        // STATUS BADGE
-        const statusColors = { pending: '#facc15', paid: '#22c55e', shipped: '#3b82f6', delivered: '#8b5cf6', cancelled: '#ef4444' };
-        const statusColor = statusColors[order.status] || gray;
-        doc.fillColor(statusColor)
-           .roundedRect(50, y, 130, 22, 4)
-           .fill();
-        doc.fillColor('#ffffff')
-           .font('Helvetica-Bold')
-           .fontSize(9)
-           .text(`STATUS: ${(order.status || 'Pending').toUpperCase()}`, 58, y + 5);
-        y += 35;
-
-        // FOOTER
-        const footerY = 760;
-        doc.moveTo(50, footerY).lineTo(550, footerY).strokeColor(gold).lineWidth(1).stroke();
-
-        doc.fontSize(8)
-           .font('Helvetica')
-           .fillColor(gray)
-           .text('💪 Thank you for choosing PRADH Desi Fuel!', 50, footerY + 12, { align: 'center' })
-           .text('📞 +91 8979993655  |  📧 support@pradh.com', 50, footerY + 26, { align: 'center' })
-           .text(`Generated: ${new Date().toLocaleString()}`, 50, footerY + 40, { align: 'center' });
-
-        doc.end();
-        console.log(`✅ Invoice generated: ${orderId}`);
-
-    } catch (error) {
-        console.error('Error generating invoice:', error);
-        res.status(500).json({ success: false, error: 'Failed to generate invoice' });
     }
 });
 
@@ -734,7 +496,7 @@ app.post('/create-order', async (req, res) => {
     }
 });
 
-app.post('/verify-payment', (req, res) => {
+app.post('/verify-payment', async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderDetails } = req.body;
         const body = razorpay_order_id + '|' + razorpay_payment_id;
@@ -747,24 +509,21 @@ app.post('/verify-payment', (req, res) => {
             return res.status(400).json({ success: false, message: 'Invalid payment signature' });
         }
 
-        let orders = readDB('orders.json');
         const orderId = 'ORD' + Date.now().toString().slice(-8);
-        const newOrder = {
+        const newOrder = new Order({
             id: orderId,
             order_id: razorpay_order_id,
             payment_id: razorpay_payment_id,
             status: 'paid',
-            date: new Date().toISOString(),
+            date: new Date(),
             items: orderDetails?.items || [],
             total: orderDetails?.total || 0,
             deliveryCharge: orderDetails?.deliveryCharge || 0,
             coupon: orderDetails?.coupon || null,
             discount: orderDetails?.discount || 0,
             customer: orderDetails?.customer || {}
-        };
-
-        orders.push(newOrder);
-        writeDB('orders.json', orders);
+        });
+        await newOrder.save();
         console.log('✅ Order saved:', orderId);
         res.json({ success: true, message: 'Payment verified!', order: newOrder });
     } catch (error) {
@@ -774,7 +533,7 @@ app.post('/verify-payment', (req, res) => {
 });
 
 // ============================================
-// SERVE HTML FILES
+// SERVE HTML
 // ============================================
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -785,10 +544,6 @@ app.get('/', (req, res) => {
 // ============================================
 app.listen(PORT, () => {
     console.log(`\n🚀 Server running on http://localhost:${PORT}`);
-    console.log(`📦 Products: ${readDB('products.json').length}`);
-    console.log(`📋 Orders: ${readDB('orders.json').length}`);
-    console.log(`👤 Users: ${readDB('users.json').length}`);
-    console.log(`🎟️ Coupons: ${readDB('coupons.json').length}`);
-    console.log(`⭐ Reviews: ${readDB('reviews.json').length}`);
-    console.log(`\n✅ Server is ready!\n`);
+    console.log(`📦 Database: MongoDB Atlas`);
+    console.log(`✅ Server is ready!\n`);
 });
