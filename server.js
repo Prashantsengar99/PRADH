@@ -803,7 +803,6 @@ app.get('/api/track/:orderId', (req, res) => {
 // ============================================
 // INVOICE PDF GENERATION
 // ============================================
-const PDFDocument = require('pdfkit');
 const path = require('path');
 
 // Generate Invoice PDF
