@@ -162,29 +162,6 @@
         }
         .btn-info:hover { background: #2563eb; }
         
-        .form-input {
-            width: 100%;
-            padding: 12px 16px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            color: #ffffff;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: #facc15;
-            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.1);
-        }
-        .form-label {
-            display: block;
-            color: #94a3b8;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-        
         .status-badge {
             padding: 4px 14px;
             border-radius: 20px;
@@ -201,77 +178,6 @@
         .status-shipped { background: #3b82f6; color: white; }
         .status-delivered { background: #8b5cf6; color: white; }
         .status-cancelled { background: #ef4444; color: white; }
-        
-        .review-card {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            transition: all 0.3s;
-        }
-        .review-card:hover { border-color: #facc15; }
-        .review-card.pending { border-left: 4px solid #facc15; }
-        .review-card.approved { border-left: 4px solid #22c55e; }
-        .review-card.rejected { border-left: 4px solid #ef4444; opacity: 0.7; }
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-        .review-product { color: #facc15; font-weight: 600; }
-        .review-rating { color: #facc15; font-size: 1.1rem; }
-        .review-user { color: #ffffff; font-weight: 500; font-size: 14px; }
-        .review-date { color: #94a3b8; font-size: 0.75rem; }
-        .review-comment { color: #e2e8f0; margin: 8px 0; line-height: 1.5; font-size: 14px; }
-        .review-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-        .btn-sm {
-            padding: 4px 14px;
-            border: none;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .btn-sm:hover { transform: translateY(-1px); }
-        .btn-approve { background: #22c55e; color: #0f172a; }
-        .btn-approve:hover { background: #16a34a; }
-        .btn-reject { background: #ef4444; color: white; }
-        .btn-reject:hover { background: #dc2626; }
-        .btn-edit-sm { background: #3b82f6; color: white; }
-        .btn-edit-sm:hover { background: #2563eb; }
-        .btn-delete-sm { background: #ef4444; color: white; }
-        .btn-delete-sm:hover { background: #dc2626; }
-        
-        .filter-bar {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-            padding: 12px 16px;
-            background: #1e293b;
-            border-radius: 12px;
-            border: 1px solid #334155;
-        }
-        .filter-btn {
-            padding: 4px 16px;
-            border: 1px solid #334155;
-            border-radius: 20px;
-            background: transparent;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 13px;
-        }
-        .filter-btn:hover { border-color: #facc15; color: #facc15; }
-        .filter-btn.active { background: #facc15; color: #0f172a; border-color: #facc15; }
         
         .mobile-toggle {
             display: none;
@@ -311,7 +217,7 @@
             border: 1px solid #334155;
             border-radius: 20px;
             padding: 30px;
-            max-width: 500px;
+            max-width: 700px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
@@ -327,6 +233,70 @@
         }
         .modal-close:hover { color: #ffffff; }
         
+        /* Order details grid */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .detail-item {
+            background: #0f172a;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+        .detail-item .label {
+            color: #94a3b8;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .detail-item .value {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 4px;
+            word-break: break-word;
+        }
+        .detail-item .value.gold { color: #facc15; }
+        
+        .order-items-list {
+            margin: 15px 0;
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #334155;
+        }
+        .order-items-list .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #1e293b;
+            color: #e2e8f0;
+            font-size: 14px;
+        }
+        .order-items-list .item-row:last-child {
+            border-bottom: none;
+        }
+        .order-items-list .item-row .item-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .order-items-list .item-row .item-name .qty-badge {
+            background: #facc15;
+            color: #0f172a;
+            padding: 0 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .order-items-list .item-row .item-price {
+            color: #facc15;
+            font-weight: 600;
+        }
+        
         @media (max-width: 1024px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
@@ -337,20 +307,17 @@
             .stat-grid { grid-template-columns: 1fr 1fr !important; }
             .main-content { padding: 12px; }
             .table-container { overflow-x: auto; }
-            .review-header { flex-direction: column; }
+            .detail-grid { grid-template-columns: 1fr; }
         }
         
         .sidebar::-webkit-scrollbar { width: 4px; }
         .sidebar::-webkit-scrollbar-track { background: #1e293b; }
         .sidebar::-webkit-scrollbar-thumb { background: #facc15; border-radius: 10px; }
-        .no-reviews { text-align: center; color: #94a3b8; padding: 30px; }
-        .no-reviews i { font-size: 40px; display: block; margin-bottom: 10px; color: #334155; }
     </style>
 </head>
 <body>
 
 <div class="admin-wrapper">
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
             <img src="logo.jpeg" alt="PRADH">
@@ -388,13 +355,11 @@
         </nav>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
         <button class="mobile-toggle" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
         </button>
 
-        <!-- Dashboard -->
         <section id="dashboard" class="page-section active">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
                 <div>
@@ -423,9 +388,9 @@
                     <div class="stat-label">Total Revenue</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-star"></i></div>
-                    <div class="stat-value" id="totalReviews">0</div>
-                    <div class="stat-label">Total Reviews</div>
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-value" id="totalCustomers">0</div>
+                    <div class="stat-label">Total Customers</div>
                 </div>
             </div>
             
@@ -446,14 +411,13 @@
                     <button onclick="navigateTo('coupons')" class="btn-primary" style="width: 100%; background: #8b5cf6; color: white;">
                         <i class="fas fa-ticket-alt"></i> Create Coupon
                     </button>
-                    <button onclick="navigateTo('reviews')" class="btn-primary" style="width: 100%; background: #f59e0b; color: #0f172a;">
-                        <i class="fas fa-star"></i> Manage Reviews
+                    <button onclick="navigateTo('orders')" class="btn-primary" style="width: 100%; background: #3b82f6; color: white;">
+                        <i class="fas fa-eye"></i> View Orders
                     </button>
                 </div>
             </div>
         </section>
 
-        <!-- Products Section -->
         <section id="products" class="page-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
                 <div>
@@ -479,17 +443,12 @@
                         </tr>
                     </thead>
                     <tbody id="productsTableBody">
-                        <tr>
-                            <td colspan="7" style="text-align: center; color: #64748b; padding: 40px;">
-                                <i class="fas fa-spinner fa-spin"></i> Loading products...
-                            </td>
-                        </tr>
+                        <tr><td colspan="7" style="text-align: center; color: #64748b; padding: 40px;">Loading...</td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- Orders Section -->
         <section id="orders" class="page-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <div>
@@ -507,6 +466,7 @@
                         <tr>
                             <th>Order ID</th>
                             <th>Customer</th>
+                            <th>Phone</th>
                             <th>Items</th>
                             <th>Total</th>
                             <th>Status</th>
@@ -515,13 +475,12 @@
                         </tr>
                     </thead>
                     <tbody id="ordersTableBody">
-                        <tr><td colspan="7" style="text-align: center; color: #64748b; padding: 40px;">No orders found</td></tr>
+                        <tr><td colspan="8" style="text-align: center; color: #64748b; padding: 40px;">Loading orders...</td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- Coupons Section -->
         <section id="coupons" class="page-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <div>
@@ -550,55 +509,35 @@
             </div>
         </section>
 
-        <!-- Reviews Section -->
         <section id="reviews" class="page-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <div>
-                    <h1 style="font-size: 24px; font-weight: 700;">⭐ Review Management</h1>
-                    <p style="color: #94a3b8;">Approve, edit, or delete customer reviews</p>
+                    <h1 style="font-size: 24px; font-weight: 700;">⭐ Reviews</h1>
+                    <p style="color: #94a3b8;">Manage customer reviews</p>
                 </div>
                 <button class="btn-primary" onclick="loadReviews()">
                     <i class="fas fa-sync"></i> Refresh
                 </button>
             </div>
-
-            <!-- Review Stats -->
-            <div class="stat-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px;">
-                <div class="stat-card">
-                    <div class="stat-value" id="reviewTotal" style="font-size: 20px;">0</div>
-                    <div class="stat-label">Total</div>
-                </div>
-                <div class="stat-card" style="border-color: #facc15;">
-                    <div class="stat-value" id="reviewPending" style="font-size: 20px; color: #facc15;">0</div>
-                    <div class="stat-label">Pending</div>
-                </div>
-                <div class="stat-card" style="border-color: #22c55e;">
-                    <div class="stat-value" id="reviewApproved" style="font-size: 20px; color: #22c55e;">0</div>
-                    <div class="stat-label">Approved</div>
-                </div>
-                <div class="stat-card" style="border-color: #ef4444;">
-                    <div class="stat-value" id="reviewRejected" style="font-size: 20px; color: #ef4444;">0</div>
-                    <div class="stat-label">Rejected</div>
-                </div>
-            </div>
-
-            <!-- Filter Bar -->
-            <div class="filter-bar">
-                <button class="filter-btn active" data-filter="all" onclick="filterReviews('all')">All</button>
-                <button class="filter-btn" data-filter="pending" onclick="filterReviews('pending')">Pending</button>
-                <button class="filter-btn" data-filter="approved" onclick="filterReviews('approved')">Approved</button>
-                <button class="filter-btn" data-filter="rejected" onclick="filterReviews('rejected')">Rejected</button>
-            </div>
-
-            <!-- Reviews List -->
-            <div id="reviewsContainer">
-                <div style="text-align: center; color: #94a3b8; padding: 40px;">
-                    <i class="fas fa-spinner fa-spin"></i> Loading reviews...
-                </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Customer</th>
+                            <th>Rating</th>
+                            <th>Comment</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reviewsTableBody">
+                        <tr><td colspan="6" style="text-align: center; color: #64748b; padding: 40px;">No reviews</td></tr>
+                    </tbody>
+                </table>
             </div>
         </section>
 
-        <!-- Customers Section -->
         <section id="customers" class="page-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <div>
@@ -609,12 +548,11 @@
                     <i class="fas fa-sync"></i> Refresh
                 </button>
             </div>
-            
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>Customer</th>
+                            <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Orders</th>
@@ -623,16 +561,23 @@
                         </tr>
                     </thead>
                     <tbody id="customersTableBody">
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: #64748b; padding: 40px;">
-                                <i class="fas fa-spinner fa-spin"></i> Loading customers...
-                            </td>
-                        </tr>
+                        <tr><td colspan="6" style="text-align: center; color: #64748b; padding: 40px;">Loading...</td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
     </main>
+</div>
+
+<!-- Order Details Modal -->
+<div class="modal-overlay" id="orderModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('orderModal')">&times;</button>
+        <h3><i class="fas fa-receipt"></i> Order Details</h3>
+        <div id="orderDetailsBody">
+            <p style="color: #64748b;">Loading...</p>
+        </div>
+    </div>
 </div>
 
 <!-- Add/Edit Product Modal -->
@@ -642,12 +587,10 @@
         <h3 id="productModalTitle">Add New Product</h3>
         <form id="productForm" onsubmit="saveProduct(event)">
             <input type="hidden" id="productId">
-            
             <div style="margin-bottom: 15px;">
                 <label class="form-label">Product Name *</label>
                 <input type="text" id="prodName" class="form-input" placeholder="Enter product name" required>
             </div>
-            
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                 <div>
                     <label class="form-label">Price (₹) *</label>
@@ -658,32 +601,23 @@
                     <input type="number" id="prodStock" class="form-input" placeholder="0">
                 </div>
             </div>
-            
             <div style="margin-bottom: 15px;">
                 <label class="form-label">Category</label>
-                <input type="text" id="prodCategory" class="form-input" placeholder="e.g., Whey Protein, Mass Gainer">
+                <input type="text" id="prodCategory" class="form-input" placeholder="e.g., Whey Protein">
             </div>
-            
             <div style="margin-bottom: 15px;">
                 <label class="form-label">Description</label>
                 <textarea id="prodDescription" class="form-input" rows="3" placeholder="Product description"></textarea>
             </div>
-            
             <div style="margin-bottom: 15px;">
                 <label class="form-label">Image URL</label>
-                <input type="text" id="prodImage" class="form-input" placeholder="product.jpeg or image URL">
-                <small style="color: #64748b; display: block; margin-top: 4px;">
-                    Enter image filename from your server or full URL
-                </small>
+                <input type="text" id="prodImage" class="form-input" placeholder="product.jpeg">
             </div>
-            
             <div style="display: flex; gap: 10px;">
                 <button type="submit" class="btn-primary" style="flex: 1;">
                     <i class="fas fa-save"></i> Save Product
                 </button>
-                <button type="button" class="btn-danger" onclick="closeModal('productModal')">
-                    Cancel
-                </button>
+                <button type="button" class="btn-danger" onclick="closeModal('productModal')">Cancel</button>
             </div>
         </form>
     </div>
@@ -711,62 +645,9 @@
                 <button type="submit" class="btn-primary" style="flex: 1;">
                     <i class="fas fa-plus"></i> Create Coupon
                 </button>
-                <button type="button" class="btn-danger" onclick="closeModal('couponModal')">
-                    Cancel
-                </button>
+                <button type="button" class="btn-danger" onclick="closeModal('couponModal')">Cancel</button>
             </div>
         </form>
-    </div>
-</div>
-
-<!-- Edit Review Modal -->
-<div class="modal-overlay" id="editReviewModal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('editReviewModal')">&times;</button>
-        <h3><i class="fas fa-edit"></i> Edit Review</h3>
-        <input type="hidden" id="editReviewId">
-        
-        <div style="margin-bottom: 15px;">
-            <label class="form-label">Product</label>
-            <input type="text" id="editProductName" class="form-input" disabled style="opacity: 0.6;">
-        </div>
-        
-        <div style="margin-bottom: 15px;">
-            <label class="form-label">Customer Name</label>
-            <input type="text" id="editUserName" class="form-input" disabled style="opacity: 0.6;">
-        </div>
-        
-        <div style="margin-bottom: 15px;">
-            <label class="form-label">Rating</label>
-            <select id="editRating" class="form-input">
-                <option value="5">5 ★ - Excellent</option>
-                <option value="4">4 ★ - Great</option>
-                <option value="3">3 ★ - Good</option>
-                <option value="2">2 ★ - Fair</option>
-                <option value="1">1 ★ - Poor</option>
-            </select>
-        </div>
-        
-        <div style="margin-bottom: 15px;">
-            <label class="form-label">Comment</label>
-            <textarea id="editComment" class="form-input" rows="4" placeholder="Edit review comment..."></textarea>
-        </div>
-        
-        <div style="margin-bottom: 15px;">
-            <label class="form-label">Status</label>
-            <select id="editStatus" class="form-input">
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
-            </select>
-        </div>
-        
-        <div style="display: flex; gap: 10px;">
-            <button onclick="saveReviewEdit()" class="btn-primary" style="flex: 1; justify-content: center;">
-                <i class="fas fa-save"></i> Save Changes
-            </button>
-            <button onclick="closeModal('editReviewModal')" class="btn-danger">Cancel</button>
-        </div>
     </div>
 </div>
 
@@ -813,66 +694,32 @@
     }
 
     // ============================================
-    // PRODUCT MANAGEMENT
+    // PRODUCTS
     // ============================================
-    
     async function loadProducts() {
         try {
             const response = await fetch('/api/admin/products');
             const data = await response.json();
-            
             const tbody = document.getElementById('productsTableBody');
             
             if (data.success && data.products && data.products.length > 0) {
                 tbody.innerHTML = data.products.map(p => `
                     <tr>
-                        <td>
-                            <img src="${p.image || 'product.jpeg'}" 
-                                 alt="${p.name}" 
-                                 class="product-img-thumb"
-                                 onerror="this.src='product.jpeg'">
-                        </td>
-                        <td>
-                            <strong>${p.name}</strong>
-                            <br>
-                            <small style="color: #64748b;">${p.sku || 'No SKU'}</small>
-                        </td>
-                        <td style="color: #facc15; font-weight: 600;">₹${p.price.toFixed(2)}</td>
-                        <td>
-                            <span class="status-badge ${p.stock > 20 ? 'status-active' : p.stock > 0 ? 'status-low-stock' : 'status-inactive'}">
-                                ${p.stock > 20 ? 'In Stock' : p.stock > 0 ? 'Low Stock' : 'Out of Stock'}
-                            </span>
-                            <br>
-                            <small style="color: #64748b;">${p.stock || 0} units</small>
-                        </td>
+                        <td><img src="${p.image || 'product.jpeg'}" class="product-img-thumb" onerror="this.src='product.jpeg'"></td>
+                        <td><strong>${p.name}</strong><br><small style="color: #64748b;">${p.sku || 'No SKU'}</small></td>
+                        <td style="color: #facc15;">₹${p.price.toFixed(2)}</td>
+                        <td><span class="status-badge ${p.stock > 20 ? 'status-active' : p.stock > 0 ? 'status-low-stock' : 'status-inactive'}">${p.stock > 20 ? 'In Stock' : p.stock > 0 ? 'Low Stock' : 'Out of Stock'}</span></td>
                         <td style="color: #94a3b8;">${p.category || 'General'}</td>
+                        <td><span class="status-badge ${p.status === 'active' ? 'status-active' : 'status-inactive'}">${p.status || 'active'}</span></td>
                         <td>
-                            <span class="status-badge ${p.status === 'active' ? 'status-active' : 'status-inactive'}">
-                                ${p.status || 'active'}
-                            </span>
-                        </td>
-                        <td>
-                            <button class="btn-warning" onclick="editProduct('${p.id}')" style="padding: 4px 12px; font-size: 12px; margin-right: 5px;">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-danger" onclick="deleteProduct('${p.id}')" style="padding: 4px 12px; font-size: 12px;">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                            <button class="btn-warning" onclick="editProduct('${p.id}')" style="padding: 4px 12px; font-size: 12px; margin-right: 5px;"><i class="fas fa-edit"></i></button>
+                            <button class="btn-danger" onclick="deleteProduct('${p.id}')" style="padding: 4px 12px; font-size: 12px;"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>
                 `).join('');
-                
                 document.getElementById('productBadge').textContent = data.products.length;
             } else {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" style="text-align: center; color: #64748b; padding: 40px;">
-                            <i class="fas fa-box" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
-                            No products added yet.
-                        </td>
-                    </tr>
-                `;
-                document.getElementById('productBadge').textContent = '0';
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #64748b; padding: 40px;">No products added yet.</td></tr>`;
             }
         } catch (error) {
             console.error('Error loading products:', error);
@@ -937,8 +784,6 @@
                 closeModal('productModal');
                 loadProducts();
                 loadDashboard();
-            } else {
-                alert('❌ Error: ' + data.error);
             }
         } catch (error) {
             console.error('Error saving product:', error);
@@ -961,9 +806,193 @@
     }
 
     // ============================================
-    // COUPON MANAGEMENT
+    // ORDERS - COMPLETE DETAILS
     // ============================================
-    
+    let allOrders = [];
+
+    async function loadOrders() {
+        try {
+            const response = await fetch('/get-orders');
+            const data = await response.json();
+            const tbody = document.getElementById('ordersTableBody');
+            
+            if (data.success && data.orders && data.orders.length > 0) {
+                allOrders = data.orders;
+                document.getElementById('orderBadge').textContent = data.orders.length;
+                
+                tbody.innerHTML = data.orders.map(o => `
+                    <tr>
+                        <td><span style="color: #facc15; font-family: monospace; font-size: 13px;">${o.id || o.order_id}</span></td>
+                        <td><strong>${o.customer?.name || 'Guest'}</strong></td>
+                        <td style="color: #94a3b8;">${o.customer?.phone || 'N/A'}</td>
+                        <td style="color: #94a3b8; font-size: 13px;">${o.items ? o.items.length : 0} items</td>
+                        <td style="color: #facc15; font-weight: 600;">₹${(o.total || 0).toFixed(2)}</td>
+                        <td>
+                            <select onchange="updateOrderStatus('${o.id || o.order_id}', this.value)" 
+                                    style="background: #0f172a; color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 4px 8px;">
+                                <option value="pending" ${(o.status || 'pending') === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="paid" ${o.status === 'paid' ? 'selected' : ''}>Paid</option>
+                                <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                                <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </td>
+                        <td style="color: #94a3b8; font-size: 13px;">${o.date ? new Date(o.date).toLocaleDateString() : 'N/A'}</td>
+                        <td>
+                            <button class="btn-info" onclick="viewOrderDetails('${o.id || o.order_id}')" style="padding: 4px 12px; font-size: 12px;">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } else {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #64748b; padding: 40px;">No orders found</td></tr>`;
+            }
+        } catch (error) {
+            console.error('Error loading orders:', error);
+        }
+    }
+
+    // View Order Details - Complete Information
+    function viewOrderDetails(orderId) {
+        const order = allOrders.find(o => o.id === orderId || o.order_id === orderId);
+        if (!order) {
+            alert('Order not found');
+            return;
+        }
+
+        const customer = order.customer || {};
+        const items = order.items || [];
+        const totalItems = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
+        
+        const modalBody = document.getElementById('orderDetailsBody');
+        
+        modalBody.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #334155;">
+                <div>
+                    <span style="color: #94a3b8; font-size: 12px;">Order ID</span>
+                    <div style="color: #facc15; font-weight: 700; font-size: 18px;">${order.id || order.order_id}</div>
+                </div>
+                <div style="text-align: right;">
+                    <span style="color: #94a3b8; font-size: 12px;">Status</span>
+                    <div><span class="status-badge status-${order.status || 'pending'}">${(order.status || 'pending').toUpperCase()}</span></div>
+                </div>
+            </div>
+            
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="label">Order Date</div>
+                    <div class="value">${order.date ? new Date(order.date).toLocaleString() : 'N/A'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">Payment ID</div>
+                    <div class="value gold" style="font-size: 12px; font-family: monospace;">${order.payment_id || 'N/A'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">Payment Method</div>
+                    <div class="value">${customer.paymentMethod || 'N/A'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">Coupon Applied</div>
+                    <div class="value" style="color: ${order.coupon ? '#22c55e' : '#64748b'};">${order.coupon || 'None'}</div>
+                </div>
+                <div class="detail-item" style="grid-column: span 2;">
+                    <div class="label">Customer Name</div>
+                    <div class="value">${customer.name || 'Guest'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">Email</div>
+                    <div class="value" style="font-size: 13px;">${customer.email || 'N/A'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">Phone</div>
+                    <div class="value">${customer.phone || 'N/A'}</div>
+                </div>
+                <div class="detail-item" style="grid-column: span 2;">
+                    <div class="label">Delivery Address</div>
+                    <div class="value">${customer.address || 'N/A'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">City</div>
+                    <div class="value">${customer.city || 'N/A'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">Pincode</div>
+                    <div class="value">${customer.pincode || 'N/A'}</div>
+                </div>
+            </div>
+            
+            <div style="margin: 15px 0;">
+                <div style="color: #94a3b8; font-size: 13px; margin-bottom: 8px;">Order Items (${totalItems} items)</div>
+                <div class="order-items-list">
+                    ${items.length > 0 ? items.map(item => `
+                        <div class="item-row">
+                            <span class="item-name">
+                                ${item.name || 'Product'}
+                                <span class="qty-badge">×${item.quantity || 1}</span>
+                            </span>
+                            <span class="item-price">₹${(item.price * (item.quantity || 1)).toFixed(2)}</span>
+                        </div>
+                    `).join('') : '<div style="color: #64748b; padding: 10px; text-align: center;">No items in this order</div>'}
+                </div>
+            </div>
+            
+            <div style="background: #0f172a; border-radius: 8px; padding: 15px; border: 1px solid #334155;">
+                <div style="display: flex; justify-content: space-between; padding: 5px 0; color: #94a3b8;">
+                    <span>Subtotal</span>
+                    <span>₹${(order.total || 0).toFixed(2)}</span>
+                </div>
+                ${order.deliveryCharge !== undefined ? `
+                    <div style="display: flex; justify-content: space-between; padding: 5px 0; color: #94a3b8;">
+                        <span>Delivery Charge</span>
+                        <span style="color: ${order.deliveryCharge === 0 ? '#22c55e' : '#94a3b8'};">${order.deliveryCharge === 0 ? 'FREE' : '₹' + order.deliveryCharge.toFixed(2)}</span>
+                    </div>
+                ` : ''}
+                ${order.coupon ? `
+                    <div style="display: flex; justify-content: space-between; padding: 5px 0; color: #22c55e;">
+                        <span>Discount (${order.coupon})</span>
+                        <span>-₹${(order.discount || 0).toFixed(2)}</span>
+                    </div>
+                ` : ''}
+                <div style="display: flex; justify-content: space-between; padding: 10px 0 5px 0; border-top: 2px solid #334155; margin-top: 5px;">
+                    <span style="font-weight: 700; font-size: 18px;">Total</span>
+                    <span style="color: #facc15; font-weight: 700; font-size: 20px;">₹${(order.total || 0).toFixed(2)}</span>
+                </div>
+            </div>
+            
+            ${order.cancellation_reason ? `
+                <div style="margin-top: 15px; padding: 10px 15px; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 8px; color: #ef4444; font-size: 14px;">
+                    <strong>Cancellation Reason:</strong> ${order.cancellation_reason}
+                </div>
+            ` : ''}
+        `;
+        
+        document.getElementById('orderModal').classList.add('show');
+    }
+
+    async function updateOrderStatus(orderId, newStatus) {
+        if (!confirm(`Update order ${orderId} status to "${newStatus}"?`)) return;
+        
+        try {
+            const response = await fetch(`/api/orders/${orderId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            const data = await response.json();
+            if (data.success) {
+                alert(`✅ Order ${orderId} status updated!`);
+                loadOrders();
+                loadDashboard();
+            }
+        } catch (error) {
+            console.error('Error updating order:', error);
+        }
+    }
+
+    // ============================================
+    // COUPONS
+    // ============================================
     async function loadCoupons() {
         try {
             const response = await fetch('/api/coupons');
@@ -978,21 +1007,11 @@
                             <td><span style="color: #facc15; font-weight: 700;">${c.code}</span></td>
                             <td style="color: #22c55e; font-weight: 600;">${c.discount}%</td>
                             <td style="color: #94a3b8;">${c.expiry || 'No expiry'}</td>
-                            <td>
-                                <span class="status-badge ${isExpired ? 'status-inactive' : 'status-active'}">
-                                    ${isExpired ? 'Expired' : 'Active'}
-                                </span>
-                            </td>
-                            <td>
-                                <button class="btn-danger" onclick="deleteCoupon('${c.code}')" style="padding: 4px 12px; font-size: 12px;">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
+                            <td><span class="status-badge ${isExpired ? 'status-inactive' : 'status-active'}">${isExpired ? 'Expired' : 'Active'}</span></td>
+                            <td><button class="btn-danger" onclick="deleteCoupon('${c.code}')" style="padding: 4px 12px;"><i class="fas fa-trash"></i></button></td>
                         </tr>
                     `;
                 }).join('');
-            } else {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">No coupons</td></tr>`;
             }
         } catch (error) {
             console.error('Error loading coupons:', error);
@@ -1048,127 +1067,41 @@
     }
 
     // ============================================
-    // REVIEWS MANAGEMENT
+    // REVIEWS
     // ============================================
-    let allReviews = [];
-    let currentFilter = 'all';
-
     async function loadReviews() {
         try {
             const response = await fetch('/api/reviews');
             const data = await response.json();
+            const tbody = document.getElementById('reviewsTableBody');
             
-            if (data.success) {
-                allReviews = data.reviews;
-                updateReviewStats(allReviews);
-                filterReviews('all');
-                document.getElementById('reviewBadge').textContent = allReviews.filter(r => r.status === 'pending').length;
+            if (data.success && data.reviews && data.reviews.length > 0) {
+                document.getElementById('reviewBadge').textContent = data.reviews.filter(r => r.status === 'pending').length;
+                tbody.innerHTML = data.reviews.map(r => `
+                    <tr>
+                        <td style="color: #94a3b8;">${r.productName || 'Product'}</td>
+                        <td>${r.userName || 'Anonymous'}</td>
+                        <td style="color: #facc15;">${'★'.repeat(r.rating)}</td>
+                        <td style="color: #94a3b8; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${r.comment}</td>
+                        <td><span class="status-badge status-${r.status}">${r.status}</span></td>
+                        <td>
+                            ${r.status === 'pending' ? `
+                                <button class="btn-success" onclick="updateReviewStatus('${r.id}', 'approved')" style="padding: 4px 8px; font-size: 11px; margin-right: 4px;">Approve</button>
+                                <button class="btn-danger" onclick="updateReviewStatus('${r.id}', 'rejected')" style="padding: 4px 8px; font-size: 11px;">Reject</button>
+                            ` : `
+                                <button class="btn-danger" onclick="deleteReview('${r.id}')" style="padding: 4px 8px; font-size: 11px;"><i class="fas fa-trash"></i></button>
+                            `}
+                        </td>
+                    </tr>
+                `).join('');
             }
         } catch (error) {
             console.error('Error loading reviews:', error);
-            document.getElementById('reviewsContainer').innerHTML = `
-                <div class="no-reviews">
-                    <i class="fas fa-exclamation-circle" style="color: #ef4444;"></i>
-                    Error loading reviews: ${error.message}
-                </div>
-            `;
         }
-    }
-
-    function updateReviewStats(reviews) {
-        const total = reviews.length;
-        const pending = reviews.filter(r => r.status === 'pending').length;
-        const approved = reviews.filter(r => r.status === 'approved').length;
-        const rejected = reviews.filter(r => r.status === 'rejected').length;
-        
-        document.getElementById('reviewTotal').textContent = total;
-        document.getElementById('reviewPending').textContent = pending;
-        document.getElementById('reviewApproved').textContent = approved;
-        document.getElementById('reviewRejected').textContent = rejected;
-        document.getElementById('reviewBadge').textContent = pending;
-    }
-
-    function filterReviews(status) {
-        currentFilter = status;
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.filter === status);
-        });
-        
-        let filtered = allReviews;
-        if (status !== 'all') {
-            filtered = allReviews.filter(r => r.status === status);
-        }
-        displayReviews(filtered);
-    }
-
-    function displayReviews(reviews) {
-        const container = document.getElementById('reviewsContainer');
-        
-        if (reviews.length === 0) {
-            container.innerHTML = `
-                <div class="no-reviews">
-                    <i class="fas fa-comment"></i>
-                    No reviews found
-                </div>
-            `;
-            return;
-        }
-        
-        container.innerHTML = reviews.map(review => `
-            <div class="review-card ${review.status}">
-                <div class="review-header">
-                    <div>
-                        <div class="review-product">
-                            <i class="fas fa-box"></i> ${review.productName || 'Product'}
-                        </div>
-                        <div class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
-                        <div class="review-user">
-                            <i class="fas fa-user"></i> ${review.userName || 'Anonymous'}
-                        </div>
-                        <div class="review-date">
-                            <i class="far fa-calendar-alt"></i> ${new Date(review.createdAt).toLocaleDateString()}
-                        </div>
-                    </div>
-                    <div>
-                        <span class="status-badge status-${review.status}">
-                            ${review.status.toUpperCase()}
-                        </span>
-                    </div>
-                </div>
-                <div class="review-comment">${review.comment}</div>
-                <div class="review-actions">
-                    ${review.status === 'pending' ? `
-                        <button class="btn-sm btn-approve" onclick="updateReviewStatus('${review.id}', 'approved')">
-                            <i class="fas fa-check"></i> Approve
-                        </button>
-                        <button class="btn-sm btn-reject" onclick="updateReviewStatus('${review.id}', 'rejected')">
-                            <i class="fas fa-times"></i> Reject
-                        </button>
-                    ` : `
-                        ${review.status === 'approved' ? `
-                            <button class="btn-sm btn-reject" onclick="updateReviewStatus('${review.id}', 'rejected')">
-                                <i class="fas fa-times"></i> Reject
-                            </button>
-                        ` : `
-                            <button class="btn-sm btn-approve" onclick="updateReviewStatus('${review.id}', 'approved')">
-                                <i class="fas fa-check"></i> Approve
-                            </button>
-                        `}
-                    `}
-                    <button class="btn-sm btn-edit-sm" onclick="openEditReviewModal('${review.id}')">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
-                    <button class="btn-sm btn-delete-sm" onclick="deleteReview('${review.id}')">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
-                </div>
-            </div>
-        `).join('');
     }
 
     async function updateReviewStatus(reviewId, status) {
         if (!confirm(`Are you sure you want to ${status} this review?`)) return;
-        
         try {
             const response = await fetch(`/api/reviews/${reviewId}`, {
                 method: 'PUT',
@@ -1185,67 +1118,8 @@
         }
     }
 
-    // Open Edit Review Modal with full details
-    function openEditReviewModal(reviewId) {
-        const review = allReviews.find(r => r.id === reviewId);
-        if (!review) {
-            alert('Review not found');
-            return;
-        }
-        
-        document.getElementById('editReviewId').value = reviewId;
-        document.getElementById('editProductName').value = review.productName || 'Product';
-        document.getElementById('editUserName').value = review.userName || 'Anonymous';
-        document.getElementById('editRating').value = review.rating;
-        document.getElementById('editComment').value = review.comment;
-        document.getElementById('editStatus').value = review.status;
-        
-        document.getElementById('editReviewModal').classList.add('show');
-    }
-
-    // Save Review Edit
-    async function saveReviewEdit() {
-        const reviewId = document.getElementById('editReviewId').value;
-        const rating = document.getElementById('editRating').value;
-        const comment = document.getElementById('editComment').value.trim();
-        const status = document.getElementById('editStatus').value;
-        
-        if (!comment) {
-            alert('Please enter a comment');
-            return;
-        }
-        
-        if (!confirm('Save changes to this review?')) return;
-        
-        try {
-            const response = await fetch(`/api/reviews/${reviewId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    rating: parseInt(rating),
-                    comment: comment,
-                    status: status
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                alert('✅ Review updated successfully!');
-                closeModal('editReviewModal');
-                loadReviews();
-            } else {
-                alert('❌ Error: ' + data.error);
-            }
-        } catch (error) {
-            console.error('Error saving review edit:', error);
-            alert('❌ Error updating review: ' + error.message);
-        }
-    }
-
     async function deleteReview(reviewId) {
         if (!confirm('Delete this review?')) return;
-        
         try {
             const response = await fetch(`/api/reviews/${reviewId}`, { method: 'DELETE' });
             const data = await response.json();
@@ -1255,66 +1129,6 @@
             }
         } catch (error) {
             console.error('Error deleting review:', error);
-        }
-    }
-
-    // ============================================
-    // ORDERS
-    // ============================================
-    async function loadOrders() {
-        try {
-            const response = await fetch('/get-orders');
-            const data = await response.json();
-            const tbody = document.getElementById('ordersTableBody');
-            
-            if (data.success && data.orders && data.orders.length > 0) {
-                document.getElementById('orderBadge').textContent = data.orders.length;
-                tbody.innerHTML = data.orders.map(o => `
-                    <tr>
-                        <td><span style="color: #facc15; font-family: monospace;">#${o.id || o.order_id}</span></td>
-                        <td>${o.customer?.name || 'Guest'}</td>
-                        <td style="color: #94a3b8; font-size: 13px;">${o.items ? o.items.length : 0} items</td>
-                        <td style="color: #facc15; font-weight: 600;">₹${(o.total || 0).toFixed(2)}</td>
-                        <td><span class="status-badge status-${o.status || 'pending'}">${o.status || 'Pending'}</span></td>
-                        <td style="color: #94a3b8; font-size: 13px;">${o.date ? new Date(o.date).toLocaleDateString() : 'N/A'}</td>
-                        <td>
-                            <select onchange="updateOrderStatus('${o.id || o.order_id}', this.value)" 
-                                    style="background: #0f172a; color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 4px 8px;">
-                                <option value="pending" ${(o.status || 'pending') === 'pending' ? 'selected' : ''}>Pending</option>
-                                <option value="paid" ${o.status === 'paid' ? 'selected' : ''}>Paid</option>
-                                <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Shipped</option>
-                                <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Delivered</option>
-                                <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
-                            </select>
-                        </td>
-                    </tr>
-                `).join('');
-            } else {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #64748b; padding: 40px;">No orders found</td></tr>`;
-                document.getElementById('orderBadge').textContent = '0';
-            }
-        } catch (error) {
-            console.error('Error loading orders:', error);
-        }
-    }
-
-    async function updateOrderStatus(orderId, newStatus) {
-        if (!confirm(`Update order ${orderId} status to "${newStatus}"?`)) return;
-        
-        try {
-            const response = await fetch(`/api/orders/${orderId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: newStatus })
-            });
-            const data = await response.json();
-            if (data.success) {
-                alert(`✅ Order ${orderId} status updated!`);
-                loadOrders();
-                loadDashboard();
-            }
-        } catch (error) {
-            console.error('Error updating order:', error);
         }
     }
 
@@ -1353,21 +1167,15 @@
                 if (customers.length > 0) {
                     customers.sort((a, b) => b.totalSpent - a.totalSpent);
                     tbody.innerHTML = customers.map(c => {
-                        let status = 'Active';
-                        let statusClass = 'status-active';
-                        if (c.totalSpent > 5000) {
-                            status = 'VIP';
-                            statusClass = 'status-vip';
-                        } else if (c.totalSpent > 1000) {
-                            status = 'Regular';
-                            statusClass = 'status-active';
-                        }
+                        let status = 'Active', statusClass = 'status-active';
+                        if (c.totalSpent > 5000) { status = 'VIP'; statusClass = 'status-vip'; }
+                        else if (c.totalSpent > 1000) { status = 'Regular'; statusClass = 'status-active'; }
                         return `
                             <tr>
                                 <td><strong>${c.name}</strong></td>
                                 <td style="color: #94a3b8;">${c.email}</td>
                                 <td style="color: #94a3b8;">${c.phone}</td>
-                                <td style="color: #facc15; font-weight: 600;">${c.orders}</td>
+                                <td style="color: #facc15;">${c.orders}</td>
                                 <td style="color: #facc15; font-weight: 600;">₹${c.totalSpent.toFixed(2)}</td>
                                 <td><span class="status-badge ${statusClass}">${status}</span></td>
                             </tr>
@@ -1403,6 +1211,15 @@
                 const revenue = orders.reduce((sum, o) => sum + (parseFloat(o.total) || 0), 0);
                 document.getElementById('totalRevenue').textContent = '₹' + revenue.toFixed(2);
                 
+                const uniqueCustomers = new Set();
+                orders.forEach(o => {
+                    if (o.customer && o.customer.phone) {
+                        uniqueCustomers.add(o.customer.phone);
+                    }
+                });
+                document.getElementById('totalCustomers').textContent = uniqueCustomers.size;
+                document.getElementById('customerBadge').textContent = uniqueCustomers.size;
+                
                 const recent = orders.slice(-5).reverse();
                 const recentHtml = recent.length > 0 ? recent.map(o => `
                     <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #334155;">
@@ -1422,7 +1239,6 @@
             const reviewResponse = await fetch('/api/reviews');
             const reviewData = await reviewResponse.json();
             if (reviewData.success) {
-                document.getElementById('totalReviews').textContent = reviewData.reviews.length;
                 document.getElementById('reviewBadge').textContent = reviewData.reviews.filter(r => r.status === 'pending').length;
             }
         } catch (error) {
@@ -1446,31 +1262,6 @@
         loadReviews();
         loadCustomers();
     });
-
-    // Make functions global
-    window.navigateTo = navigateTo;
-    window.toggleSidebar = toggleSidebar;
-    window.logout = logout;
-    window.closeModal = closeModal;
-    window.showAddProductModal = showAddProductModal;
-    window.editProduct = editProduct;
-    window.saveProduct = saveProduct;
-    window.deleteProduct = deleteProduct;
-    window.showAddCouponModal = showAddCouponModal;
-    window.saveCoupon = saveCoupon;
-    window.deleteCoupon = deleteCoupon;
-    window.loadReviews = loadReviews;
-    window.filterReviews = filterReviews;
-    window.updateReviewStatus = updateReviewStatus;
-    window.openEditReviewModal = openEditReviewModal;
-    window.saveReviewEdit = saveReviewEdit;
-    window.deleteReview = deleteReview;
-    window.loadOrders = loadOrders;
-    window.updateOrderStatus = updateOrderStatus;
-    window.loadCustomers = loadCustomers;
-    window.loadProducts = loadProducts;
-    window.loadCoupons = loadCoupons;
-    window.loadDashboard = loadDashboard;
 </script>
 </body>
 </html>
