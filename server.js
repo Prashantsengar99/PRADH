@@ -20,14 +20,17 @@ app.use(express.static('.'));
 // ============================================
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/pradh_db';
 
+console.log('🔍 MongoDB URI:', MONGODB_URI.replace(/\/\/([^:]+):([^@]+)@/, '//***:***@'));
+
 mongoose.connect(MONGODB_URI)
 .then(() => {
     console.log('✅ MongoDB Atlas Connected Successfully!');
     console.log(`📦 Database: ${mongoose.connection.db.databaseName}`);
+    console.log(`🔗 Host: ${mongoose.connection.host}`);
 })
 .catch(err => {
-    console.error('❌ MongoDB Connection Error:', err);
-    process.exit(1);
+    console.error('❌ MongoDB Connection Error:', err.message);
+    console.log('💡 Make sure MONGODB_URI is set in environment variables');
 });
 
 // ============================================
@@ -183,7 +186,7 @@ app.get('/api/user/:username', async (req, res) => {
 });
 
 // ============================================
-// PRODUCT ROUTES - FULL CRUD
+// PRODUCT ROUTES
 // ============================================
 app.get('/api/admin/products', async (req, res) => {
     try {
@@ -343,10 +346,8 @@ app.delete('/api/coupons/:code', async (req, res) => {
 });
 
 // ============================================
-// REVIEW ROUTES - FULL CRUD WITH EDIT
+// REVIEW ROUTES
 // ============================================
-
-// GET all reviews
 app.get('/api/reviews', async (req, res) => {
     try {
         const reviews = await Review.find();
@@ -356,20 +357,6 @@ app.get('/api/reviews', async (req, res) => {
     }
 });
 
-// GET review by ID
-app.get('/api/reviews/:id', async (req, res) => {
-    try {
-        const review = await Review.findOne({ id: req.params.id });
-        if (!review) {
-            return res.status(404).json({ success: false, error: 'Review not found' });
-        }
-        res.json({ success: true, review });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// GET reviews by product
 app.get('/api/reviews/product/:productId', async (req, res) => {
     try {
         const reviews = await Review.find({ productId: req.params.productId, status: 'approved' });
@@ -379,7 +366,6 @@ app.get('/api/reviews/product/:productId', async (req, res) => {
     }
 });
 
-// CREATE review (User)
 app.post('/api/reviews', async (req, res) => {
     try {
         const { productId, productName, rating, comment, userName } = req.body;
@@ -396,48 +382,33 @@ app.post('/api/reviews', async (req, res) => {
             status: 'pending'
         });
         await review.save();
-        console.log('✅ New review submitted');
-        res.json({ success: true, message: 'Review submitted successfully! Waiting for admin approval.', review });
+        res.json({ success: true, message: 'Review submitted!', review });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-// UPDATE review - Admin can EDIT (FIXED)
 app.put('/api/reviews/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { status, comment, rating } = req.body;
-        
-        console.log('✏️ Admin editing review:', id);
-        console.log('📝 New data:', { status, comment, rating });
-        
         const review = await Review.findOne({ id: id });
         if (!review) {
             return res.status(404).json({ success: false, error: 'Review not found' });
         }
-        
-        // Update fields
         if (status !== undefined) review.status = status;
         if (comment !== undefined) review.comment = comment;
         if (rating !== undefined) review.rating = parseInt(rating);
         review.updatedAt = new Date();
-        
         await review.save();
-        
         console.log('✅ Review updated:', review.id);
-        res.json({ 
-            success: true, 
-            message: 'Review updated successfully!', 
-            review: review 
-        });
+        res.json({ success: true, message: 'Review updated successfully!', review });
     } catch (error) {
         console.error('Error updating review:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-// DELETE review
 app.delete('/api/reviews/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -449,7 +420,6 @@ app.delete('/api/reviews/:id', async (req, res) => {
     }
 });
 
-// GET review stats
 app.get('/api/reviews/stats/:productId', async (req, res) => {
     try {
         const reviews = await Review.find({ productId: req.params.productId, status: 'approved' });
