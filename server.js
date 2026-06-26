@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const path = require('path');
+const PDFDocument = require('pdfkit');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,17 +21,13 @@ app.use(express.static('.'));
 // ============================================
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/pradh_db';
 
-console.log('🔍 MongoDB URI:', MONGODB_URI.replace(/\/\/([^:]+):([^@]+)@/, '//***:***@'));
-
 mongoose.connect(MONGODB_URI)
 .then(() => {
     console.log('✅ MongoDB Atlas Connected Successfully!');
     console.log(`📦 Database: ${mongoose.connection.db.databaseName}`);
-    console.log(`🔗 Host: ${mongoose.connection.host}`);
 })
 .catch(err => {
     console.error('❌ MongoDB Connection Error:', err.message);
-    console.log('💡 Make sure MONGODB_URI is set in environment variables');
 });
 
 // ============================================
@@ -197,16 +194,6 @@ app.get('/api/admin/products', async (req, res) => {
     }
 });
 
-app.get('/api/products/:id', async (req, res) => {
-    try {
-        const product = await Product.findOne({ id: req.params.id });
-        if (!product) return res.status(404).json({ success: false, error: 'Product not found' });
-        res.json({ success: true, product });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
 app.post('/api/admin/products', async (req, res) => {
     try {
         const { name, price, description, category, image, stock } = req.body;
@@ -224,8 +211,7 @@ app.post('/api/admin/products', async (req, res) => {
             status: 'active'
         });
         await product.save();
-        console.log('✅ Product added:', product.name);
-        res.json({ success: true, message: 'Product added successfully!', product });
+        res.json({ success: true, message: 'Product added!', product });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
@@ -248,10 +234,8 @@ app.put('/api/admin/products/:id', async (req, res) => {
         if (status) product.status = status;
         product.updatedAt = new Date();
         await product.save();
-        console.log('✅ Product updated:', product.name);
-        res.json({ success: true, message: 'Product updated successfully!', product });
+        res.json({ success: true, message: 'Product updated!', product });
     } catch (error) {
-        console.error('Error updating product:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -260,7 +244,6 @@ app.delete('/api/admin/products/:id', async (req, res) => {
     try {
         const { id } = req.params;
         await Product.deleteOne({ id });
-        console.log('✅ Product deleted:', id);
         res.json({ success: true, message: 'Product deleted!' });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
@@ -357,15 +340,6 @@ app.get('/api/reviews', async (req, res) => {
     }
 });
 
-app.get('/api/reviews/product/:productId', async (req, res) => {
-    try {
-        const reviews = await Review.find({ productId: req.params.productId, status: 'approved' });
-        res.json({ success: true, reviews });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
 app.post('/api/reviews', async (req, res) => {
     try {
         const { productId, productName, rating, comment, userName } = req.body;
@@ -401,10 +375,8 @@ app.put('/api/reviews/:id', async (req, res) => {
         if (rating !== undefined) review.rating = parseInt(rating);
         review.updatedAt = new Date();
         await review.save();
-        console.log('✅ Review updated:', review.id);
-        res.json({ success: true, message: 'Review updated successfully!', review });
+        res.json({ success: true, message: 'Review updated!', review });
     } catch (error) {
-        console.error('Error updating review:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -413,7 +385,6 @@ app.delete('/api/reviews/:id', async (req, res) => {
     try {
         const { id } = req.params;
         await Review.deleteOne({ id });
-        console.log('✅ Review deleted:', id);
         res.json({ success: true, message: 'Review deleted!' });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
@@ -440,6 +411,279 @@ app.get('/api/reviews/stats/:productId', async (req, res) => {
         res.json({ success: true, stats });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// ============================================
+// INVOICE PDF GENERATION - FIXED OVERLAPPING
+// ============================================
+app.get('/api/invoice/:orderId', async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        console.log('📄 Generating invoice for order:', orderId);
+        
+        const order = await Order.findOne({ id: orderId });
+        if (!order) {
+            return res.status(404).json({ success: false, error: 'Order not found' });
+        }
+
+        const doc = new PDFDocument({ 
+            size: 'A4', 
+            margin: 50,
+            bufferPages: true
+        });
+        
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=invoice-${order.id}.pdf`);
+        doc.pipe(res);
+
+        // Colors
+        const gold = '#facc15';
+        const dark = '#0f172a';
+        const gray = '#64748b';
+        const lightGray = '#f8fafc';
+        const border = '#e2e8f0';
+
+        let y = 50;
+
+        // ===== HEADER =====
+        // Company Name
+        doc.fontSize(28)
+           .font('Helvetica-Bold')
+           .fillColor(gold)
+           .text('PRADH DESI FUEL', 50, y, { align: 'center' });
+        y += 35;
+
+        doc.fontSize(12)
+           .font('Helvetica')
+           .fillColor(gray)
+           .text('💪 Pure Desi Protein Fuel', 50, y, { align: 'center' });
+        y += 30;
+
+        // Invoice Title
+        doc.fontSize(24)
+           .font('Helvetica-Bold')
+           .fillColor(dark)
+           .text('INVOICE', 50, y, { align: 'center' });
+        y += 20;
+
+        doc.fontSize(10)
+           .font('Helvetica')
+           .fillColor(gray)
+           .text(`Invoice #: ${order.id}`, 50, y, { align: 'center' });
+        y += 30;
+
+        // Divider
+        doc.moveTo(50, y).lineTo(550, y).strokeColor(gold).lineWidth(2).stroke();
+        y += 25;
+
+        // ===== TWO COLUMN LAYOUT =====
+        const leftX = 50;
+        const rightX = 320;
+        const lineHeight = 20;
+
+        // Left: Order Details
+        doc.fontSize(11)
+           .font('Helvetica-Bold')
+           .fillColor(dark)
+           .text('ORDER DETAILS', leftX, y);
+        y += 18;
+
+        doc.font('Helvetica')
+           .fontSize(9)
+           .fillColor(gray);
+        
+        const orderInfo = [
+            ['Order Date:', new Date(order.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })],
+            ['Payment ID:', order.payment_id || 'N/A'],
+            ['Payment Method:', order.customer?.paymentMethod || 'N/A'],
+            ['Status:', (order.status || 'Pending').toUpperCase()]
+        ];
+        
+        let orderY = y;
+        orderInfo.forEach(([label, value]) => {
+            doc.text(label, leftX, orderY);
+            doc.text(value, leftX + 100, orderY);
+            orderY += lineHeight;
+        });
+
+        // Right: Customer Info
+        let custY = y;
+        doc.font('Helvetica-Bold')
+           .fontSize(11)
+           .fillColor(dark)
+           .text('BILL TO', rightX, custY);
+        custY += 18;
+
+        doc.font('Helvetica')
+           .fontSize(9)
+           .fillColor(gray);
+        
+        const cust = order.customer || {};
+        const customerLines = [
+            cust.name || 'Guest',
+            cust.address || 'N/A',
+            `${cust.city || ''} ${cust.pincode || ''}`,
+            `Phone: ${cust.phone || 'N/A'}`,
+            `Email: ${cust.email || 'N/A'}`
+        ];
+        
+        customerLines.forEach(line => {
+            if (line.trim()) {
+                doc.text(line, rightX, custY);
+                custY += lineHeight;
+            }
+        });
+
+        // Set y to max of both columns
+        y = Math.max(orderY, custY) + 15;
+
+        // ===== DIVIDER =====
+        doc.moveTo(50, y).lineTo(550, y).strokeColor(border).lineWidth(1).stroke();
+        y += 20;
+
+        // ===== ITEMS TABLE =====
+        const tableX = 50;
+        const col1 = 60;
+        const col2 = 280;
+        const col3 = 380;
+        const col4 = 460;
+
+        // Table Header
+        doc.fillColor(lightGray)
+           .rect(tableX, y, 500, 22)
+           .fill();
+        doc.fillColor(dark)
+           .font('Helvetica-Bold')
+           .fontSize(9);
+        doc.text('Product', col1, y + 5);
+        doc.text('Qty', col2, y + 5);
+        doc.text('Price', col3, y + 5);
+        doc.text('Total', col4, y + 5);
+        y += 22;
+
+        // Table Rows
+        let subtotal = 0;
+        order.items?.forEach((item, idx) => {
+            const total = item.price * item.quantity;
+            subtotal += total;
+
+            if (idx % 2 === 0) {
+                doc.fillColor('#fafafa').rect(tableX, y, 500, 20).fill();
+            }
+            doc.fillColor(dark)
+               .font('Helvetica')
+               .fontSize(9);
+            const name = item.name.length > 28 ? item.name.substring(0, 25) + '...' : item.name;
+            doc.text(name || 'Product', col1, y + 4);
+            doc.text(item.quantity || 1, col2, y + 4);
+            doc.text(`₹${item.price.toFixed(0)}`, col3, y + 4);
+            doc.text(`₹${total.toFixed(0)}`, col4, y + 4);
+            y += 20;
+        });
+
+        // Table Bottom Line
+        doc.moveTo(50, y).lineTo(550, y).strokeColor(border).lineWidth(1).stroke();
+        y += 15;
+
+        // ===== TOTALS =====
+        const deliveryCharge = order.deliveryCharge || 0;
+        const discount = order.discount || 0;
+        const grandTotal = subtotal + deliveryCharge - discount;
+
+        const totalX = 500;
+        const labelX = 400;
+
+        doc.font('Helvetica')
+           .fontSize(10);
+        
+        // Subtotal
+        doc.fillColor(gray).text('Subtotal:', labelX, y, { align: 'right' });
+        doc.fillColor(dark).text(`₹${subtotal.toFixed(0)}`, totalX, y, { align: 'right' });
+        y += 22;
+
+        // Delivery
+        doc.fillColor(gray).text('Delivery:', labelX, y, { align: 'right' });
+        doc.fillColor(deliveryCharge === 0 ? '#22c55e' : dark)
+           .text(deliveryCharge === 0 ? 'FREE' : `₹${deliveryCharge.toFixed(0)}`, totalX, y, { align: 'right' });
+        y += 22;
+
+        // Discount
+        if (order.coupon) {
+            doc.fillColor(gray).text(`Discount (${order.coupon}):`, labelX, y, { align: 'right' });
+            doc.fillColor('#22c55e').text(`-₹${discount.toFixed(0)}`, totalX, y, { align: 'right' });
+            y += 22;
+        }
+
+        // Grand Total - with more spacing
+        y += 8;
+        doc.moveTo(300, y).lineTo(550, y).strokeColor(gold).lineWidth(1.5).stroke();
+        y += 10;
+
+        doc.font('Helvetica-Bold')
+           .fontSize(16)
+           .fillColor(gold)
+           .text('Grand Total:', labelX + 400, y, { align: 'right' })
+           .text(`₹${grandTotal.toFixed(0)}`, totalX + 400, y, { align: 'right' });
+        y += 30;
+
+        // ===== COUPON BADGE =====
+        if (order.coupon) {
+            doc.fillColor('#22c55e')
+               .font('Helvetica')
+               .fontSize(9)
+               .text(`🎉 Coupon Applied: ${order.coupon} (${order.discount || 0}% off)`, 50, y);
+            y += 20;
+        }
+
+        // ===== CANCELLATION REASON =====
+        if (order.cancellation_reason) {
+            doc.fillColor('#ef4444')
+               .font('Helvetica-Bold')
+               .fontSize(9)
+               .text('⚠️ Cancellation Reason:', 50, y);
+            doc.fillColor(gray)
+               .font('Helvetica')
+               .fontSize(9)
+               .text(order.cancellation_reason, 50, y + 14);
+            y += 40;
+        }
+
+        // ===== STATUS BADGE =====
+        const statusColors = { 
+            pending: '#facc15', 
+            paid: '#22c55e', 
+            shipped: '#3b82f6', 
+            delivered: '#8b5cf6', 
+            cancelled: '#ef4444' 
+        };
+        const statusColor = statusColors[order.status] || gray;
+        doc.fillColor(statusColor)
+           .roundedRect(50, y, 130, 22, 4)
+           .fill();
+        doc.fillColor('#ffffff')
+           .font('Helvetica-Bold')
+           .fontSize(9)
+           .text(`STATUS: ${(order.status || 'Pending').toUpperCase()}`, 58, y + 5);
+        y += 35;
+
+        // ===== FOOTER =====
+        const footerY = 770;
+        doc.moveTo(50, footerY).lineTo(550, footerY).strokeColor(gold).lineWidth(1).stroke();
+
+        doc.fontSize(8)
+           .font('Helvetica')
+           .fillColor(gray)
+           .text('💪 Thank you for choosing PRADH Desi Fuel!', 50, footerY + 12, { align: 'center' })
+           .text('📞 +91 8979993655  |  📧 support@pradh.com', 50, footerY + 26, { align: 'center' })
+           .text(`Generated: ${new Date().toLocaleString()}`, 50, footerY + 40, { align: 'center' });
+
+        doc.end();
+        console.log('✅ Invoice generated:', orderId);
+
+    } catch (error) {
+        console.error('❌ Error generating invoice:', error);
+        res.status(500).json({ success: false, error: 'Failed to generate invoice' });
     }
 });
 
