@@ -1,1 +1,95 @@
-[]
+[
+  {
+    "id": "ORD1700000001",
+    "order_id": "order_1234567890",
+    "payment_id": "pay_1234567890",
+    "status": "pending",
+    "date": "2026-06-26T10:30:00.000Z",
+    "items": [
+      {
+        "id": "PROD002",
+        "name": "PRADH Desi Fuel (500g)",
+        "price": 599,
+        "quantity": 2
+      },
+      {
+        "id": "PROD001",
+        "name": "PRADH Desi Fuel (250g)",
+        "price": 349,
+        "quantity": 1
+      }
+    ],
+    "total": 1547,
+    "deliveryCharge": 0,
+    "coupon": "DESIFUEL10",
+    "discount": 10,
+    "customer": {
+      "name": "Rahul Sharma",
+      "phone": "9876543210",
+      "email": "rahul@gmail.com",
+      "address": "123, Main Street, Delhi",
+      "city": "Delhi",
+      "pincode": "110001",
+      "paymentMethod": "card"
+    },
+    "createdAt": "2026-06-26T10:30:00.000Z"
+  },
+  {
+    "id": "ORD1700000002",
+    "order_id": "order_2345678901",
+    "payment_id": "pay_2345678901",
+    "status": "paid",
+    "date": "2026-06-26T14:20:00.000Z",
+    "items": [
+      {
+        "id": "PROD003",
+        "name": "PRADH Desi Fuel (1 KG)",
+        "price": 1099,
+        "quantity": 2
+      }
+    ],
+    "total": 2198,
+    "deliveryCharge": 0,
+    "coupon": null,
+    "discount": 0,
+    "customer": {
+      "name": "Priya Singh",
+      "phone": "9876543211",
+      "email": "priya@gmail.com",
+      "address": "456, Park Avenue, Mumbai",
+      "city": "Mumbai",
+      "pincode": "400001",
+      "paymentMethod": "upi"
+    },
+    "createdAt": "2026-06-26T14:20:00.000Z"
+  },
+  {
+    "id": "ORD1700000004",
+    "order_id": "order_4567890123",
+    "payment_id": "pay_4567890123",
+    "status": "delivered",
+    "date": "2026-06-25T18:45:00.000Z",
+    "items": [
+      {
+        "id": "PROD002",
+        "name": "PRADH Desi Fuel (500g)",
+        "price": 599,
+        "quantity": 1
+      }
+    ],
+    "total": 599,
+    "deliveryCharge": 49,
+    "coupon": null,
+    "discount": 0,
+    "customer": {
+      "name": "Rahul Sharma",
+      "phone": "9876543210",
+      "email": "rahul@gmail.com",
+      "address": "123, Main Street, Delhi",
+      "city": "Delhi",
+      "pincode": "110001",
+      "paymentMethod": "card"
+    },
+    "createdAt": "2026-06-25T18:45:00.000Z"
+  }
+]

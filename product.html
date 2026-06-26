@@ -59,7 +59,7 @@
 
     <script>
         // ============================================
-        // LOAD PRODUCTS FROM SERVER - KEEPING YOUR DESIGN
+        // LOAD PRODUCTS FROM SERVER
         // ============================================
         async function loadProducts() {
             const grid = document.getElementById('productGrid');
@@ -69,7 +69,6 @@
                 const data = await response.json();
                 
                 if (data.success && data.products && data.products.length > 0) {
-                    // Display products from server with your exact HTML structure
                     grid.innerHTML = data.products.map(product => `
                         <div class="product-card">
                             <a href="product-detail.html?id=${product.id}" target="_blank" style="text-decoration: none; color: inherit;">
@@ -97,190 +96,27 @@
                         </div>
                     `).join('');
                 } else {
-                    // Your original products (fallback)
                     grid.innerHTML = `
-                        <div class="product-card">
-                            <a href="product-detail.html?id=pdf-250g" target="_blank" style="text-decoration: none; color: inherit;">
-                                <div class="product-img-container">
-                                    <img src="product1.jpeg" alt="PRADH Desi Fuel 250g" class="product-real-img" onerror="this.src='https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=500';">
-                                </div>
-                            </a>
-                            <div class="product-info">
-                                <a href="product-detail.html?id=pdf-250g" target="_blank" style="text-decoration: none; color: inherit;">
-                                    <h3 class="product-title" style="cursor: pointer;">PRADH Desi Fuel (250g)</h3>
-                                </a>
-                                <p class="product-desc">Perfect trial size package. High-protein roasted mix crafted clean for swift energetic lifestyle recoveries.</p>
-                                <div class="product-meta">
-                                    <span class="product-price">₹349</span>
-                                    <button class="btn btn-primary" onclick="addToCart('pdf-250g', 'PRADH Desi Fuel', 349, '250g')">Add To Cart</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="product-card">
-                            <a href="product-detail.html?id=pdf-500g" target="_blank" style="text-decoration: none; color: inherit;">
-                                <div class="product-img-container">
-                                    <img src="product1.jpeg" alt="PRADH Desi Fuel 500g" class="product-real-img" onerror="this.src='https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=500';">
-                                </div>
-                            </a>
-                            <div class="product-info">
-                                <a href="product-detail.html?id=pdf-500g" target="_blank" style="text-decoration: none; color: inherit;">
-                                    <h3 class="product-title" style="cursor: pointer;">PRADH Desi Fuel (500g)</h3>
-                                </a>
-                                <p class="product-desc">Standard balanced nutritional pack configuration. Ideal option for consistent fitness enthusiasts.</p>
-                                <div class="product-meta">
-                                    <span class="product-price">₹599</span>
-                                    <button class="btn btn-primary" onclick="addToCart('pdf-500g', 'PRADH Desi Fuel', 599, '500g')">Add To Cart</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="product-card">
-                            <a href="product-detail.html?id=pdf-1kg" target="_blank" style="text-decoration: none; color: inherit;">
-                                <div class="product-img-container">
-                                    <img src="product1.jpeg" alt="PRADH Desi Fuel 1KG" class="product-real-img" onerror="this.src='https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=500';">
-                                </div>
-                            </a>
-                            <div class="product-info">
-                                <a href="product-detail.html?id=pdf-1kg" target="_blank" style="text-decoration: none; color: inherit;">
-                                    <h3 class="product-title" style="cursor: pointer;">PRADH Desi Fuel (1 KG)</h3>
-                                </a>
-                                <p class="product-desc">Maximum value health pack configuration. Freshly roasted traditional formula optimized for bulk performance.</p>
-                                <div class="product-meta">
-                                    <span class="product-price">₹1099</span>
-                                    <button class="btn btn-primary" onclick="addToCart('pdf-1kg', 'PRADH Desi Fuel', 1099, '1 KG')">Add To Cart</button>
-                                </div>
-                            </div>
+                        <div class="no-products">
+                            <i class="fas fa-box-open"></i>
+                            <h3>No Products Available</h3>
+                            <p>Check back soon for new products!</p>
                         </div>
                     `;
                 }
             } catch (error) {
                 console.error('Error loading products:', error);
-                // Show your original products if server fails
                 grid.innerHTML = `
-                    <div class="product-card">
-                        <a href="product-detail.html?id=pdf-250g" target="_blank" style="text-decoration: none; color: inherit;">
-                            <div class="product-img-container">
-                                <img src="product1.jpeg" alt="PRADH Desi Fuel 250g" class="product-real-img" onerror="this.src='https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=500';">
-                            </div>
-                        </a>
-                        <div class="product-info">
-                            <a href="product-detail.html?id=pdf-250g" target="_blank" style="text-decoration: none; color: inherit;">
-                                <h3 class="product-title" style="cursor: pointer;">PRADH Desi Fuel (250g)</h3>
-                            </a>
-                            <p class="product-desc">Perfect trial size package. High-protein roasted mix crafted clean for swift energetic lifestyle recoveries.</p>
-                            <div class="product-meta">
-                                <span class="product-price">₹349</span>
-                                <button class="btn btn-primary" onclick="addToCart('pdf-250g', 'PRADH Desi Fuel', 349, '250g')">Add To Cart</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <a href="product-detail.html?id=pdf-500g" target="_blank" style="text-decoration: none; color: inherit;">
-                            <div class="product-img-container">
-                                <img src="product1.jpeg" alt="PRADH Desi Fuel 500g" class="product-real-img" onerror="this.src='https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=500';">
-                            </div>
-                        </a>
-                        <div class="product-info">
-                            <a href="product-detail.html?id=pdf-500g" target="_blank" style="text-decoration: none; color: inherit;">
-                                <h3 class="product-title" style="cursor: pointer;">PRADH Desi Fuel (500g)</h3>
-                            </a>
-                            <p class="product-desc">Standard balanced nutritional pack configuration. Ideal option for consistent fitness enthusiasts.</p>
-                            <div class="product-meta">
-                                <span class="product-price">₹599</span>
-                                <button class="btn btn-primary" onclick="addToCart('pdf-500g', 'PRADH Desi Fuel', 599, '500g')">Add To Cart</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <a href="product-detail.html?id=pdf-1kg" target="_blank" style="text-decoration: none; color: inherit;">
-                            <div class="product-img-container">
-                                <img src="product1.jpeg" alt="PRADH Desi Fuel 1KG" class="product-real-img" onerror="this.src='https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=500';">
-                            </div>
-                        </a>
-                        <div class="product-info">
-                            <a href="product-detail.html?id=pdf-1kg" target="_blank" style="text-decoration: none; color: inherit;">
-                                <h3 class="product-title" style="cursor: pointer;">PRADH Desi Fuel (1 KG)</h3>
-                            </a>
-                            <p class="product-desc">Maximum value health pack configuration. Freshly roasted traditional formula optimized for bulk performance.</p>
-                            <div class="product-meta">
-                                <span class="product-price">₹1099</span>
-                                <button class="btn btn-primary" onclick="addToCart('pdf-1kg', 'PRADH Desi Fuel', 1099, '1 KG')">Add To Cart</button>
-                            </div>
-                        </div>
+                    <div class="no-products">
+                        <i class="fas fa-exclamation-triangle" style="color: #ef4444; font-size: 40px; display: block; margin-bottom: 15px;"></i>
+                        <h3 style="color: #ffffff;">Error Loading Products</h3>
+                        <p style="color: #94a3b8;">${error.message}</p>
+                        <button onclick="loadProducts()" class="btn btn-primary" style="margin-top: 15px;">
+                            <i class="fas fa-sync"></i> Retry
+                        </button>
                     </div>
                 `;
             }
-        }
-
-        // ============================================
-        // ADD TO CART - Keep your original function
-        // ============================================
-        window.addToCart = function(productId, productName, price, variant) {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            
-            const existingItem = cart.find(item => 
-                item.id === productId || 
-                (item.name === productName && item.variant === variant)
-            );
-            
-            if (existingItem) {
-                existingItem.quantity = (existingItem.quantity || 1) + 1;
-            } else {
-                cart.push({
-                    id: productId,
-                    name: productName,
-                    price: parseFloat(price),
-                    variant: variant || 'Standard',
-                    quantity: 1,
-                    image: 'product1.jpeg'
-                });
-            }
-            
-            localStorage.setItem('cart', JSON.stringify(cart));
-            
-            // Update cart badge
-            if (window.updateCartBadge) {
-                window.updateCartBadge();
-            }
-            
-            // Show notification
-            showNotification(`${productName} added to cart! 🛒`);
-        };
-
-        // ============================================
-        // SHOW NOTIFICATION
-        // ============================================
-        function showNotification(message) {
-            const existing = document.querySelector('.notification-toast');
-            if (existing) existing.remove();
-            
-            const notification = document.createElement('div');
-            notification.className = 'notification-toast';
-            notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                padding: 15px 25px;
-                background: #28a745;
-                color: white;
-                border-radius: 10px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                z-index: 9999;
-                font-weight: 500;
-                animation: slideIn 0.3s ease;
-                max-width: 350px;
-            `;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.transition = 'opacity 0.5s';
-                setTimeout(() => notification.remove(), 500);
-            }, 3000);
         }
 
         // ============================================
@@ -288,20 +124,7 @@
         // ============================================
         document.addEventListener('DOMContentLoaded', function() {
             loadProducts();
-            
-            // Update cart badge
-            if (window.updateCartBadge) {
-                window.updateCartBadge();
-            }
-            
-            // Mobile menu toggle
-            const menuToggle = document.getElementById('menuToggle');
-            const navMenu = document.getElementById('navMenu');
-            if (menuToggle && navMenu) {
-                menuToggle.addEventListener('click', function() {
-                    navMenu.classList.toggle('active');
-                });
-            }
+            if (window.updateCartBadge) window.updateCartBadge();
         });
     </script>
 </body>

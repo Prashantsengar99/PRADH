@@ -1,1 +1,41 @@
-[]
+[
+  {
+    "id": 1700000000000,
+    "username": "rahul",
+    "email": "rahul@gmail.com",
+    "password": "1234",
+    "phone": "9876543210",
+    "createdAt": "2026-06-20T10:30:00.000Z",
+    "rewards": 250,
+    "level": "Silver",
+    "address": "123, Main Street, Delhi",
+    "city": "Delhi",
+    "pincode": "110001"
+  },
+  {
+    "id": 1700000000001,
+    "username": "priya",
+    "email": "priya@gmail.com",
+    "password": "1234",
+    "phone": "9876543211",
+    "createdAt": "2026-06-21T14:20:00.000Z",
+    "rewards": 500,
+    "level": "Gold",
+    "address": "456, Park Avenue, Mumbai",
+    "city": "Mumbai",
+    "pincode": "400001"
+  },
+  {
+    "id": 1700000000002,
+    "username": "testuser",
+    "email": "test@gmail.com",
+    "password": "1234",
+    "phone": "9876543215",
+    "createdAt": "2026-06-26T14:00:00.000Z",
+    "rewards": 100,
+    "level": "Bronze",
+    "address": "777, Test Street, Pune",
+    "city": "Pune",
+    "pincode": "411001"
+  }
+]

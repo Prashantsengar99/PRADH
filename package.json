@@ -23,6 +23,8 @@
     "crypto": "^1.0.1",
     "dotenv": "^17.4.2",
     "express": "^4.22.2",
+    "fs": "^0.0.1-security",
+    "pdfkit": "^0.19.1",
     "razorpay": "^2.9.6"
   }
 }
