@@ -3,9 +3,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
-const fs = require('fs');
 const path = require('path');
 const PDFDocument = require('pdfkit');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -102,28 +102,17 @@ const reviewSchema = new mongoose.Schema({
     updatedAt: { type: Date, default: Date.now }
 });
 
-// ============================================
-// DELIVERY SETTINGS SCHEMA (MongoDB)
-// ============================================
-const settingsSchema = new mongoose.Schema({
-    key: { type: String, unique: true, required: true },
-    deliveryCharge: { type: Number, default: 49 },
-    freeDeliveryThreshold: { type: Number, default: 999 },
-    lastUpdated: { type: Date, default: Date.now }
-});
-
 const User = mongoose.model('User', userSchema);
 const Product = mongoose.model('Product', productSchema);
 const Order = mongoose.model('Order', orderSchema);
 const Coupon = mongoose.model('Coupon', couponSchema);
 const Review = mongoose.model('Review', reviewSchema);
-const Setting = mongoose.model('Setting', settingsSchema);
 
 // ============================================
 // RAZORPAY SETUP
 // ============================================
 if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-    console.error('❌ ERROR: Razorpay keys not found in .env file');
+    console.error('❌ ERROR: Razorpay keys not found!');
     process.exit(1);
 }
 
@@ -133,156 +122,6 @@ const razorpay = new Razorpay({
 });
 
 console.log('✅ Razorpay initialized');
-
-// ============================================
-// DELIVERY SETTINGS - MONGODB PERSISTENCE
-// ============================================
-let deliverySettings = {
-    deliveryCharge: 49,
-    freeDeliveryThreshold: 999,
-    lastUpdated: new Date()
-};
-
-// Load settings from MongoDB
-async function loadDeliverySettingsFromDB() {
-    try {
-        let setting = await Setting.findOne({ key: 'delivery' });
-        
-        if (!setting) {
-            setting = new Setting({
-                key: 'delivery',
-                deliveryCharge: 49,
-                freeDeliveryThreshold: 999,
-                lastUpdated: new Date()
-            });
-            await setting.save();
-            console.log('✅ Default delivery settings created in MongoDB');
-        }
-        
-        deliverySettings.deliveryCharge = setting.deliveryCharge;
-        deliverySettings.freeDeliveryThreshold = setting.freeDeliveryThreshold;
-        deliverySettings.lastUpdated = setting.lastUpdated;
-        
-        console.log('✅ Delivery settings loaded from MongoDB:', deliverySettings);
-        return true;
-    } catch (error) {
-        console.error('❌ Error loading delivery settings from MongoDB:', error);
-        return false;
-    }
-}
-
-// Save settings to MongoDB
-async function saveDeliverySettingsToDB() {
-    try {
-        const result = await Setting.findOneAndUpdate(
-            { key: 'delivery' },
-            {
-                deliveryCharge: deliverySettings.deliveryCharge,
-                freeDeliveryThreshold: deliverySettings.freeDeliveryThreshold,
-                lastUpdated: new Date()
-            },
-            { new: true, upsert: true }
-        );
-        
-        // Also save to file as backup
-        try {
-            fs.writeFileSync('settings.json', JSON.stringify({
-                deliveryCharge: result.deliveryCharge,
-                freeDeliveryThreshold: result.freeDeliveryThreshold,
-                lastUpdated: result.lastUpdated
-            }, null, 2));
-        } catch (fileError) {
-            // Silent fail for file backup
-        }
-        
-        console.log('✅ Delivery settings saved to MongoDB:', result);
-        return true;
-    } catch (error) {
-        console.error('❌ Error saving delivery settings to MongoDB:', error);
-        return false;
-    }
-}
-
-// ============================================
-// DELIVERY SETTINGS API
-// ============================================
-
-app.get('/api/delivery-charge', async (req, res) => {
-    try {
-        const setting = await Setting.findOne({ key: 'delivery' });
-        if (!setting) {
-            return res.json({ 
-                success: true, 
-                deliveryCharge: 49, 
-                freeDeliveryThreshold: 999 
-            });
-        }
-        res.json({ 
-            success: true, 
-            deliveryCharge: setting.deliveryCharge,
-            freeDeliveryThreshold: setting.freeDeliveryThreshold
-        });
-    } catch (error) {
-        console.error('Error fetching delivery settings:', error);
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-app.put('/api/delivery-charge', async (req, res) => {
-    try {
-        const { charge, freeThreshold } = req.body;
-        
-        if (charge !== undefined && (isNaN(charge) || charge < 0)) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Invalid delivery charge amount (must be >= 0)' 
-            });
-        }
-        
-        if (freeThreshold !== undefined && (isNaN(freeThreshold) || freeThreshold < 0)) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Invalid free threshold amount (must be >= 0)' 
-            });
-        }
-        
-        const updateData = { lastUpdated: new Date() };
-        if (charge !== undefined) updateData.deliveryCharge = parseFloat(charge);
-        if (freeThreshold !== undefined) updateData.freeDeliveryThreshold = parseFloat(freeThreshold);
-        
-        const setting = await Setting.findOneAndUpdate(
-            { key: 'delivery' },
-            updateData,
-            { new: true, upsert: true }
-        );
-        
-        deliverySettings.deliveryCharge = setting.deliveryCharge;
-        deliverySettings.freeDeliveryThreshold = setting.freeDeliveryThreshold;
-        deliverySettings.lastUpdated = setting.lastUpdated;
-        
-        // Backup to file
-        try {
-            fs.writeFileSync('settings.json', JSON.stringify({
-                deliveryCharge: setting.deliveryCharge,
-                freeDeliveryThreshold: setting.freeDeliveryThreshold,
-                lastUpdated: setting.lastUpdated
-            }, null, 2));
-        } catch (fileError) {}
-        
-        console.log('✅ Delivery settings updated in MongoDB:', setting);
-        res.json({ 
-            success: true, 
-            message: 'Delivery settings updated successfully',
-            settings: {
-                deliveryCharge: setting.deliveryCharge,
-                freeDeliveryThreshold: setting.freeDeliveryThreshold
-            }
-        });
-    } catch (error) {
-        console.error('Error updating delivery settings:', error);
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
 
 // ============================================
 // USER ROUTES
@@ -577,48 +416,91 @@ app.get('/api/reviews/stats/:productId', async (req, res) => {
 });
 
 // ============================================
-// INVOICE PDF GENERATION
+// INVOICE PDF GENERATION - FIXED OVERLAPPING
 // ============================================
 app.get('/api/invoice/:orderId', async (req, res) => {
     try {
         const { orderId } = req.params;
+        console.log('📄 Generating invoice for order:', orderId);
+        
         const order = await Order.findOne({ id: orderId });
         if (!order) {
             return res.status(404).json({ success: false, error: 'Order not found' });
         }
 
-        const doc = new PDFDocument({ size: 'A4', margin: 50, bufferPages: true });
+        const doc = new PDFDocument({ 
+            size: 'A4', 
+            margin: 50,
+            bufferPages: true
+        });
+        
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename=invoice-${order.id}.pdf`);
         doc.pipe(res);
 
+        // Colors
         const gold = '#facc15';
         const dark = '#0f172a';
         const gray = '#64748b';
         const lightGray = '#f8fafc';
+        const border = '#e2e8f0';
 
         let y = 50;
-        doc.fontSize(28).font('Helvetica-Bold').fillColor(gold).text('PRADH DESI FUEL', 50, y, { align: 'center' });
+
+        // ===== HEADER =====
+        // Company Name
+        doc.fontSize(28)
+           .font('Helvetica-Bold')
+           .fillColor(gold)
+           .text('PRADH DESI FUEL', 50, y, { align: 'center' });
         y += 35;
-        doc.fontSize(12).font('Helvetica').fillColor(gray).text('💪 Pure Desi Protein Fuel', 50, y, { align: 'center' });
+
+        doc.fontSize(12)
+           .font('Helvetica')
+           .fillColor(gray)
+           .text('💪 Pure Desi Protein Fuel', 50, y, { align: 'center' });
         y += 30;
-        doc.fontSize(24).font('Helvetica-Bold').fillColor(dark).text('INVOICE', 50, y, { align: 'center' });
+
+        // Invoice Title
+        doc.fontSize(24)
+           .font('Helvetica-Bold')
+           .fillColor(dark)
+           .text('INVOICE', 50, y, { align: 'center' });
         y += 20;
-        doc.fontSize(10).font('Helvetica').fillColor(gray).text(`Invoice #: ${order.id}`, 50, y, { align: 'center' });
+
+        doc.fontSize(10)
+           .font('Helvetica')
+           .fillColor(gray)
+           .text(`Invoice #: ${order.id}`, 50, y, { align: 'center' });
         y += 30;
+
+        // Divider
         doc.moveTo(50, y).lineTo(550, y).strokeColor(gold).lineWidth(2).stroke();
         y += 25;
 
-        const leftX = 50, rightX = 320, lineHeight = 20;
-        doc.fontSize(11).font('Helvetica-Bold').fillColor(dark).text('ORDER DETAILS', leftX, y);
+        // ===== TWO COLUMN LAYOUT =====
+        const leftX = 50;
+        const rightX = 320;
+        const lineHeight = 20;
+
+        // Left: Order Details
+        doc.fontSize(11)
+           .font('Helvetica-Bold')
+           .fillColor(dark)
+           .text('ORDER DETAILS', leftX, y);
         y += 18;
-        doc.font('Helvetica').fontSize(9).fillColor(gray);
+
+        doc.font('Helvetica')
+           .fontSize(9)
+           .fillColor(gray);
+        
         const orderInfo = [
             ['Order Date:', new Date(order.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })],
             ['Payment ID:', order.payment_id || 'N/A'],
             ['Payment Method:', order.customer?.paymentMethod || 'N/A'],
             ['Status:', (order.status || 'Pending').toUpperCase()]
         ];
+        
         let orderY = y;
         orderInfo.forEach(([label, value]) => {
             doc.text(label, leftX, orderY);
@@ -626,10 +508,18 @@ app.get('/api/invoice/:orderId', async (req, res) => {
             orderY += lineHeight;
         });
 
+        // Right: Customer Info
         let custY = y;
-        doc.font('Helvetica-Bold').fontSize(11).fillColor(dark).text('BILL TO', rightX, custY);
+        doc.font('Helvetica-Bold')
+           .fontSize(11)
+           .fillColor(dark)
+           .text('BILL TO', rightX, custY);
         custY += 18;
-        doc.font('Helvetica').fontSize(9).fillColor(gray);
+
+        doc.font('Helvetica')
+           .fontSize(9)
+           .fillColor(gray);
+        
         const cust = order.customer || {};
         const customerLines = [
             cust.name || 'Guest',
@@ -638,6 +528,7 @@ app.get('/api/invoice/:orderId', async (req, res) => {
             `Phone: ${cust.phone || 'N/A'}`,
             `Email: ${cust.email || 'N/A'}`
         ];
+        
         customerLines.forEach(line => {
             if (line.trim()) {
                 doc.text(line, rightX, custY);
@@ -645,27 +536,45 @@ app.get('/api/invoice/:orderId', async (req, res) => {
             }
         });
 
+        // Set y to max of both columns
         y = Math.max(orderY, custY) + 15;
-        doc.moveTo(50, y).lineTo(550, y).strokeColor('#e2e8f0').lineWidth(1).stroke();
+
+        // ===== DIVIDER =====
+        doc.moveTo(50, y).lineTo(550, y).strokeColor(border).lineWidth(1).stroke();
         y += 20;
 
-        const tableX = 50, col1 = 60, col2 = 280, col3 = 380, col4 = 460;
-        doc.fillColor(lightGray).rect(tableX, y, 500, 22).fill();
-        doc.fillColor(dark).font('Helvetica-Bold').fontSize(9);
+        // ===== ITEMS TABLE =====
+        const tableX = 50;
+        const col1 = 60;
+        const col2 = 280;
+        const col3 = 380;
+        const col4 = 460;
+
+        // Table Header
+        doc.fillColor(lightGray)
+           .rect(tableX, y, 500, 22)
+           .fill();
+        doc.fillColor(dark)
+           .font('Helvetica-Bold')
+           .fontSize(9);
         doc.text('Product', col1, y + 5);
         doc.text('Qty', col2, y + 5);
         doc.text('Price', col3, y + 5);
         doc.text('Total', col4, y + 5);
         y += 22;
 
+        // Table Rows
         let subtotal = 0;
         order.items?.forEach((item, idx) => {
             const total = item.price * item.quantity;
             subtotal += total;
+
             if (idx % 2 === 0) {
                 doc.fillColor('#fafafa').rect(tableX, y, 500, 20).fill();
             }
-            doc.fillColor(dark).font('Helvetica').fontSize(9);
+            doc.fillColor(dark)
+               .font('Helvetica')
+               .fontSize(9);
             const name = item.name.length > 28 ? item.name.substring(0, 25) + '...' : item.name;
             doc.text(name || 'Product', col1, y + 4);
             doc.text(item.quantity || 1, col2, y + 4);
@@ -674,55 +583,105 @@ app.get('/api/invoice/:orderId', async (req, res) => {
             y += 20;
         });
 
-        doc.moveTo(50, y).lineTo(550, y).strokeColor('#e2e8f0').lineWidth(1).stroke();
+        // Table Bottom Line
+        doc.moveTo(50, y).lineTo(550, y).strokeColor(border).lineWidth(1).stroke();
         y += 15;
 
+        // ===== TOTALS =====
         const deliveryCharge = order.deliveryCharge || 0;
         const discount = order.discount || 0;
         const grandTotal = subtotal + deliveryCharge - discount;
 
-        const totalX = 500, labelX = 400;
-        doc.font('Helvetica').fontSize(10);
+        const totalX = 500;
+        const labelX = 400;
+
+        doc.font('Helvetica')
+           .fontSize(10);
+        
+        // Subtotal
         doc.fillColor(gray).text('Subtotal:', labelX, y, { align: 'right' });
         doc.fillColor(dark).text(`₹${subtotal.toFixed(0)}`, totalX, y, { align: 'right' });
         y += 22;
+
+        // Delivery
         doc.fillColor(gray).text('Delivery:', labelX, y, { align: 'right' });
-        doc.fillColor(deliveryCharge === 0 ? '#22c55e' : dark).text(deliveryCharge === 0 ? 'FREE' : `₹${deliveryCharge.toFixed(0)}`, totalX, y, { align: 'right' });
+        doc.fillColor(deliveryCharge === 0 ? '#22c55e' : dark)
+           .text(deliveryCharge === 0 ? 'FREE' : `₹${deliveryCharge.toFixed(0)}`, totalX, y, { align: 'right' });
         y += 22;
+
+        // Discount
         if (order.coupon) {
             doc.fillColor(gray).text(`Discount (${order.coupon}):`, labelX, y, { align: 'right' });
             doc.fillColor('#22c55e').text(`-₹${discount.toFixed(0)}`, totalX, y, { align: 'right' });
             y += 22;
         }
+
+        // Grand Total - with more spacing
         y += 8;
         doc.moveTo(300, y).lineTo(550, y).strokeColor(gold).lineWidth(1.5).stroke();
         y += 10;
-        doc.font('Helvetica-Bold').fontSize(16).fillColor(gold).text('Grand Total:', labelX + 400, y, { align: 'right' }).text(`₹${grandTotal.toFixed(0)}`, totalX + 400, y, { align: 'right' });
+
+        doc.font('Helvetica-Bold')
+           .fontSize(16)
+           .fillColor(gold)
+           .text('Grand Total:', labelX + 400, y, { align: 'right' })
+           .text(`₹${grandTotal.toFixed(0)}`, totalX + 400, y, { align: 'right' });
         y += 30;
 
+        // ===== COUPON BADGE =====
         if (order.coupon) {
-            doc.fillColor('#22c55e').font('Helvetica').fontSize(9).text(`🎉 Coupon Applied: ${order.coupon} (${order.discount || 0}% off)`, 50, y);
+            doc.fillColor('#22c55e')
+               .font('Helvetica')
+               .fontSize(9)
+               .text(`🎉 Coupon Applied: ${order.coupon} (${order.discount || 0}% off)`, 50, y);
             y += 20;
         }
 
+        // ===== CANCELLATION REASON =====
         if (order.cancellation_reason) {
-            doc.fillColor('#ef4444').font('Helvetica-Bold').fontSize(9).text('⚠️ Cancellation Reason:', 50, y);
-            doc.fillColor(gray).font('Helvetica').fontSize(9).text(order.cancellation_reason, 50, y + 14);
+            doc.fillColor('#ef4444')
+               .font('Helvetica-Bold')
+               .fontSize(9)
+               .text('⚠️ Cancellation Reason:', 50, y);
+            doc.fillColor(gray)
+               .font('Helvetica')
+               .fontSize(9)
+               .text(order.cancellation_reason, 50, y + 14);
             y += 40;
         }
 
-        const statusColors = { pending: '#facc15', paid: '#22c55e', shipped: '#3b82f6', delivered: '#8b5cf6', cancelled: '#ef4444' };
+        // ===== STATUS BADGE =====
+        const statusColors = { 
+            pending: '#facc15', 
+            paid: '#22c55e', 
+            shipped: '#3b82f6', 
+            delivered: '#8b5cf6', 
+            cancelled: '#ef4444' 
+        };
         const statusColor = statusColors[order.status] || gray;
-        doc.fillColor(statusColor).roundedRect(50, y, 130, 22, 4).fill();
-        doc.fillColor('#ffffff').font('Helvetica-Bold').fontSize(9).text(`STATUS: ${(order.status || 'Pending').toUpperCase()}`, 58, y + 5);
+        doc.fillColor(statusColor)
+           .roundedRect(50, y, 130, 22, 4)
+           .fill();
+        doc.fillColor('#ffffff')
+           .font('Helvetica-Bold')
+           .fontSize(9)
+           .text(`STATUS: ${(order.status || 'Pending').toUpperCase()}`, 58, y + 5);
         y += 35;
 
+        // ===== FOOTER =====
         const footerY = 770;
         doc.moveTo(50, footerY).lineTo(550, footerY).strokeColor(gold).lineWidth(1).stroke();
-        doc.fontSize(8).font('Helvetica').fillColor(gray).text('💪 Thank you for choosing PRADH Desi Fuel!', 50, footerY + 12, { align: 'center' }).text('📞 +91 8979993655  |  📧 support@pradh.com', 50, footerY + 26, { align: 'center' }).text(`Generated: ${new Date().toLocaleString()}`, 50, footerY + 40, { align: 'center' });
+
+        doc.fontSize(8)
+           .font('Helvetica')
+           .fillColor(gray)
+           .text('💪 Thank you for choosing PRADH Desi Fuel!', 50, footerY + 12, { align: 'center' })
+           .text('📞 +91 8979993655  |  📧 support@pradh.com', 50, footerY + 26, { align: 'center' })
+           .text(`Generated: ${new Date().toLocaleString()}`, 50, footerY + 40, { align: 'center' });
 
         doc.end();
         console.log('✅ Invoice generated:', orderId);
+
     } catch (error) {
         console.error('❌ Error generating invoice:', error);
         res.status(500).json({ success: false, error: 'Failed to generate invoice' });
@@ -796,19 +755,76 @@ app.get('/', (req, res) => {
 });
 
 // ============================================
-// LOAD SETTINGS ON STARTUP
-// ============================================
-(async function initSettings() {
-    await loadDeliverySettingsFromDB();
-})();
-
-// ============================================
 // START SERVER
 // ============================================
 app.listen(PORT, () => {
     console.log(`\n🚀 Server running on http://localhost:${PORT}`);
     console.log(`📦 Database: MongoDB Atlas`);
-    console.log(`✅ Current Delivery Charge: ₹${deliverySettings.deliveryCharge}`);
-    console.log(`✅ Free Delivery Threshold: ₹${deliverySettings.freeDeliveryThreshold}`);
     console.log(`✅ Server is ready!\n`);
+});
+
+// ============================================
+// DELIVERY SETTINGS API - ADD THIS SECTION
+// ============================================
+
+// Get delivery settings
+app.get('/api/delivery-charge', (req, res) => {
+    try {
+        let settings = {};
+        if (fs.existsSync('settings.json')) {
+            const data = fs.readFileSync('settings.json', 'utf8');
+            settings = JSON.parse(data);
+        }
+        const deliveryCharge = settings.deliveryCharge !== undefined ? settings.deliveryCharge : 49;
+        const freeThreshold = settings.freeDeliveryThreshold || 999;
+        
+        res.json({ 
+            success: true, 
+            deliveryCharge: deliveryCharge,
+            freeDeliveryThreshold: freeThreshold
+        });
+    } catch (error) {
+        console.error('Error fetching delivery settings:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Update delivery settings
+app.put('/api/delivery-charge', (req, res) => {
+    try {
+        const { charge, freeThreshold } = req.body;
+        
+        if (charge !== undefined && (isNaN(charge) || charge < 0)) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Invalid delivery charge amount' 
+            });
+        }
+        
+        let settings = {};
+        if (fs.existsSync('settings.json')) {
+            const data = fs.readFileSync('settings.json', 'utf8');
+            settings = JSON.parse(data);
+        }
+        
+        if (charge !== undefined) {
+            settings.deliveryCharge = parseFloat(charge);
+        }
+        if (freeThreshold !== undefined && freeThreshold !== null) {
+            settings.freeDeliveryThreshold = parseFloat(freeThreshold);
+        }
+        settings.lastUpdated = new Date().toISOString();
+        
+        fs.writeFileSync('settings.json', JSON.stringify(settings, null, 2));
+        
+        console.log('✅ Delivery settings updated:', settings);
+        res.json({ 
+            success: true, 
+            message: 'Delivery settings updated successfully',
+            settings: settings
+        });
+    } catch (error) {
+        console.error('Error updating delivery settings:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
