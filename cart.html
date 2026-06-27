@@ -428,12 +428,6 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <div class="announcement-bar">
-        <div class="announcement-text" id="announcement-text">
-            🔥 Use Code: <span class="coupon-highlight">DESIFUEL10</span> for extra 10% OFF on your first order!
-        </div>
-    </div>
 
     <header>
         <div class="nav-container">
@@ -475,8 +469,8 @@
                     Your Cart
                     <span class="cart-count-badge" id="cartCountBadge">0</span>
                 </h2>
-                <div style="color: #94a3b8; font-size: 14px;">
-                    <i class="fas fa-truck"></i> Free delivery on orders above ₹999
+                <div style="color: #94a3b8; font-size: 14px;" id="deliveryInfo">
+                    <i class="fas fa-truck"></i> Loading delivery info...
                 </div>
             </div>
 
@@ -509,6 +503,36 @@
 
     <script src="main.js"></script>
     <script>
+        // ============================================
+        // GET DELIVERY SETTINGS FROM SERVER
+        // ============================================
+        let deliverySettings = {
+            deliveryCharge: 0,
+            freeDeliveryThreshold: 0
+        };
+
+        async function getDeliverySettings() {
+            try {
+                const response = await fetch('/api/delivery-charge');
+                const data = await response.json();
+                if (data.success) {
+                    deliverySettings.deliveryCharge = data.deliveryCharge || 0;
+                    deliverySettings.freeDeliveryThreshold = data.freeDeliveryThreshold || 0;
+                    
+                    // Update header
+                    const deliveryInfo = document.getElementById('deliveryInfo');
+                    if (deliveryInfo) {
+                        deliveryInfo.innerHTML = `<i class="fas fa-truck"></i> Free delivery on orders above ₹${deliverySettings.freeDeliveryThreshold}`;
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching delivery settings:', error);
+            }
+        }
+
+        // ============================================
+        // LOAD CART
+        // ============================================
         function loadCart() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             const container = document.getElementById('cartItemsContainer');
@@ -571,8 +595,8 @@
 
             html += '</div>';
 
-            // Summary section
-            const deliveryCharge = total > 999 ? 0 : 49;
+            // Summary section - Using dynamic delivery settings
+            const deliveryCharge = total > deliverySettings.freeDeliveryThreshold ? 0 : deliverySettings.deliveryCharge;
             const grandTotal = total + deliveryCharge;
 
             html += `
@@ -591,10 +615,14 @@
                         ${deliveryCharge > 0 ? `
                             <div class="cart-total-sub">
                                 <i class="fas fa-truck"></i> Delivery: ₹${deliveryCharge.toFixed(2)}
+                                <br>
+                                <small style="color: #64748b;">Free delivery above ₹${deliverySettings.freeDeliveryThreshold}</small>
                             </div>
                         ` : `
                             <div class="cart-total-sub" style="color: #22c55e;">
                                 <i class="fas fa-check-circle"></i> Free Delivery
+                                <br>
+                                <small style="color: #64748b;">You saved ₹${deliverySettings.deliveryCharge} on delivery!</small>
                             </div>
                         `}
                         <div style="margin-top: 8px; color: #94a3b8; font-size: 14px;">
@@ -692,10 +720,41 @@
             }, 3000);
         }
 
-        // Load cart on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        // ============================================
+        // LOAD CART ON PAGE LOAD
+        // ============================================
+        document.addEventListener('DOMContentLoaded', async function() {
+            // First get delivery settings
+            await getDeliverySettings();
+            // Then load cart
             loadCart();
         });
     </script>
 </body>
 </html>
+
+// ============================================
+// DELIVERY SETTINGS FOR CART - ADD THIS
+// ============================================
+
+async function getDeliverySettings() {
+    try {
+        const response = await fetch('/api/delivery-charge');
+        const data = await response.json();
+        if (data.success) {
+            window.deliverySettings = {
+                deliveryCharge: data.deliveryCharge || 0,
+                freeDeliveryThreshold: data.freeDeliveryThreshold || 0
+            };
+            console.log('📦 Delivery settings loaded:', window.deliverySettings);
+        }
+    } catch (error) {
+        console.error('Error fetching delivery settings:', error);
+        window.deliverySettings = { deliveryCharge: 49, freeDeliveryThreshold: 999 };
+    }
+}
+
+// Load delivery settings on page load
+document.addEventListener('DOMContentLoaded', async function() {
+    await getDeliverySettings();
+});

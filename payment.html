@@ -344,11 +344,6 @@
 </head>
 <body>
 
-    <div class="announcement-bar">
-        <div class="announcement-text">
-            🔥 Use Code: <span class="coupon-highlight">DESIFUEL10</span> for extra 10% OFF on your first order!
-        </div>
-    </div>
 
     <header>
         <div class="nav-container">
@@ -486,7 +481,29 @@
     <script src="main.js"></script>
     <script>
         // ============================================
-        // GET COUPONS FROM SERVER (NOT localStorage)
+        // DELIVERY SETTINGS - FETCH FROM SERVER
+        // ============================================
+        let deliverySettings = {
+            deliveryCharge: 49,
+            freeDeliveryThreshold: 999
+        };
+
+        async function getDeliverySettings() {
+            try {
+                const response = await fetch('/api/delivery-charge');
+                const data = await response.json();
+                if (data.success) {
+                    deliverySettings.deliveryCharge = data.deliveryCharge || 49;
+                    deliverySettings.freeDeliveryThreshold = data.freeDeliveryThreshold || 999;
+                    console.log('📦 Delivery settings loaded:', deliverySettings);
+                }
+            } catch (error) {
+                console.error('Error fetching delivery settings:', error);
+            }
+        }
+
+        // ============================================
+        // GET COUPONS FROM SERVER
         // ============================================
         async function getCouponsFromServer() {
             try {
@@ -513,7 +530,7 @@
         let appliedCouponCode = '';
         let availableCoupons = [];
 
-        // Display order summary
+        // Display order summary with dynamic delivery charge
         function displayOrderSummary() {
             const container = document.getElementById('orderItemsList');
             
@@ -549,11 +566,27 @@
 
             container.innerHTML = html;
 
-            deliveryCharge = totalAmount > 999 ? 0 : 49;
+            // Calculate delivery charge based on settings
+            let deliveryFee = deliverySettings.deliveryCharge || 49;
+            if (totalAmount >= deliverySettings.freeDeliveryThreshold) {
+                deliveryFee = 0;
+            }
+            deliveryCharge = deliveryFee;
+
             const finalTotal = totalAmount + deliveryCharge - couponDiscount;
 
             document.getElementById('subtotal').textContent = totalAmount.toFixed(2);
-            document.getElementById('deliveryCharge').textContent = deliveryCharge.toFixed(2);
+            
+            // Show delivery charge
+            const deliveryDisplay = document.getElementById('deliveryCharge');
+            if (deliveryCharge === 0) {
+                deliveryDisplay.textContent = 'FREE';
+                deliveryDisplay.style.color = '#22c55e';
+            } else {
+                deliveryDisplay.textContent = deliveryCharge.toFixed(2);
+                deliveryDisplay.style.color = '#facc15';
+            }
+            
             document.getElementById('grandTotal').textContent = finalTotal.toFixed(2);
             
             const discountRow = document.getElementById('discountRow');
@@ -580,7 +613,6 @@
             }
 
             try {
-                // Validate coupon with server
                 const response = await fetch('/api/coupons/validate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -773,7 +805,12 @@
         // INITIALIZATION
         // ============================================
         document.addEventListener('DOMContentLoaded', async function() {
+            // First load delivery settings
+            await getDeliverySettings();
+            
+            // Then display order summary
             displayOrderSummary();
+            
             if (window.updateCartBadge) window.updateCartBadge();
             
             // Check for coupon in URL

@@ -5,6 +5,7 @@ const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const path = require('path');
 const PDFDocument = require('pdfkit');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -760,4 +761,70 @@ app.listen(PORT, () => {
     console.log(`\n🚀 Server running on http://localhost:${PORT}`);
     console.log(`📦 Database: MongoDB Atlas`);
     console.log(`✅ Server is ready!\n`);
+});
+
+// ============================================
+// DELIVERY SETTINGS API - ADD THIS SECTION
+// ============================================
+
+// Get delivery settings
+app.get('/api/delivery-charge', (req, res) => {
+    try {
+        let settings = {};
+        if (fs.existsSync('settings.json')) {
+            const data = fs.readFileSync('settings.json', 'utf8');
+            settings = JSON.parse(data);
+        }
+        const deliveryCharge = settings.deliveryCharge !== undefined ? settings.deliveryCharge : 49;
+        const freeThreshold = settings.freeDeliveryThreshold || 999;
+        
+        res.json({ 
+            success: true, 
+            deliveryCharge: deliveryCharge,
+            freeDeliveryThreshold: freeThreshold
+        });
+    } catch (error) {
+        console.error('Error fetching delivery settings:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Update delivery settings
+app.put('/api/delivery-charge', (req, res) => {
+    try {
+        const { charge, freeThreshold } = req.body;
+        
+        if (charge !== undefined && (isNaN(charge) || charge < 0)) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Invalid delivery charge amount' 
+            });
+        }
+        
+        let settings = {};
+        if (fs.existsSync('settings.json')) {
+            const data = fs.readFileSync('settings.json', 'utf8');
+            settings = JSON.parse(data);
+        }
+        
+        if (charge !== undefined) {
+            settings.deliveryCharge = parseFloat(charge);
+        }
+        if (freeThreshold !== undefined && freeThreshold !== null) {
+            settings.freeDeliveryThreshold = parseFloat(freeThreshold);
+        }
+        settings.lastUpdated = new Date().toISOString();
+        
+        fs.writeFileSync('settings.json', JSON.stringify(settings, null, 2));
+        
+        console.log('✅ Delivery settings updated:', settings);
+        res.json({ 
+            success: true, 
+            message: 'Delivery settings updated successfully',
+            settings: settings
+        });
+    } catch (error) {
+        console.error('Error updating delivery settings:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
