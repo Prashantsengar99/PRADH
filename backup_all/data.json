@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Whey Protein Isolate",
+    "price": 2499,
+    "description": "Pure whey protein isolate, 25g protein per serving",
+    "image": "product.jpeg",
+    "category": "Whey Protein"
+  },
+  {
+    "id": 2,
+    "name": "Mass Gainer",
+    "price": 2999,
+    "description": "High calorie mass gainer for muscle growth",
+    "image": "product1.jpeg",
+    "category": "Mass Gainer"
+  },
+  {
+    "id": 3,
+    "name": "BCAA Complex",
+    "price": 1499,
+    "description": "Essential amino acids for recovery",
+    "image": "product2.jpeg",
+    "category": "Supplements"
+  }
+]

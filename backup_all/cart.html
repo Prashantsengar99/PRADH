@@ -96,11 +96,6 @@
             font-size: 20px;
             font-weight: 700;
         }
-        .cart-item-limit-warning {
-            color: #facc15;
-            font-size: 12px;
-            margin-top: 4px;
-        }
         .cart-item-actions {
             display: flex;
             align-items: center;
@@ -130,13 +125,9 @@
             align-items: center;
             justify-content: center;
         }
-        .quantity-btn:hover:not(:disabled) {
+        .quantity-btn:hover {
             background: #facc15;
             color: #0f172a;
-        }
-        .quantity-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
         }
         .quantity-number {
             color: #ffffff;
@@ -379,52 +370,9 @@
         }
 
         // ============================================
-        // GET PRODUCT LIMIT
+        // STOCK VALIDATION FUNCTIONS - SIRF EK BAAR
         // ============================================
-        async function getProductLimit(productId) {
-            try {
-                const response = await fetch('/api/products/' + productId + '/purchase-limit');
-                const data = await response.json();
-                return data.maxPurchase || 0;
-            } catch (error) {
-                console.error('Error getting product limit:', error);
-                return 0;
-            }
-        }
 
-        // ============================================
-        // UPDATE QUANTITY WITH LIMIT CHECK
-        // ============================================
-        async function updateQuantity(index, change) {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            if (!cart[index]) return;
-            
-            const newQuantity = parseInt(cart[index].quantity) + change;
-            if (newQuantity < 1) return;
-            
-            // Check stock
-            const stockCheck = await checkStock(cart[index].id, newQuantity);
-            if (!stockCheck.available) {
-                alert('❌ Only ' + stockCheck.stock + ' items available!');
-                return;
-            }
-            
-            // Check product limit
-            const limit = await getProductLimit(cart[index].id);
-            if (limit > 0 && newQuantity > limit) {
-                alert('❌ Max ' + limit + ' unit(s) allowed for this product');
-                return;
-            }
-            
-            cart[index].quantity = newQuantity;
-            localStorage.setItem('cart', JSON.stringify(cart));
-            loadCart();
-            if (window.updateCartBadge) window.updateCartBadge();
-        }
-
-        // ============================================
-        // CHECK STOCK
-        // ============================================
         async function checkStock(productId, quantity) {
             try {
                 const response = await fetch('/api/products/' + productId + '/stock');
@@ -455,53 +403,34 @@
             return true;
         }
 
-        // ============================================
-        // PROCEED TO CHECKOUT
-        // ============================================
         async function proceedToCheckout() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             if (cart.length === 0) {
                 alert('Your cart is empty!');
                 return;
             }
-            
-            // Check stock
             const stockValid = await validateCartStock();
             if (!stockValid) return;
-            
-            // Check purchase limit for each item
-            const token = localStorage.getItem('token');
-            const user = JSON.parse(localStorage.getItem('user') || 'null');
-            
-            if (token && user) {
-                for (let item of cart) {
-                    try {
-                        const response = await fetch('/api/products/' + item.id + '/purchase-limit?userId=' + user.id, {
-                            headers: { 'Authorization': 'Bearer ' + token }
-                        });
-                        const data = await response.json();
-                        
-                        if (data.success && !data.canPurchase) {
-                            alert('❌ "' + item.name + '" - ' + data.message);
-                            return;
-                        }
-                        if (data.success && data.maxPurchase > 0 && data.remaining < item.quantity) {
-                            alert('❌ "' + item.name + '" - Only ' + data.remaining + ' unit(s) allowed. Max: ' + data.maxPurchase);
-                            return;
-                        }
-                    } catch (error) {
-                        console.error('Error checking purchase limit:', error);
-                    }
-                }
-            }
-            
             window.location.href = 'payment.html';
         }
 
-        // ============================================
-        // LOAD CART
-        // ============================================
-        async function loadCart() {
+        async function updateQuantity(index, change) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (!cart[index]) return;
+            const newQuantity = parseInt(cart[index].quantity) + change;
+            if (newQuantity < 1) return;
+            const stockCheck = await checkStock(cart[index].id, newQuantity);
+            if (!stockCheck.available) {
+                alert('❌ Only ' + stockCheck.stock + ' items available!');
+                return;
+            }
+            cart[index].quantity = newQuantity;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+            if (window.updateCartBadge) window.updateCartBadge();
+        }
+
+        function loadCart() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             const container = document.getElementById('cartItemsContainer');
             updateCartBadgeUI(cart);
@@ -513,40 +442,23 @@
 
             let html = '<div class="cart-items-list">';
             let total = 0;
-
-            for (let index = 0; index < cart.length; index++) {
-                const item = cart[index];
+            cart.forEach((item, index) => {
                 const itemTotal = parseFloat(item.price) * parseInt(item.quantity);
                 total += itemTotal;
-                
-                // Get product limit
-                let limit = 0;
-                try {
-                    const response = await fetch('/api/products/' + item.id + '/purchase-limit');
-                    const data = await response.json();
-                    limit = data.maxPurchase || 0;
-                } catch (e) {}
-                
-                const isLimited = limit > 0;
-                const maxQty = isLimited ? limit : 999;
-                const warningText = isLimited ? '⚠️ Max ' + limit + ' unit(s) allowed' : '';
-                
                 html += '<div class="cart-item" data-index="' + index + '">' +
                     '<div class="cart-item-image">' + (item.image ? '<img src="' + item.image + '" alt="' + item.name + '">' : '<div class="no-image">💪</div>') + '</div>' +
                     '<div class="cart-item-details"><div class="cart-item-name">' + (item.name || 'Product') + '</div>' +
-                    '<div class="cart-item-price">₹' + parseFloat(item.price).toFixed(2) + '</div>' +
-                    (isLimited ? '<div class="cart-item-limit-warning">' + warningText + '</div>' : '') +
-                    '</div>' +
+                    '<div class="cart-item-price">₹' + parseFloat(item.price).toFixed(2) + '</div></div>' +
                     '<div class="cart-item-actions">' +
                     '<div class="quantity-control">' +
-                    '<button class="quantity-btn" onclick="updateQuantity(' + index + ', -1)" ' + (item.quantity <= 1 ? 'disabled' : '') + '><i class="fas fa-minus"></i></button>' +
+                    '<button class="quantity-btn" onclick="updateQuantity(' + index + ', -1)"><i class="fas fa-minus"></i></button>' +
                     '<span class="quantity-number">' + item.quantity + '</span>' +
-                    '<button class="quantity-btn" onclick="updateQuantity(' + index + ', 1)" ' + (item.quantity >= maxQty ? 'disabled' : '') + '><i class="fas fa-plus"></i></button>' +
+                    '<button class="quantity-btn" onclick="updateQuantity(' + index + ', 1)"><i class="fas fa-plus"></i></button>' +
                     '</div>' +
                     '<div class="item-total">₹' + itemTotal.toFixed(2) + '</div>' +
                     '<button class="remove-btn" onclick="removeItem(' + index + ')" title="Remove item"><i class="fas fa-trash"></i></button>' +
                     '</div></div>';
-            }
+            });
             html += '</div>';
 
             const deliveryCharge = total > deliverySettings.freeDeliveryThreshold ? 0 : deliverySettings.deliveryCharge;

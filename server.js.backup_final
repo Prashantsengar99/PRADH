@@ -503,7 +503,7 @@ app.get('/api/products/:id/stock', async (req, res) => {
     }
 });
 
-app.get('/api/products/:id/purchase-limit', verifyToken, async (req, res) => {
+app.get('/api/products/:id/purchase-limit', async (req, res) => {
     try {
         const { id } = req.params;
         const product = await Product.findOne({ id: id });
@@ -959,20 +959,158 @@ app.listen(PORT, () => {
 });
 
 // ============================================
-// PURCHASE LIMIT API - QUANTITY BASED (1 = Only Once)
+// PURCHASE LIMIT API - FIXED
 // ============================================
 app.get('/api/products/:id/purchase-limit', async (req, res) => {
     try {
         const productId = req.params.id;
         const phone = req.query.phone;
-        const userId = req.query.userId;
         
-        // Use userId or phone
-        const identifier = userId || phone;
+        console.log('🔍 Checking purchase limit for:', { productId, phone });
         
-        console.log('🔍 Checking limit for:', { productId, identifier });
+        if (!phone) {
+            return res.json({ 
+                success: true, 
+                maxPurchase: 0, 
+                purchased: 0,
+                remaining: 0,
+                canPurchase: true,
+                message: 'No phone provided'
+            });
+        }
         
-        if (!identifier) {
+        // Find product
+        const product = await Product.findOne({ id: productId });
+        if (!product) {
+            console.log('❌ Product not found:', productId);
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Product not found' 
+            });
+        }
+        
+        console.log('✅ Product found:', product.name, 'Max Purchase:', product.maxPurchasePerUser);
+        
+        // If maxPurchasePerUser is 0, unlimited
+        if (product.maxPurchasePerUser === 0) {
+            return res.json({ 
+                success: true, 
+                maxPurchase: 0, 
+                purchased: 0,
+                remaining: 0,
+                canPurchase: true,
+                message: 'Unlimited purchases allowed'
+            });
+        }
+        
+        // Count total quantity purchased by this phone
+        const orders = await Order.find({ 
+            'customer.phone': phone,
+            status: { $in: ['paid', 'shipped', 'delivered'] }
+        });
+        
+        console.log('📦 Found orders:', orders.length);
+        
+        let totalQuantity = 0;
+        orders.forEach(order => {
+            if (order.items && Array.isArray(order.items)) {
+                order.items.forEach(item => {
+                    if (item.id === productId) {
+                        totalQuantity += item.quantity || 1;
+                    }
+                });
+            }
+        });
+        
+        console.log('📊 Total purchased:', totalQuantity);
+        
+        const canPurchase = totalQuantity < product.maxPurchasePerUser;
+        const remaining = Math.max(0, product.maxPurchasePerUser - totalQuantity);
+        
+        res.json({
+            success: true,
+            maxPurchase: product.maxPurchasePerUser,
+            purchased: totalQuantity,
+            remaining: remaining,
+            canPurchase: canPurchase,
+            message: canPurchase ? 
+                'You can purchase ' + remaining + ' more unit(s)' : 
+                '❌ Purchase limit reached (Max: ' + product.maxPurchasePerUser + ' units)'
+        });
+    } catch (error) {
+        console.error('❌ Error checking purchase limit:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: error.message 
+        });
+    }
+});
+
+app.get('/api/products/:id/purchase-limit', async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const phone = req.query.phone;
+        
+        console.log('🔍 Checking limit for:', productId, phone);
+        
+        if (!phone) {
+            return res.json({ success: true, maxPurchase: 0, purchased: 0, remaining: 0, canPurchase: true });
+        }
+        
+        const product = await Product.findOne({ id: productId });
+        if (!product) {
+            return res.status(404).json({ success: false, error: 'Product not found' });
+        }
+        
+        if (product.maxPurchasePerUser === 0) {
+            return res.json({ success: true, maxPurchase: 0, purchased: 0, remaining: 0, canPurchase: true });
+        }
+        
+        const orders = await Order.find({ 
+            'customer.phone': phone,
+            status: { $in: ['paid', 'shipped', 'delivered'] }
+        });
+        
+        let totalQuantity = 0;
+        orders.forEach(order => {
+            if (order.items) {
+                order.items.forEach(item => {
+                    if (item.id === productId) {
+                        totalQuantity += item.quantity || 1;
+                    }
+                });
+            }
+        });
+        
+        const canPurchase = totalQuantity < product.maxPurchasePerUser;
+        const remaining = Math.max(0, product.maxPurchasePerUser - totalQuantity);
+        
+        res.json({
+            success: true,
+            maxPurchase: product.maxPurchasePerUser,
+            purchased: totalQuantity,
+            remaining: remaining,
+            canPurchase: canPurchase,
+            message: canPurchase ? 'You can purchase ' + remaining + ' more' : 'Limit reached (Max: ' + product.maxPurchasePerUser + ')'
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+
+// ============================================
+// PURCHASE LIMIT API - FINAL
+// ============================================
+app.get("/api/products/:id/purchase-limit", async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const phone = req.query.phone;
+        
+        console.log("🔍 Checking limit:", productId, phone);
+        
+        if (!phone) {
             return res.json({ 
                 success: true, 
                 maxPurchase: 0, 
@@ -984,47 +1122,23 @@ app.get('/api/products/:id/purchase-limit', async (req, res) => {
         
         const product = await Product.findOne({ id: productId });
         if (!product) {
-            return res.status(404).json({ success: false, error: 'Product not found' });
+            return res.status(404).json({ success: false, error: "Product not found" });
         }
         
-        // If maxPurchasePerUser is 0, unlimited
         if (product.maxPurchasePerUser === 0) {
             return res.json({ 
                 success: true, 
                 maxPurchase: 0, 
                 purchased: 0, 
                 remaining: 0, 
-                canPurchase: true,
-                message: 'Unlimited purchases allowed'
+                canPurchase: true 
             });
         }
         
-        // Count total quantity purchased by this user/phone
-        let query = {};
-        if (userId) {
-            // If userId provided, check by user ID
-            const user = await User.findById(userId);
-            if (user) {
-                query = { 'customer.phone': user.phone };
-            }
-        } else if (phone) {
-            query = { 'customer.phone': phone };
-        }
-        
-        if (!query['customer.phone']) {
-            return res.json({ 
-                success: true, 
-                maxPurchase: product.maxPurchasePerUser, 
-                purchased: 0, 
-                remaining: product.maxPurchasePerUser, 
-                canPurchase: true,
-                message: 'No orders found for this user'
-            });
-        }
-        
-        query.status = { $in: ['paid', 'shipped', 'delivered'] };
-        
-        const orders = await Order.find(query);
+        const orders = await Order.find({ 
+            "customer.phone": phone,
+            status: { $in: ["paid", "shipped", "delivered"] }
+        });
         
         let totalQuantity = 0;
         orders.forEach(order => {
@@ -1047,11 +1161,11 @@ app.get('/api/products/:id/purchase-limit', async (req, res) => {
             remaining: remaining,
             canPurchase: canPurchase,
             message: canPurchase ? 
-                'You can purchase ' + remaining + ' more unit(s)' : 
-                '❌ Purchase limit reached! You can only purchase ' + product.maxPurchasePerUser + ' unit(s) of this product.'
+                "You can purchase " + remaining + " more" : 
+                "Limit reached (Max: " + product.maxPurchasePerUser + ")"
         });
     } catch (error) {
-        console.error('Error checking purchase limit:', error);
+        console.error("Error:", error);
         res.status(500).json({ success: false, error: error.message });
     }
 });

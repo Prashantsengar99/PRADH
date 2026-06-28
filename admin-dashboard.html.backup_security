@@ -638,6 +638,12 @@
 </div>
 
 <script>
+    (function() {
+        if (localStorage.getItem(.adminLoggedIn.) !== .true.) {
+            window.location.href = .admin.html.;
+        }
+    })();
+
     // ============================================
     // NAVIGATION
     // ============================================
@@ -1252,3 +1258,13 @@
 </script>
 </body>
 </html>
+
+// ============================================
+// ADMIN SECURITY CHECK - ADD AT TOP
+// ============================================
+(function checkAdminAuth() {
+    const isAdmin = localStorage.getItem('adminLoggedIn');
+    if (isAdmin !== 'true') {
+        window.location.href = 'admin.html';
+    }
+})();

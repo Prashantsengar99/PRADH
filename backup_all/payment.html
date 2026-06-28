@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+    const limitValid = await validatePurchaseLimits();
+    if (!limitValid) {
+        return;
+    }<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -344,6 +347,7 @@
 </head>
 <body>
 
+
     <header>
         <div class="nav-container">
             <div class="logo">
@@ -459,7 +463,10 @@
         </div>
     </div>
 
-    <a href="https://wa.me/918979993655?text=Hello%20PRADH%20Desi%20Fuel!%20I%20have%20a%20query%20about%20my%20order." class="whatsapp-floating-btn" target="_blank" title="Chat with us on WhatsApp">
+    <a href="https://wa.me/918979993655?text=Hello%20PRADH%20Desi%20Fuel!%20I%20have%20a%20query%20about%20my%20order." 
+       class="whatsapp-floating-btn" 
+       target="_blank" 
+       title="Chat with us on WhatsApp">
         <svg viewBox="0 0 32 32" class="whatsapp-svg">
             <path d="M16 2a13 13 0 0 0-11.3 19.4L3 29l7.8-2A13 13 0 1 0 16 2zm0 24a11 11 0 0 1-5.6-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4A11 11 0 1 1 16 26zm5.9-8.1c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.1-.7.2l-1 1.3c-.2.3-.5.3-.8.1a10.3 10.3 0 0 1-3.7-2.3 11.4 11.4 0 0 1-2.5-3.2c-.2-.4 0-.6.2-.8l.6-.7v-.4c-.2-.5-.7-1.7-1-2.4-.2-.6-.5-.6-.7-.6h-.6a1.3 1.3 0 0 0-1 .4 4.8 4.8 0 0 0-1.5 3.5 8.3 8.3 0 0 0 1.8 4.4 19 19 0 0 0 7.3 6.5c3.5 1.4 4.2 1.1 5 1a4.2 4.2 0 0 0 2.8-2 3.4 3.4 0 0 0 .2-2c-.1-.2-.4-.3-.7-.5z"/>
         </svg>
@@ -468,16 +475,21 @@
     <footer>
         <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
             <p>&copy; 2026 <span>PRADH</span>. All Rights Reserved.</p>
-            <a href="https://forms.gle/wybyGnhVKrNikMJV6" target="_blank" class="feedback-btn">📝 Share Your Feedback</a>
+            <a href="https://forms.gle/wybyGnhVKrNikMJV6" target="_blank" class="feedback-btn">
+                📝 Share Your Feedback
+            </a>
         </div>
     </footer>
 
     <script src="main.js"></script>
     <script>
         // ============================================
-        // DELIVERY SETTINGS
+        // DELIVERY SETTINGS - FETCH FROM SERVER
         // ============================================
-        let deliverySettings = { deliveryCharge: 49, freeDeliveryThreshold: 999 };
+        let deliverySettings = {
+            deliveryCharge: 49,
+            freeDeliveryThreshold: 999
+        };
 
         async function getDeliverySettings() {
             try {
@@ -494,7 +506,24 @@
         }
 
         // ============================================
-        // CART DATA
+        // GET COUPONS FROM SERVER
+        // ============================================
+        async function getCouponsFromServer() {
+            try {
+                const response = await fetch('/api/coupons');
+                const data = await response.json();
+                if (data.success) {
+                    return data.coupons;
+                }
+                return [];
+            } catch (error) {
+                console.error('Error fetching coupons:', error);
+                return [];
+            }
+        }
+
+        // ============================================
+        // MAIN LOGIC
         // ============================================
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let totalAmount = 0;
@@ -502,10 +531,9 @@
         let couponDiscount = 0;
         let couponApplied = false;
         let appliedCouponCode = '';
+        let availableCoupons = [];
 
-        // ============================================
-        // DISPLAY ORDER SUMMARY
-        // ============================================
+        // Display order summary with dynamic delivery charge
         function displayOrderSummary() {
             const container = document.getElementById('orderItemsList');
             
@@ -541,6 +569,7 @@
 
             container.innerHTML = html;
 
+            // Calculate delivery charge based on settings
             let deliveryFee = deliverySettings.deliveryCharge || 49;
             if (totalAmount >= deliverySettings.freeDeliveryThreshold) {
                 deliveryFee = 0;
@@ -551,6 +580,7 @@
 
             document.getElementById('subtotal').textContent = totalAmount.toFixed(2);
             
+            // Show delivery charge
             const deliveryDisplay = document.getElementById('deliveryCharge');
             if (deliveryCharge === 0) {
                 deliveryDisplay.textContent = 'FREE';
@@ -572,7 +602,7 @@
         }
 
         // ============================================
-        // APPLY COUPON
+        // APPLY COUPON - Fetches from server
         // ============================================
         async function applyCoupon() {
             const input = document.getElementById('couponInput');
@@ -628,95 +658,9 @@
         }
 
         // ============================================
-        // CHECK LOGIN BEFORE PAYMENT
-        // ============================================
-        function checkLoginBeforePayment() {
-            const token = localStorage.getItem('token');
-            const user = JSON.parse(localStorage.getItem('user') || 'null');
-            
-            if (!token || !user) {
-                alert('❌ Please login or create an account to continue!');
-                sessionStorage.setItem('redirectAfterLogin', window.location.href);
-                window.location.href = 'signup.html';
-                return false;
-            }
-            return true;
-        }
-
-        // ============================================
-        // STOCK VALIDATION
-        // ============================================
-        async function validateStockBeforePayment() {
-            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-            if (cartItems.length === 0) {
-                alert('Your cart is empty!');
-                return false;
-            }
-            for (let item of cartItems) {
-                try {
-                    const response = await fetch('/api/products/' + item.id + '/stock');
-                    const data = await response.json();
-                    if (!data.success) {
-                        alert('❌ Error checking stock for "' + item.name + '"');
-                        return false;
-                    }
-                    if (data.stock < item.quantity) {
-                        alert('❌ "' + item.name + '" only ' + data.stock + ' items available. Please reduce quantity.');
-                        return false;
-                    }
-                } catch (error) {
-                    console.error('Stock check error:', error);
-                    alert('❌ Error checking stock. Please try again.');
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        // ============================================
-        // PURCHASE LIMIT VALIDATION - SIRF EK BAAR
-        // ============================================
-        async function validatePurchaseLimits() {
-            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-            if (cartItems.length === 0) return true;
-            
-            const token = localStorage.getItem('token');
-            const user = JSON.parse(localStorage.getItem('user') || 'null');
-            
-            if (!token || !user) {
-                console.log('👤 Guest user - skipping purchase limit check');
-                return true;
-            }
-            
-            for (let item of cartItems) {
-                try {
-                    const response = await fetch('/api/products/' + item.id + '/purchase-limit?userId=' + user.id, {
-                        headers: { 'Authorization': 'Bearer ' + token }
-                    });
-                    const data = await response.json();
-                    
-                    if (data.success && !data.canPurchase) {
-                        alert('❌ "' + item.name + '" - ' + data.message);
-                        return false;
-                    }
-                    if (data.success && data.maxPurchase > 0 && data.remaining < item.quantity) {
-                        alert('❌ "' + item.name + '" - Only ' + data.remaining + ' more unit(s) allowed. Max: ' + data.maxPurchase);
-                        return false;
-                    }
-                } catch (error) {
-                    console.error('Error checking purchase limit for', item.name, error);
-                }
-            }
-            return true;
-        }
-
-        // ============================================
         // INITIATE PAYMENT
         // ============================================
         async function initiatePayment() {
-            // 1. Check Login
-            if (!checkLoginBeforePayment()) return;
-
             const name = document.getElementById('custName').value.trim();
             const phone = document.getElementById('custPhone').value.trim();
             const address = document.getElementById('custAddress').value.trim();
@@ -730,14 +674,6 @@
                 showStatus('Your cart is empty!', 'error');
                 return;
             }
-
-            // 2. Check Stock
-            const stockValid = await validateStockBeforePayment();
-            if (!stockValid) return;
-
-            // 3. Check Purchase Limit
-            const limitValid = await validatePurchaseLimits();
-            if (!limitValid) return;
 
             const payBtn = document.getElementById('payBtn');
             payBtn.disabled = true;
@@ -872,10 +808,15 @@
         // INITIALIZATION
         // ============================================
         document.addEventListener('DOMContentLoaded', async function() {
+            // First load delivery settings
             await getDeliverySettings();
+            
+            // Then display order summary
             displayOrderSummary();
+            
             if (window.updateCartBadge) window.updateCartBadge();
             
+            // Check for coupon in URL
             const urlParams = new URLSearchParams(window.location.search);
             const couponParam = urlParams.get('coupon');
             if (couponParam) {
@@ -891,3 +832,238 @@
     </script>
 </body>
 </html>
+
+// ============================================
+// STOCK VALIDATION IN PAYMENT - ADD THIS
+// ============================================
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    for (let item of cart) {
+        try {
+            const response = await fetch(`/api/products/${item.id}/stock`);
+            const data = await response.json();
+            
+            if (!data.success) {
+                alert(`❌ Error checking stock for "${item.name}"`);
+                return false;
+            }
+            
+            if (data.stock < item.quantity) {
+                alert(`❌ "${item.name}" only ${data.stock} items available. Please reduce quantity.`);
+                return false;
+            }
+        } catch (error) {
+            console.error('Stock check error:', error);
+            alert('❌ Error checking stock. Please try again.');
+            return false;
+        }
+    }
+    return true;
+}
+
+// Modified initiatePayment function
+async function initiatePayment() {
+    // First validate stock
+    if (!stockValid) {
+        return;
+    }
+    
+    // Rest of your existing payment code...
+    // (Your existing initiatePayment code here)
+}
+
+// ============================================
+// STOCK VALIDATION FOR PAYMENT
+// ============================================
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    for (let item of cart) {
+        try {
+            const response = await fetch('/api/products/' + item.id + '/stock');
+            const data = await response.json();
+            if (!data.success) {
+                alert('❌ Error checking stock for "' + item.name + '"');
+                return false;
+            }
+            if (data.stock < item.quantity) {
+                alert('❌ "' + item.name + '" only ' + data.stock + ' items available. Please reduce quantity.');
+                return false;
+            }
+        } catch (error) {
+            console.error('Stock check error:', error);
+            alert('❌ Error checking stock. Please try again.');
+            return false;
+        }
+    }
+    return true;
+}
+
+// ============================================
+// STOCK VALIDATION FOR PAYMENT
+// ============================================
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    for (let item of cart) {
+        try {
+            const response = await fetch('/api/products/' + item.id + '/stock');
+            const data = await response.json();
+            if (!data.success) {
+                alert('❌ Error checking stock for "' + item.name + '"');
+                return false;
+            }
+            if (data.stock < item.quantity) {
+                alert('❌ "' + item.name + '" only ' + data.stock + ' items available. Please reduce quantity.');
+                return false;
+            }
+        } catch (error) {
+            console.error('Stock check error:', error);
+            alert('❌ Error checking stock. Please try again.');
+            return false;
+        }
+    }
+    return true;
+}
+
+// ============================================
+// STOCK VALIDATION FOR PAYMENT
+// ============================================
+
+
+// Override initiatePayment
+const originalInitiatePayment = initiatePayment;
+
+// ============================================
+// STOCK VALIDATION FOR PAYMENT
+// ============================================
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return false;
+    }
+    for (let item of cart) {
+        try {
+            const response = await fetch('/api/products/' + item.id + '/stock');
+            const data = await response.json();
+            if (!data.success) {
+                alert('❌ Error checking stock for "' + item.name + '"');
+                return false;
+            }
+            if (data.stock < item.quantity) {
+                alert('❌ "' + item.name + '" only ' + data.stock + ' items available. Please reduce quantity.');
+                return false;
+            }
+        } catch (error) {
+            console.error('Stock check error:', error);
+            alert('❌ Error checking stock. Please try again.');
+            return false;
+        }
+    }
+    return true;
+}
+
+// Override initiatePayment
+const originalInitiatePayment = initiatePayment;
+    if (!stockValid) return;
+    originalInitiatePayment.call(this);
+};
+
+// ============================================
+// STOCK VALIDATION FOR PAYMENT
+// ============================================
+
+async function validateStockBeforePayment() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return false;
+    }
+    for (let item of cart) {
+        try {
+            const response = await fetch('/api/products/' + item.id + '/stock');
+            const data = await response.json();
+            if (!data.success) {
+                alert('❌ Error checking stock for "' + item.name + '"');
+                return false;
+            }
+            if (data.stock < item.quantity) {
+                alert('❌ "' + item.name + '" only ' + data.stock + ' items available. Please reduce quantity.');
+                return false;
+            }
+        } catch (error) {
+            console.error('Stock check error:', error);
+            alert('❌ Error checking stock. Please try again.');
+            return false;
+        }
+    }
+    return true;
+}
+
+// Override initiatePayment
+const originalInitiatePayment = initiatePayment;
+initiatePayment = async function() {
+    const stockValid = await validateStockBeforePayment();
+    if (!stockValid) return;
+    originalInitiatePayment.call(this);
+};
+
+// ============================================
+// PURCHASE LIMIT CHECK - ADD THIS
+// ============================================
+
+async function checkPurchaseLimit(productId) {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            // Guest user - skip purchase limit check
+            return { success: true, canPurchase: true };
+        }
+        
+        const response = await fetch('/api/products/' + productId + '/purchase-limit', {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error checking purchase limit:', error);
+        return { success: false, canPurchase: true };
+    }
+}
+
+async function validatePurchaseLimits() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart.length === 0) return true;
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
+        // Guest user - skip purchase limit
+        console.log('Guest user - skipping purchase limit check');
+        return true;
+    }
+    
+    for (let item of cart) {
+        try {
+            const response = await fetch('/api/products/' + item.id + '/purchase-limit', {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+            const data = await response.json();
+            
+            if (data.success && !data.canPurchase) {
+                alert('❌ "' + item.name + '" - ' + data.message);
+                return false;
+            }
+            if (data.success && data.maxPurchase > 0 && data.remaining < item.quantity) {
+                alert('❌ "' + item.name + '" - Only ' + data.remaining + ' more unit(s) allowed. Max: ' + data.maxPurchase);
+                return false;
+            }
+        } catch (error) {
+            console.error('Error checking purchase limit for', item.name, error);
+        }
+    }
+    return true;
+}

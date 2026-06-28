@@ -3,42 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Account</title>
+    <title>My Account - PRADH Desi Fuel</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        .account-container {
+            background: #1e293b;
+            border-radius: 24px;
+            border: 1px solid #334155;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .profile-header {
+            margin-bottom: 30px;
+        }
+        .profile-header i {
+            font-size: 70px;
+            color: #facc15;
+            margin-bottom: 10px;
+        }
+        .profile-header h2 {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .profile-header p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .profile-header .user-email {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-top: 6px;
+        }
+        .profile-header .user-email i {
+            color: #facc15;
+            margin-right: 6px;
+            font-size: 14px;
+        }
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin: 20px 0;
+        }
+        .action-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            padding: 20px 14px;
+            text-decoration: none;
+            color: #e2e8f0;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .action-card:hover {
+            border-color: #facc15;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(250, 204, 21, 0.08);
+        }
+        .action-card i {
+            font-size: 28px;
+            color: #facc15;
+        }
+        .action-card span {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .action-card.logout i {
+            color: #ef4444;
+        }
+        .action-card.logout:hover {
+            border-color: #ef4444;
+        }
+        .action-card.login i {
+            color: #22c55e;
+        }
+        .action-card.login:hover {
+            border-color: #22c55e;
+        }
+        .action-card.dashboard i {
+            color: #3b82f6;
+        }
+        .action-card.dashboard:hover {
+            border-color: #3b82f6;
+        }
+        .account-check-box {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+        }
+        .account-check-box p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        .create-account-link {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 10px 28px;
+            background: linear-gradient(135deg, #facc15, #eab308);
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 14px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .create-account-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(250, 204, 21, 0.25);
+        }
+        .logout-btn {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 10px 28px;
+            background: transparent;
+            color: #ef4444;
+            font-weight: 700;
+            font-size: 14px;
+            border-radius: 10px;
+            border: 1px solid #ef4444;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .logout-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+        }
+        .hidden { display: none; }
+        .text-center { text-align: center; }
+        .mt-20 { margin-top: 20px; }
+        @media (max-width: 480px) {
+            .account-container { padding: 24px 16px; }
+            .action-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .action-card { padding: 14px 10px; }
+            .action-card i { font-size: 22px; }
+            .action-card span { font-size: 12px; }
+        }
+    </style>
 </head>
-<body class="account-page">
+<body>
 
-    <div class="account-container">
-        <div class="profile-header">
-            <i class="fas fa-user-circle"></i>
-            <h2>Welcome User</h2>
-            <p>Manage your account settings</p>
+<div class="account-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <i class="fas fa-user-circle"></i>
+        <h2 id="welcomeUser">Welcome User</h2>
+        <p id="userStatus">Manage your account settings</p>
+        <div class="user-email" id="userEmailDisplay">
+            <i class="fas fa-envelope"></i> <span id="userEmail">Not logged in</span>
         </div>
-
-        <div class="action-grid">
-            <a href="admin.html" class="action-card">
-                <i class="fas fa-user-shield"></i>
-                <span>Admin Access</span>
-            </a>
-             <a href="userlogin.html" class="action-card">
-                <i class="fas fa-user-shield"></i>
-                <span>User Login</span>
-            </a>
-            <a href="user-profile.html" class="action-card">
-                <i class="fas fa-user-edit"></i>
-                <span>Edit Profile</span>
-            </a>
-            <a href="logout.html" class="action-card logout">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </a>
-        </div>
-        <div class="account-check-box">
-    <p>You don't have an account?</p>
-    <a href="signup.html" class="create-account-link">Create Account</a>
-</div>
     </div>
+
+    <!-- Action Grid -->
+    <div class="action-grid">
+        <!-- Admin Access -->
+        <a href="admin.html" class="action-card">
+            <i class="fas fa-user-shield"></i>
+            <span>Admin Access</span>
+        </a>
+
+        <!-- User Dashboard -->
+        <a href="userlogin.html" class="action-card dashboard">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>User Dashboard</span>
+        </a>
+
+        <!-- Login / Logout - Dynamic -->
+        <a href="#" class="action-card login" id="loginAction">
+            <i class="fas fa-sign-in-alt"></i>
+            <span id="loginActionText">User Login</span>
+        </a>
+
+        <!-- My Orders -->
+        <a href="order.html" class="action-card">
+            <i class="fas fa-shopping-bag"></i>
+            <span>My Orders</span>
+        </a>
+    </div>
+
+    <!-- Account Check Box -->
+    <div class="account-check-box" id="accountCheckBox">
+        <p id="accountCheckText">You don't have an account?</p>
+        <a href="signup.html" class="create-account-link" id="signupAction">Create Account</a>
+    </div>
+</div>
+
+<script>
+    // ============================================
+    // CHECK LOGIN STATUS AND UPDATE UI
+    // ============================================
+    function updateUI() {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        
+        const welcomeUser = document.getElementById('welcomeUser');
+        const userEmail = document.getElementById('userEmail');
+        const userStatus = document.getElementById('userStatus');
+        const loginAction = document.getElementById('loginAction');
+        const loginActionText = document.getElementById('loginActionText');
+        const accountCheckBox = document.getElementById('accountCheckBox');
+        const accountCheckText = document.getElementById('accountCheckText');
+        const signupAction = document.getElementById('signupAction');
+        
+        if (token && user) {
+            // User is logged in
+            welcomeUser.textContent = 'Welcome ' + (user.username || 'User') + '!';
+            userEmail.textContent = user.email || 'Not logged in';
+            userStatus.textContent = '✅ Logged in successfully';
+            userStatus.style.color = '#22c55e';
+            
+            // Change Login to Logout
+            loginAction.className = 'action-card logout';
+            loginAction.innerHTML = '<i class="fas fa-sign-out-alt"></i><span>Logout</span>';
+            loginAction.href = '#';
+            loginAction.onclick = function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('rememberMe');
+                    window.location.href = 'index.html';
+                }
+            };
+            
+            // Update account check box
+            accountCheckText.textContent = 'Manage your account';
+            signupAction.textContent = 'Go to Dashboard';
+            signupAction.href = 'user-dashboard.html';
+            signupAction.className = 'create-account-link';
+            
+        } else {
+            // User is not logged in
+            welcomeUser.textContent = 'Welcome Guest';
+            userEmail.textContent = 'Please login to access your account';
+            userStatus.textContent = '🔒 Not logged in';
+            userStatus.style.color = '#94a3b8';
+            
+            // Login action
+            loginAction.className = 'action-card login';
+            loginAction.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>User Login</span>';
+            loginAction.href = 'userlogin.html';
+            loginAction.onclick = null;
+            
+            // Update account check box
+            accountCheckText.textContent = 'You don\'t have an account?';
+            signupAction.textContent = 'Create Account';
+            signupAction.href = 'signup.html';
+            signupAction.className = 'create-account-link';
+        }
+    }
+
+    // ============================================
+    // REDIRECT IF LOGGED IN - BUTTON CLICK
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        updateUI();
+    });
+</script>
 </body>
 </html>

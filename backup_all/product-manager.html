@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Manager Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .input-group:focus-within label { color: #2563eb; }
+    </style>
+</head>
+<body class="bg-gray-50 p-2 md:p-6">
+
+    <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+        <div class="bg-slate-900 p-6 text-white flex justify-between items-center">
+            <h2 class="text-xl font-bold tracking-tight">📦 Product Manager</h2>
+            <button id="addBtn" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-lg">+ Add Item</button>
+        </div>
+
+        <div id="productForm" class="p-6 border-b hidden bg-gray-50">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" placeholder="Product Name" class="p-3 rounded-xl border focus:ring-2 focus:ring-blue-500 outline-none">
+                <input type="number" placeholder="Price (INR)" class="p-3 rounded-xl border focus:ring-2 focus:ring-blue-500 outline-none">
+                <select class="p-3 rounded-xl border outline-none">
+                    <option>Select Flavor</option>
+                    <option>Chocolate</option>
+                    <option>Mango</option>
+                </select>
+                <input type="text" placeholder="Batch Number" class="p-3 rounded-xl border outline-none">
+                <textarea placeholder="Description" class="col-span-full p-3 rounded-xl border h-20"></textarea>
+            </div>
+            <button class="mt-4 w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700">Save Product</button>
+        </div>
+
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-100 text-gray-600 text-sm">
+                        <th class="p-4">Product</th>
+                        <th class="p-4">Stock</th>
+                        <th class="p-4">Price</th>
+                        <th class="p-4 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="productTable">
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-4 font-medium">Whey Gold 2kg</td>
+                        <td class="p-4"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-lg text-xs">45 In-Stock</span></td>
+                        <td class="p-4 text-gray-700">₹4,500</td>
+                        <td class="p-4 text-center">
+                            <button class="text-blue-600 hover:underline mr-2">Edit</button>
+                            <button class="text-red-600 hover:underline">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Toggle Form Logic
+        document.getElementById('addBtn').addEventListener('click', () => {
+            const form = document.getElementById('productForm');
+            form.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

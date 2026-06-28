@@ -1,0 +1,1516 @@
+/* --- Global Reset & Variables --- */
+:root {
+    --bg-dark: #111827;
+    --bg-light: #f9fafb;
+    --accent-yellow: #facc15;
+    --accent-green: #22c55e;
+    --text-dark: #1f2937;
+    --text-light: #f3f4f6;
+    --text-muted: #6b7280;
+    --white: #ffffff;
+    --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* --- Header / Navigation --- */
+header {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.logo a {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.logo span {
+    color: var(--accent-yellow);
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--accent-yellow);
+}
+
+.cart-icon-wrapper {
+    position: relative;
+    background: #1f2937;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+#cart-count {
+    background-color: var(--accent-yellow);
+    color: var(--bg-dark);
+    font-weight: bold;
+    font-size: 0.8rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 50%;
+    margin-left: 5px;
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: var(--text-light);
+    transition: var(--transition);
+}
+
+/* --- UI Buttons --- */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.7rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--accent-yellow);
+    color: var(--bg-dark);
+}
+
+.btn-primary:hover {
+    background-color: #e2b60d;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--text-light);
+    border: 2px solid var(--text-light);
+}
+
+.btn-secondary:hover {
+    background-color: var(--text-light);
+    color: var(--bg-dark);
+}
+
+/* --- Hero Section --- */
+/* --- Hero Section with Local Image & Premium Gradient Fallback --- */
+.hero {
+    background: linear-gradient(rgba(11, 15, 26, 0.82), rgba(17, 24, 39, 0.95)), 
+                url('logo.jpeg') center/cover no-repeat;
+    background-color: #111827; /* Dark backup color agar image load na ho */
+    color: var(--text-light);
+    padding: 9rem 2rem 7rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    /* Agar folder me image nahi milti toh niche wala stylish dynamic pattern background banayega */
+    background-image: linear-gradient(rgba(11, 15, 26, 0.85), rgba(17, 24, 39, 0.95)), 
+                      radial-gradient(circle at top right, rgba(250, 204, 21, 0.12), transparent 40%),
+                      url('logo.jpeg') center/cover no-repeat;
+}
+.hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    letter-spacing: 2px;
+}
+
+.hero-content h1 span {
+    color: var(--accent-yellow);
+}
+
+.hero-tagline {
+    font-size: 1.5rem;
+    color: var(--accent-green);
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* --- Section Formatting --- */
+.section {
+    padding: 5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background-color: var(--accent-yellow);
+    margin: 0.5rem auto 0 auto;
+    border-radius: 2px;
+}
+
+/* --- Product Grid & Cards --- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+}
+
+.product-card {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.product-img-placeholder {
+    background-color: #e5e7eb;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-weight: bold;
+    position: relative;
+}
+
+.product-img-placeholder span {
+    background: var(--bg-dark);
+    color: var(--accent-yellow);
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
+}
+
+.product-info {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.product-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.product-desc {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+}
+
+.product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.product-price {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--bg-dark);
+}
+
+/* --- About Page Stylings --- */
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.about-features {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.feature-item {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-green);
+}
+
+.feature-item h4 {
+    color: var(--bg-dark);
+    margin-bottom: 0.5rem;
+}
+
+/* --- Cart Layout --- */
+.cart-container {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    align-items: center;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #e5e7eb;
+    gap: 1rem;
+}
+
+.cart-item-info h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.qty-btn {
+    background: #e5e7eb;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.qty-btn:hover {
+    background: #d1d5db;
+}
+
+.remove-btn {
+    color: #ef4444;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.cart-summary {
+    margin-top: 2rem;
+    text-align: right;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--bg-dark);
+}
+
+.cart-summary h3 {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+}
+
+.empty-message {
+    text-align: center;
+    padding: 3rem 0;
+    color: var(--text-muted);
+}
+
+/* --- Contact & Policies Layout --- */
+.policy-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+}
+
+.contact-info-box {
+    background: var(--bg-dark);
+    color: var(--text-light);
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.contact-method {
+    margin-bottom: 1.5rem;
+}
+
+.contact-method h4 {
+    color: var(--accent-yellow);
+    margin-bottom: 0.25rem;
+}
+
+.policy-block {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.policy-block h3 {
+    margin-bottom: 0.75rem;
+    color: var(--bg-dark);
+    border-bottom: 2px solid #f3f4f6;
+    padding-bottom: 0.5rem;
+}
+
+/* --- Footer --- */
+footer {
+    background-color: var(--bg-dark);
+    color: var(--text-muted);
+    text-align: center;
+    padding: 2rem;
+    margin-top: 5rem;
+    font-size: 0.9rem;
+}
+
+footer p span {
+    color: var(--text-light);
+}
+
+/* --- Responsive Layout Breakpoints --- */
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: var(--bg-dark);
+        padding: 2rem;
+        gap: 1.5rem;
+        border-top: 1px solid #1f2937;
+    }
+    
+    .nav-menu.active {
+        display: flex;
+    }
+    
+    .menu-toggle {
+        display: flex;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.3rem;
+    }
+    
+    .about-grid, .policy-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+    
+    .cart-item {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        padding: 1rem 0;
+    }
+    
+    .cart-item-info { grid-column: span 2; }
+}
+/* --- Social Media Handles Styling --- */
+.social-link-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: var(--transition);
+    color: var(--text-light);
+    background: #1f2937; /* Dark base button layer */
+}
+
+.social-link-item span {
+    font-size: 1.2rem;
+}
+
+/* Hover Effects with Brand Accent Colors */
+.social-link-item.insta-color:hover {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: #fff;
+    transform: translateX(5px);
+}
+
+.social-link-item.fb-color:hover {
+    background-color: #1877f2;
+    color: #fff;
+    transform: translateX(5px);
+}
+
+.social-link-item.wa-color:hover {
+    background-color: var(--accent-green);
+    color: #fff;
+    transform: translateX(5px);
+}
+/* --- Checkout Form Modal Styling --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(17, 24, 39, 0.7); /* Dark semi-transparent filter */
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: 1rem;
+}
+
+.modal-content {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    animation: slideUp 0.3s ease-out;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #f3f4f6;
+    padding-bottom: 0.75rem;
+}
+
+.close-modal-btn {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.close-modal-btn:hover {
+    color: #ef4444;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    color: var(--bg-dark);
+}
+
+.form-group input, 
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-family: var(--font-main);
+    font-size: 0.95rem;
+    transition: var(--transition);
+}
+
+.form-group input:focus, 
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-yellow);
+    box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2);
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+/* --- New Product Image Styling --- */
+.product-img-container {
+    width: 100%;
+    height: 280px; /* Card ke andar photo ki unchai fixed rahegi */
+    background-color: #e5e7eb;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-real-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Isse photo bina khinche ya tedi-medi hue box me set ho jayegi */
+    transition: var(--transition);
+}
+
+/* Photo par hover karne se halka zoom effect aayega jo premium lagta hai */
+.product-card:hover .product-real-img {
+    transform: scale(1.05);
+}
+/* --- Floating WhatsApp Button Styling --- */
+.whatsapp-floating-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: #22c55e; /* Brand green accent color */
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 5000; /* Taaki ye har ek layer ke upar dikhe */
+    transition: all 0.3s ease;
+    animation: whatsappPulse 2s infinite;
+}
+
+.whatsapp-svg {
+    width: 35px;
+    height: 35px;
+    fill: #ffffff;
+}
+
+/* Hover Effect */
+.whatsapp-floating-btn:hover {
+    transform: scale(1.1) rotate(5deg);
+    background-color: #16a34a; /* Halka dark green hover par */
+    box-shadow: 0 6px 15px rgba(34, 197, 94, 0.5);
+}
+
+/* Premium Continuous Pulse Glow Effect */
+@keyframes whatsappPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(34, 197, 94, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+    }
+}
+
+/* Mobile responsive alignment adjustment */
+@media (max-width: 768px) {
+    .whatsapp-floating-btn {
+        bottom: 20px;
+        right: 20px;
+        width: 52px;
+        height: 52px;
+    }
+    .whatsapp-svg {
+        width: 28px;
+        height: 28px;
+    }
+}
+/* --- Premium Footer Feedback Button --- */
+.feedback-btn {
+    background-color: transparent;
+    color: var(--accent-yellow);
+    border: 2px solid var(--accent-yellow);
+    padding: 0.5rem 1.2rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 0.5rem;
+}
+
+/* Hover effect jab koi mouse le jaye */
+.feedback-btn:hover {
+    background-color: var(--accent-yellow);
+    color: var(--bg-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(250, 204, 21, 0.2);
+}
+/* --- Mobile Menu Toggle Badge Styling --- */
+.menu-toggle {
+    position: relative; /* Badge position align karne ke liye */
+}
+
+#mobile-cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ef4444; /* Bright Red indicator alert */
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border: 1px solid var(--bg-dark);
+}
+/* --- Premium Dynamic Announcement Bar Styling --- */
+.announcement-bar {
+    background: linear-gradient(90deg, #0b0f1a, #1e293b);
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #facc15; /* PRADH Yellow theme line */
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Taaki scroll karne par sabke upar rahe */
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Coupon code highlights text */
+.coupon-highlight {
+    color: #facc15;
+    background: rgba(250, 204, 21, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px dashed #facc15;
+    display: inline-block;
+    animation: pulseGlow 1.5s infinite alternate;
+}
+
+/* Blinking/Glowing text animation */
+@keyframes pulseGlow {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(250, 204, 21, 0);
+    }
+    100% {
+        transform: scale(1.03);
+        box-shadow: 0 0 8px rgba(250, 204, 21, 0.4);
+    }
+}
+/* --- Ingredients Grid Hover Zoom effect --- */
+.ingredients-section div div:hover {
+    transform: translateY(-5px);
+    border-color: #facc15 !important;
+    box-shadow: 0 10px 20px rgba(250, 204, 21, 0.05);
+}
+    /* Timeline Container */
+.timeline-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 1.5rem 0;
+        position: relative;
+        padding: 0 10px;
+    }
+    /* Beech ki connect karne wali line */
+    .timeline-line {
+        position: absolute;
+        top: 15px;
+        left: 30px;
+        right: 30px;
+        height: 4px;
+        background-color: #e0e0e0;
+        z-index: 1;
+    }
+    /* Active line jo status ke hisab se badhegi */
+    .timeline-line-progress {
+        position: absolute;
+        top: 15px;
+        left: 30px;
+        height: 4px;
+        background-color: #2e7d32; /* Green color */
+        z-index: 2;
+        transition: width 0.4s ease;
+    }
+    /* Timeline ke Individual Steps */
+    .timeline-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 3;
+        flex: 1;
+    }
+    /* Step ka Gol Circle */
+    .step-circle {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background-color: #fff;
+        border: 3px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: bold;
+        color: #999;
+        transition: all 0.4s ease;
+    }
+    /* Active step jab kaam ho jaye */
+    .timeline-step.active .step-circle {
+        border-color: #2e7d32;
+        background-color: #2e7d32;
+        color: white;
+    }
+    .step-label {
+        font-size: 0.75rem;
+        margin-top: 0.5rem;
+        color: #666;
+        font-weight: 500;
+    }
+    .timeline-step.active .step-label {
+        color: #2e7d32;
+        font-weight: bold;
+    }
+.product-img-container {
+    width: 100%;
+    height: 320px; /* Is height ko tum apne hisab se badha sakte ho agar aur bada dikhana hai */
+    overflow: hidden;
+    position: relative;
+}
+
+.product-img-container {
+    width: 100%;
+    height: 350px; /* Isko tum apne hisab se lamba ya chota kar sakte ho */
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* 👇 JADU 1: Peeche background me wahi landscape image full screen phelegi blur hoke */
+    background-image: url('landscape.jpeg');
+    background-size: cover;
+    background-position: center;
+    backdrop-filter: blur(10px); /* Kafi premium look dega */
+}
+
+/* Ek halka sa dark overlay taaki background zyada bright na lage */
+.product-img-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.2); /* Agar dark theme hai toh rgba(0,0,0,0.3) kar dena */
+    z-index: 1;
+}
+
+
+
+/* Hover par badhiya zoom effect */
+.product-img-container:hover .product-real-img {
+    transform: scale(1.05);
+}
+.hero {
+    color: var(--text-light);
+    padding: 9rem 2rem 7rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background-color: #111827; /* Dark backup color */
+    
+    /* 👇 Ek hi background property me sab set kar diya taaki crash na ho */
+    background: linear-gradient(rgba(11, 15, 26, 0.85), rgba(17, 24, 39, 0.95)), 
+                radial-gradient(circle at top right, rgba(250, 204, 21, 0.12), transparent 40%),
+                url('xyz.jpeg') center/cover no-repeat; /* 👈 Agar logo lagana hai toh yahan logo.jpeg kar dena */
+}
+/* Container jo button ko align kare */
+.admin-link-container {
+    display: flex;             /* Flexbox activate karega */
+    justify-content: center;   /* Horizontal center karne ke liye */
+    align-items: center;       /* Vertical center karne ke liye */
+    padding: 20px 0;           /* Thoda space dene ke liye */
+    width: 100%;               /* Poori width cover karega */
+}
+
+/* Modern Button ki styling */
+.modern-admin-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Gradient background */
+    color: #ffffff !important;
+    text-decoration: none;
+    border-radius: 30px; /* Rounded corners */
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+/* Hover Effects (Mouse le jane par changes) */
+.modern-admin-btn:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); /* Gradient reverse karega */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px); /* Thoda upar uthega */
+}
+
+/* Button ke andar arrow icon ke liye thoda space */
+.modern-admin-btn i {
+    margin-left: 20px;
+    font-size: 14px;
+}
+.header-tools {
+    padding: 20px;
+    background: #f9f9f9;
+    text-align: center;
+}
+
+.nav-icons {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.nav-icons a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 12px;
+}
+
+.nav-icons i {
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.search-input {
+    width: 70%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-btn {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.account-page {
+    background-color: #f4f7f6;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.account-container {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.profile-header i {
+    font-size: 60px;
+    color: #28a745;
+    margin-bottom: 10px;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.action-card {
+    background: #f8f9fa;
+    padding: 20px 10px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: 0.3s;
+    border: 1px solid #eee;
+}
+
+.action-card i {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: #28a745;
+}
+
+.action-card:hover {
+    background: #28a745;
+    color: white;
+    transform: translateY(-5px);
+}
+
+.action-card:hover i {
+    color: white;
+}
+
+.logout { color: #dc3545; }
+.logout:hover { background: #dc3545; color: white; }
+.account-check-box {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px dashed #ccc; /* Thoda alag dikhne ke liye dashed border */
+    margin: 20px 0;
+}
+
+.account-check-box p {
+    margin: 0 0 10px 0;
+    font-size: 15px;
+    color: #555;
+}
+
+.create-account-link {
+    display: inline-block;
+    padding: 8px 20px;
+    background: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+.create-account-link:hover {
+    background: #0056b3;
+}
+.swiper {
+    width: 100%;
+    padding: 20px 0;
+}
+
+.swiper-slide {
+    height: auto; /* Card ki height barabar rakhne ke liye */
+}
+
+/* Card ka background sahi karne ke liye */
+.product-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+.section {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto; /* Ye slider ko center mein le aayega */
+}
+#countdown {
+    font-family: monospace;
+    font-weight: bold;
+    background: #ffcc00;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #000;
+}
+.coupon-highlight {
+    background: #28a745;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+.order-item {
+    transition: transform 0.2s;
+}
+.order-item:hover {
+    transform: scale(1.02);
+}
+body {
+    background-color: #f0f0f0 !important;
+}/* Cart Icon Styles */
+.cart-icon-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cart-icon-wrapper i {
+    font-size: 18px;
+}
+
+#cart-count {
+    background: #facc15;
+    color: #0f172a;
+    padding: 1px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 20px;
+    text-align: center;
+    display: inline-block;
+}
+
+/* Mobile cart badge */
+#mobile-cart-badge {
+    background: #ef4444;
+    color: white;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    min-width: 18px;
+    text-align: center;
+}
+
+.menu-toggle {
+    position: relative;
+}
+
+/* Nav icons */
+.nav-icons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.nav-icons a {
+    color: #94a3b8;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    transition: all 0.3s;
+}
+
+.nav-icons a:hover {
+    color: #facc15;
+}
+
+.nav-icons a i {
+    font-size: 20px;
+}
+
+@media (max-width: 768px) {
+    .nav-icons {
+        gap: 12px;
+    }
+    .nav-icons a span {
+        display: none;
+    }
+    .nav-icons a i {
+        font-size: 18px;
+    }
+}
+/* ============================================
+   MOBILE MENU STYLES
+   ============================================ */
+
+/* Hamburger Menu */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 5px;
+    gap: 5px;
+    position: relative;
+    z-index: 1001;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: #ffffff;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Mobile Navigation */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+    }
+    
+    .nav-container {
+        position: relative;
+    }
+    
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background: #1e293b;
+        padding: 20px;
+        border-radius: 0 0 12px 12px;
+        border: 1px solid #334155;
+        border-top: none;
+        z-index: 1000;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    .nav-menu.active {
+        display: flex;
+    }
+    
+    .nav-menu li {
+        margin: 8px 0;
+        width: 100%;
+        list-style: none;
+    }
+    
+    .nav-menu li a {
+        display: block;
+        padding: 12px 16px;
+        width: 100%;
+        border-radius: 8px;
+        transition: all 0.3s;
+        color: #e2e8f0;
+        text-decoration: none;
+    }
+    
+    .nav-menu li a:hover {
+        background: #334155;
+    }
+    
+    .nav-menu li a.active {
+        background: #facc15;
+        color: #0f172a;
+    }
+    
+    /* Mobile cart badge */
+    .cart-icon-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    #cart-count {
+        display: inline-block;
+        background: #facc15;
+        color: #0f172a;
+        padding: 1px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+}
+
+@media (max-width: 480px) {
+    .menu-toggle span {
+        width: 22px;
+        height: 2.5px;
+    }
+    
+    .nav-menu {
+        top: 55px;
+        padding: 15px;
+    }
+}
+/* ============================================
+   CART NOTIFICATION STYLES
+   ============================================ */
+
+.cart-notification {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 16px 20px;
+    background: #1e293b;
+    color: #e2e8f0;
+    border: 2px solid #facc15;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    z-index: 9999;
+    font-weight: 500;
+    animation: slideIn 0.3s ease;
+    max-width: 420px;
+    min-width: 300px;
+    backdrop-filter: blur(10px);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.cart-notification .btn-view-cart {
+    background: #facc15;
+    color: #0f172a;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.cart-notification .btn-view-cart:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3);
+}
+
+.cart-notification .btn-continue {
+    background: transparent;
+    color: #94a3b8;
+    border: 1px solid #334155;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.cart-notification .btn-continue:hover {
+    background: #334155;
+    color: #ffffff;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+    .cart-notification {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: 100%;
+        min-width: unset;
+        padding: 14px 16px;
+    }
+    
+    .cart-notification .btn-view-cart,
+    .cart-notification .btn-continue {
+        font-size: 12px;
+        padding: 6px 14px;
+    }
+}
+/* ============================================
+   MOBILE MENU STYLES
+   ============================================ */
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 5px;
+    gap: 5px;
+    position: relative;
+    z-index: 1001;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: #ffffff;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Mobile Navigation */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+    }
+    
+    .nav-container {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+    }
+    
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background: #1e293b;
+        padding: 20px;
+        border-radius: 0 0 12px 12px;
+        border: 1px solid #334155;
+        border-top: none;
+        z-index: 1000;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    .nav-menu.active {
+        display: flex;
+    }
+    
+    .nav-menu li {
+        margin: 8px 0;
+        width: 100%;
+        list-style: none;
+    }
+    
+    .nav-menu li a {
+        display: block;
+        padding: 12px 16px;
+        width: 100%;
+        border-radius: 8px;
+        transition: all 0.3s;
+        color: #e2e8f0;
+        text-decoration: none;
+        font-size: 16px;
+    }
+    
+    .nav-menu li a:hover {
+        background: #334155;
+    }
+    
+    .nav-menu li a.active {
+        background: #facc15;
+        color: #0f172a;
+    }
+    
+    /* Mobile cart badge */
+    .cart-icon-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    #cart-count {
+        display: inline-block;
+        background: #facc15;
+        color: #0f172a;
+        padding: 1px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+}
+
+@media (max-width: 480px) {
+    .menu-toggle span {
+        width: 22px;
+        height: 2.5px;
+    }
+    
+    .nav-menu {
+        top: 55px;
+        padding: 15px;
+    }
+}

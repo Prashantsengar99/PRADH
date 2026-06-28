@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Success</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #0f172a;
+            color: white;
+        }
+        .success-box {
+            text-align: center;
+            padding: 40px;
+            background: #1e293b;
+            border-radius: 20px;
+            border: 1px solid #334155;
+        }
+        .success-box h2 { color: #22c55e; }
+        .success-box p { color: #94a3b8; margin: 20px 0; }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #facc15;
+            color: #0f172a;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-box">
+        <h2>✅ Login Successful!</h2>
+        <p>Redirecting to your account...</p>
+        <a href="myaccount.html" class="btn">Go to Account</a>
+    </div>
+    <script>
+        // Get token from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const user = urlParams.get('user');
+        
+        if (token && user) {
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', user);
+            setTimeout(() => {
+                window.location.href = 'myaccount.html';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

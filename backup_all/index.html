@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRADH DESI FUEL | Premium Nutromix Brand</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ============================================
+           MOBILE-FIRST NAVBAR
+           ============================================ */
+
+        /* ---- Base Reset ---- */
+        * { box-sizing: border-box; }
+
+        /* ---- Navbar ---- */
+        .navbar-new {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 0 12px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-new.scrolled {
+            background: rgba(15, 23, 42, 0.97);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+        }
+
+        .nav-container-new {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        /* ---- Logo ---- */
+        .logo-new {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .logo-new img {
+            height: 34px;
+            width: auto;
+            border-radius: 6px;
+        }
+
+        .logo-text .brand {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text .brand span {
+            color: #facc15;
+        }
+
+        .logo-text .tagline {
+            font-size: 8px;
+            color: #94a3b8;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* ---- Mobile Menu Toggle ---- */
+        .menu-toggle-new {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.04);
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle-new:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .menu-toggle-new span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle-new.active span:nth-child(1) {
+            transform: rotate(45deg) translate(4px, 4px);
+        }
+
+        .menu-toggle-new.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle-new.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(4px, -4px);
+        }
+
+        /* ---- Navigation Links (Desktop) ---- */
+        .nav-links-new {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 12px 16px 20px;
+            gap: 2px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            max-height: calc(100vh - 60px);
+            overflow-y: auto;
+        }
+
+        .nav-links-new.open {
+            display: flex;
+        }
+
+        .nav-links-new li {
+            list-style: none;
+        }
+
+        .nav-links-new li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links-new li a i {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links-new li a:hover {
+            background: rgba(255,255,255,0.06);
+            color: #ffffff;
+        }
+
+        .nav-links-new li a:hover i {
+            color: #facc15;
+        }
+
+        .nav-links-new li a.active {
+            color: #facc15;
+            background: rgba(250, 204, 21, 0.08);
+        }
+
+        .nav-links-new li a.active i {
+            color: #facc15;
+        }
+
+        /* ---- Cart Badge ---- */
+        .cart-link {
+            position: relative;
+        }
+
+        .cart-badge-new {
+            position: absolute;
+            top: -4px;
+            right: -6px;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #0f172a;
+            transition: all 0.3s ease;
+        }
+
+        .cart-badge-new.pulse {
+            animation: badgePulse 0.4s ease;
+        }
+
+        @keyframes badgePulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1); }
+        }
+
+        /* ============================================
+           TOOLS BAR - FULL VISIBLE ON ALL DEVICES
+           ============================================ */
+        .header-tools-new {
+            background: rgba(15, 23, 42, 0.7);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* ---- Navigation Icons (Always Visible) ---- */
+        .nav-icons-new {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            flex-wrap: wrap;
+        }
+
+        .nav-icons-new a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .nav-icons-new a:hover {
+            color: #facc15;
+            background: rgba(250, 204, 21, 0.08);
+            border-color: rgba(250, 204, 21, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .nav-icons-new a i {
+            font-size: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-icons-new a:hover i {
+            transform: translateY(-2px) scale(1.1);
+        }
+
+        .nav-icons-new a.active {
+            color: #facc15;
+            border-color: rgba(250, 204, 21, 0.2);
+            background: rgba(250, 204, 21, 0.08);
+        }
+
+        /* ---- Search Bar ---- */
+        .search-container-new {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.06);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 140px;
+            max-width: 300px;
+        }
+
+        .search-container-new:focus-within {
+            border-color: #facc15;
+            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.08);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .search-container-new input {
+            background: transparent;
+            border: none;
+            padding: 8px 12px;
+            color: #e2e8f0;
+            font-size: 13px;
+            outline: none;
+            width: 100%;
+            min-width: 80px;
+        }
+
+        .search-container-new input::placeholder {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .search-container-new button {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .search-container-new button:hover {
+            color: #facc15;
+        }
+
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        .hero-new {
+            position: relative;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #0f172a;
+            padding: 40px 16px;
+        }
+
+        .hero-bg-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .hero-bg-animation .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(250, 204, 21, 0.05);
+            animation: floatCircle 20s infinite ease-in-out;
+        }
+
+        .hero-bg-animation .circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -80px;
+            right: -80px;
+            animation-delay: 0s;
+        }
+
+        .hero-bg-animation .circle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: -30px;
+            left: -30px;
+            animation-delay: -5s;
+            background: rgba(250, 204, 21, 0.03);
+        }
+
+        .hero-bg-animation .circle:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+            background: rgba(250, 204, 21, 0.02);
+        }
+
+        @keyframes floatCircle {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(20px, -20px) scale(1.1); }
+            66% { transform: translate(-15px, 15px) scale(0.9); }
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.25;
+            animation: pulseGlow 4s infinite ease-in-out;
+        }
+
+        .glow-orb.orb-1 {
+            width: 200px;
+            height: 200px;
+            background: #facc15;
+            top: 10%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+
+        .glow-orb.orb-2 {
+            width: 150px;
+            height: 150px;
+            background: #8b5cf6;
+            bottom: 15%;
+            left: 8%;
+            animation-delay: -2s;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.15; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(1.15); }
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #facc15;
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: floatParticle 15s infinite linear;
+        }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.2; }
+            90% { opacity: 0.2; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .hero-content-new {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 900px;
+            padding: 10px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(250, 204, 21, 0.12);
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            padding: 6px 18px;
+            border-radius: 50px;
+            color: #facc15;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-badge i {
+            margin-right: 6px;
+        }
+
+        .hero-title {
+            font-size: clamp(36px, 10vw, 80px);
+            font-weight: 800;
+            line-height: 1.08;
+            margin-bottom: 12px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .hero-title .highlight {
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-title .highlight-text {
+            color: #ffffff;
+            -webkit-text-fill-color: #ffffff;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(16px, 2.5vw, 24px);
+            color: #94a3b8;
+            font-weight: 400;
+            margin-bottom: 6px;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .hero-subtitle span {
+            color: #facc15;
+            font-weight: 600;
+        }
+
+        .hero-description {
+            font-size: clamp(13px, 1.2vw, 17px);
+            color: #64748b;
+            max-width: 540px;
+            margin: 12px auto 28px;
+            line-height: 1.8;
+            padding: 0 10px;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .hero-buttons-new {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            animation: fadeInUp 0.8s ease 0.8s both;
+        }
+
+        .btn-hero-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #facc15, #eab308);
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 15px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(250, 204, 21, 0.25);
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(250, 204, 21, 0.35);
+        }
+
+        .btn-hero-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: transparent;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 15px;
+            border: 2px solid rgba(255,255,255,0.12);
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-hero-secondary:hover {
+            border-color: #facc15;
+            background: rgba(250, 204, 21, 0.06);
+            transform: translateY(-2px);
+        }
+
+        .hero-stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px 40px;
+            margin-top: 36px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            animation: fadeInUp 0.8s ease 1s both;
+        }
+
+        .stat-number {
+            font-size: clamp(24px, 3vw, 36px);
+            font-weight: 800;
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================
+           RESPONSIVE - MOBILE FIRST
+           ============================================ */
+
+        /* ---- Mobile (Default) ---- */
+        @media (max-width: 768px) {
+            .nav-container-new {
+                height: 54px;
+            }
+
+            .logo-new img {
+                height: 28px;
+            }
+
+            .logo-text .brand {
+                font-size: 15px;
+            }
+
+            .logo-text .tagline {
+                font-size: 7px;
+            }
+
+            .header-tools-new {
+                padding: 4px 10px;
+                gap: 6px;
+            }
+
+            .nav-icons-new {
+                gap: 0px;
+                width: 100%;
+                justify-content: space-around;
+            }
+
+            .nav-icons-new a {
+                flex-direction: column;
+                padding: 6px 8px;
+                font-size: 10px;
+                gap: 2px;
+                background: transparent;
+                border: none;
+                min-width: 50px;
+            }
+
+            .nav-icons-new a i {
+                font-size: 18px;
+            }
+
+            .nav-icons-new a span {
+                font-size: 9px;
+                color: #94a3b8;
+            }
+
+            .nav-icons-new a:hover {
+                background: rgba(255,255,255,0.04);
+                transform: none;
+            }
+
+            .nav-icons-new a.active {
+                color: #facc15;
+                background: rgba(250, 204, 21, 0.06);
+            }
+
+            .nav-icons-new a.active span {
+                color: #facc15;
+            }
+
+            .search-container-new {
+                min-width: 100%;
+                max-width: 100%;
+                margin-top: 2px;
+            }
+
+            .search-container-new input {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            .search-container-new input::placeholder {
+                font-size: 11px;
+            }
+
+            .search-container-new button {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            .nav-links-new {
+                top: 54px;
+                padding: 10px 12px 16px;
+                max-height: calc(100vh - 54px);
+            }
+
+            .nav-links-new li a {
+                padding: 10px 14px;
+                font-size: 14px;
+            }
+
+            .nav-links-new li a i {
+                font-size: 16px;
+                width: 20px;
+            }
+
+            .hero-new {
+                min-height: 75vh;
+                padding: 20px 12px;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .hero-subtitle {
+                font-size: 15px;
+            }
+
+            .hero-description {
+                font-size: 13px;
+                padding: 0 4px;
+                margin: 10px auto 20px;
+            }
+
+            .btn-hero-primary, .btn-hero-secondary {
+                padding: 12px 24px;
+                font-size: 14px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .hero-buttons-new {
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+                max-width: 260px;
+                margin: 0 auto;
+            }
+
+            .hero-stats {
+                gap: 16px 24px;
+                margin-top: 24px;
+                padding-top: 16px;
+            }
+
+            .stat-number {
+                font-size: 22px;
+            }
+
+            .stat-label {
+                font-size: 11px;
+            }
+
+            .glow-orb.orb-1 {
+                width: 120px;
+                height: 120px;
+                right: 5%;
+            }
+
+            .glow-orb.orb-2 {
+                width: 80px;
+                height: 80px;
+                left: 5%;
+            }
+
+            .hero-badge {
+                font-size: 10px;
+                padding: 4px 14px;
+                margin-bottom: 14px;
+            }
+        }
+
+        /* ---- Small Mobile ---- */
+        @media (max-width: 400px) {
+            .nav-icons-new a {
+                padding: 4px 6px;
+                min-width: 40px;
+            }
+
+            .nav-icons-new a i {
+                font-size: 16px;
+            }
+
+            .nav-icons-new a span {
+                font-size: 8px;
+            }
+
+            .hero-title {
+                font-size: 28px;
+            }
+
+            .hero-subtitle {
+                font-size: 13px;
+            }
+
+            .btn-hero-primary, .btn-hero-secondary {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+        }
+
+        /* ---- Tablet ---- */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .nav-icons-new a {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+
+            .search-container-new {
+                min-width: 180px;
+                max-width: 250px;
+            }
+
+            .hero-title {
+                font-size: 56px;
+            }
+        }
+
+        /* ---- Desktop ---- */
+        @media (min-width: 1025px) {
+            .menu-toggle-new {
+                display: none;
+            }
+
+            .nav-links-new {
+                display: flex !important;
+                flex-direction: row;
+                position: static;
+                background: transparent;
+                backdrop-filter: none;
+                padding: 0;
+                gap: 4px;
+                border: none;
+                max-height: none;
+                overflow: visible;
+            }
+
+            .nav-links-new li a {
+                padding: 8px 16px;
+                font-size: 14px;
+                gap: 6px;
+            }
+
+            .nav-links-new li a i {
+                font-size: 14px;
+                width: auto;
+            }
+
+            .nav-links-new li a.active::after {
+                content: '';
+                position: absolute;
+                bottom: 2px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 16px;
+                height: 2px;
+                background: #facc15;
+                border-radius: 2px;
+            }
+
+            .header-tools-new {
+                padding: 8px 24px;
+            }
+
+            .nav-icons-new a {
+                background: transparent;
+                border: none;
+                padding: 8px 14px;
+            }
+
+            .nav-icons-new a span {
+                display: inline;
+            }
+
+            .search-container-new {
+                min-width: 200px;
+                max-width: 350px;
+            }
+
+            .hero-new {
+                min-height: 85vh;
+                padding: 60px 40px;
+            }
+
+            .hero-title {
+                font-size: clamp(56px, 7vw, 80px);
+            }
+
+            .hero-description {
+                font-size: 16px;
+            }
+
+            .btn-hero-primary, .btn-hero-secondary {
+                padding: 16px 40px;
+                font-size: 16px;
+                width: auto;
+            }
+
+            .hero-buttons-new {
+                flex-direction: row;
+                max-width: none;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<header class="navbar-new" id="navbar">
+    <div class="nav-container-new">
+        <a href="index.html" class="logo-new">
+            <img src="logo.jpeg" alt="PRADH DESI FUEL Logo">
+            <div class="logo-text">
+                <span class="brand">PRADH<span>.</span></span>
+                <span class="tagline">Desi Fuel</span>
+            </div>
+        </a>
+
+        <ul class="nav-links-new" id="navLinks">
+            <li><a href="index.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="product.html"><i class="fas fa-box"></i> Products</a></li>
+            <li><a href="about.html"><i class="fas fa-leaf"></i> Our Story</a></li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li>
+                <a href="cart.html" class="cart-link">
+                    <i class="fas fa-shopping-bag"></i> Cart
+                    <span class="cart-badge-new" id="cartBadge">0</span>
+                </a>
+            </li>
+        </ul>
+
+        <button class="menu-toggle-new" id="menuToggle" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</header>
+
+<!-- ===== TOOLS BAR ===== -->
+<div class="header-tools-new">
+    <div class="nav-icons-new">
+        <a href="product.html" class="active"><i class="fas fa-box"></i><span>Products</span></a>
+        <a href="order.html"><i class="fas fa-shopping-bag"></i><span>Orders</span></a>
+        <a href="cart.html"><i class="fas fa-shopping-cart"></i><span>Cart</span></a>
+        <a href="myaccount.html"><i class="fas fa-user"></i><span>Account</span></a>
+    </div>
+
+    <div class="search-container-new">
+        <input type="text" placeholder="Search health mixes..." class="search-input">
+        <button class="search-btn"><i class="fas fa-search"></i></button>
+    </div>
+</div>
+
+    <main>
+        <!-- ===== HERO SECTION ===== -->
+        <section class="hero-new">
+            <!-- Animated Background -->
+            <div class="hero-bg-animation">
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="circle"></div>
+            </div>
+
+            <!-- Glowing Orbs -->
+            <div class="glow-orb orb-1"></div>
+            <div class="glow-orb orb-2"></div>
+
+            <!-- Floating Particles -->
+            <div class="particle" style="left: 10%; top: 20%; animation-duration: 12s; animation-delay: 0s;"></div>
+            <div class="particle" style="left: 85%; top: 15%; animation-duration: 15s; animation-delay: 2s;"></div>
+            <div class="particle" style="left: 20%; top: 70%; animation-duration: 18s; animation-delay: 4s;"></div>
+            <div class="particle" style="left: 75%; top: 65%; animation-duration: 14s; animation-delay: 1s;"></div>
+            <div class="particle" style="left: 50%; top: 10%; animation-duration: 20s; animation-delay: 3s;"></div>
+
+            <!-- Content -->
+            <div class="hero-content-new">
+                <div class="hero-badge">
+                    <i class="fas fa-fire"></i> 100% Pure Desi Fuel
+                </div>
+
+                <h1 class="hero-title">
+                    <span class="highlight-text">Fuel Your</span><br>
+                    <span class="highlight">Desi Strength</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    Just <span>Pure Desi Fuel</span> — No Fillers, No Preservatives
+                </p>
+
+                <p class="hero-description">
+                    Experience the power of traditional Indian nutrition with PRADH Desi Fuel. 
+                    Crafted from premium roasted grains, nuts, and Ayurvedic herbs for unstoppable energy.
+                </p>
+
+                <div class="hero-buttons-new">
+                    <a href="product.html" class="btn-hero-primary">
+                        <i class="fas fa-shopping-bag"></i> Shop Now
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="about.html" class="btn-hero-secondary">
+                        <i class="fas fa-play-circle"></i> Our Story
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="productCount">0+</span>
+                        <span class="stat-label">Premium Blends</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Natural Ingredients</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="customerCount">0+</span>
+                        <span class="stat-label">Happy Customers</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Featured Health Mixes</h2>
+            
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper" id="featuredProductsContainer">
+                    <!-- Products loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <div style="max-width: 1100px; margin: 0 auto; padding: 0 16px;">
+            <h2 style="text-align: center; color: #facc15; margin-bottom: 0.5rem; font-size: clamp(1.6rem, 4vw, 2.2rem);">🌱 What Goes Inside PRADH Desi Fuel?</h2>
+            <p style="text-align: center; color: #94a3b8; font-size: clamp(0.85rem, 1.2vw, 1rem); margin-bottom: 2rem;">100% Honest Disclosure. Pure Traditional Nutrition Blend.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; text-align: center;">
+                
+                <div style="background: #1e293b; padding: 1.2rem; border-radius: 12px; border: 1px solid #334155;">
+                    <div style="font-size: 2rem; margin-bottom: 0.3rem;">🌾</div>
+                    <h3 style="color: #ffffff; font-size: 1rem; margin-bottom: 0.3rem;">Roasted Energy Base</h3>
+                    <p style="color: #94a3b8; font-size: 0.8rem; line-height: 1.5;">Skinless Roasted Chana, Split Yellow Moong Dal, Malted Ragi Flour & Rolled Oats.</p>
+                </div>
+
+                <div style="background: #1e293b; padding: 1.2rem; border-radius: 12px; border: 1px solid #334155;">
+                    <div style="font-size: 2rem; margin-bottom: 0.3rem;">🥜</div>
+                    <h3 style="color: #ffffff; font-size: 1rem; margin-bottom: 0.3rem;">Nuts & Superseeds</h3>
+                    <p style="color: #94a3b8; font-size: 0.8rem; line-height: 1.5;">Almond Kernels, Cashews, Walnuts, Fox Nuts, Pumpkin & Sunflower Seeds.</p>
+                </div>
+
+                <div style="background: #1e293b; padding: 1.2rem; border-radius: 12px; border: 1px solid #334155;">
+                    <div style="font-size: 2rem; margin-bottom: 0.3rem;">🪵</div>
+                    <h3 style="color: #ffffff; font-size: 1rem; margin-bottom: 0.3rem;">Ayurvedic Recovery</h3>
+                    <p style="color: #94a3b8; font-size: 0.8rem; line-height: 1.5;">Pure Ashwagandha & Shatavari Powder for strength, stamina, and immunity.</p>
+                </div>
+
+                <div style="background: #1e293b; padding: 1.2rem; border-radius: 12px; border: 1px solid #334155;">
+                    <div style="font-size: 2rem; margin-bottom: 0.3rem;">🍫</div>
+                    <h3 style="color: #ffffff; font-size: 1rem; margin-bottom: 0.3rem;">Natural Flavor</h3>
+                    <p style="color: #94a3b8; font-size: 0.8rem; line-height: 1.5;">Dutch Cocoa, Cardamom, Fennel, Vanilla & Dhaga Mishri (No refined sugar!).</p>
+                </div>
+
+            </div>
+
+            <div style="margin-top: 2.5rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; border-top: 1px dashed #334155; padding-top: 1.5rem;">
+                <span style="color: #22c55e; font-weight: 600; font-size: 0.8rem;">🌿 Contains Sendha Namak & Herbs</span>
+                <span style="color: #22c55e; font-weight: 600; font-size: 0.8rem;">🚫 Zero Preservatives / Pure Veg</span>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="Ingredients.jpeg" download="PRADH_Desi_Fuel_Official_Label.jpeg" style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #facc15, #eab308); color: #0b0f1a; padding: 12px 22px; font-weight: 700; font-size: clamp(0.8rem, 1.2vw, 1rem); border-radius: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2); transition: all 0.3s ease;">
+                    📥 Download Original Packet Label
+                </a>
+                <p style="color: #64748b; font-size: 0.7rem; margin-top: 0.3rem;">Click to download the official back-panel packaging image.</p>
+            </div>
+        </div>
+
+        <!-- WHY CHOOSE US & REVIEWS -->
+        <section class="section" style="background-color: #111827; color: white; border-radius: 16px; margin-top: 3rem; padding: 2.5rem 1.5rem;">
+            <h2 class="section-title" style="color: white; font-size: clamp(1.4rem, 3vw, 2rem);">Why PRADH Desi Fuel?</h2>
+            
+            <div class="about-features" style="margin-bottom: 2.5rem;">
+                <div class="feature-item" style="background: #1f2937; border-left-color: #facc15; color: white; padding: 1rem; margin-bottom: 0.8rem; border-radius: 8px; border-left: 4px solid #facc15;">
+                    <h4 style="color: #facc15; font-size: clamp(1rem, 1.2vw, 1.2rem);">🔥 Traditional Roasting</h4>
+                    <p style="font-size: clamp(0.8rem, 0.9vw, 0.9rem); color: #d1d5db;">Our slow-cooking technique preserves all the essential nutrients, making it incredibly light on the gut.</p>
+                </div>
+                <div class="feature-item" style="background: #1f2937; border-left-color: #22c55e; color: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #22c55e;">
+                    <h4 style="color: #22c55e; font-size: clamp(1rem, 1.2vw, 1.2rem);">🚫 Zero Chemical Fillers</h4>
+                    <p style="font-size: clamp(0.8rem, 0.9vw, 0.9rem); color: #d1d5db;">No artificial whey concentrates, no preservatives. What you get is 100% pure, Desi Organic Fuel.</p>
+                </div>
+            </div>
+
+            <h2 class="section-title" style="color: white; font-size: clamp(1.2rem, 2.5vw, 1.8rem);">What Our Community Says</h2>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; max-width: 700px; margin: 0 auto;">
+                <div style="background: #1f2937; padding: 1.2rem; border-radius: 12px; border: 1px solid #374151;">
+                    <p style="font-style: italic; color: #e5e7eb; font-size: clamp(0.85rem, 1vw, 1rem);">"Honestly, the best organic supplement I've ever used. I take it with milk right after my morning workout, and it keeps my energy levels solid all day long!"</p>
+                    <h4 style="color: #facc15; margin-top: 0.6rem; font-size: clamp(0.9rem, 1vw, 1.1rem);">— Vikram Singh</h4>
+                </div>
+                <div style="background: #1f2937; padding: 1.2rem; border-radius: 12px; border: 1px solid #374151;">
+                    <p style="font-style: italic; color: #e5e7eb; font-size: clamp(0.85rem, 1vw, 1rem);">"The best part is that it has absolutely no refined sugar. The taste is incredibly clean, pure, and authentic. Highly recommended"</p>
+                    <h4 style="color: #facc15; margin-top: 0.6rem; font-size: clamp(0.9rem, 1vw, 1.1rem);">— Dr. Rohan Mehta</h4>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="main.js"></script>
+    
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/918979993655?text=Hello%20PRADH%20Desi%20Fuel!%20I%20have%20a%20query%20about%20your%20product." 
+       class="whatsapp-floating-btn" 
+       target="_blank" 
+       title="Chat with us on WhatsApp">
+        <svg viewBox="0 0 32 32" class="whatsapp-svg">
+            <path d="M16 2a13 13 0 0 0-11.3 19.4L3 29l7.8-2A13 13 0 1 0 16 2zm0 24a11 11 0 0 1-5.6-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4A11 11 0 1 1 16 26zm5.9-8.1c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.1-.7.2l-1 1.3c-.2.3-.5.3-.8.1a10.3 10.3 0 0 1-3.7-2.3 11.4 11.4 0 0 1-2.5-3.2c-.2-.4 0-.6.2-.8l.6-.7v-.4c-.2-.5-.7-1.7-1-2.4-.2-.6-.5-.6-.7-.6h-.6a1.3 1.3 0 0 0-1 .4 4.8 4.8 0 0 0-1.5 3.5 8.3 8.3 0 0 0 1.8 4.4 19 19 0 0 0 7.3 6.5c3.5 1.4 4.2 1.1 5 1a4.2 4.2 0 0 0 2.8-2 3.4 3.4 0 0 0 .2-2c-.1-.2-.4-.3-.7-.5z"/>
+        </svg>
+    </a>
+
+    <footer>
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; padding: 1.5rem 1rem;">
+            <p style="font-size: clamp(0.8rem, 1vw, 1rem);">&copy; 2026 <span style="color: #facc15;">PRADH</span>. All Rights Reserved.</p>
+            <a href="https://forms.gle/wybyGnhVKrNikMJV6" target="_blank" class="feedback-btn" style="color: #94a3b8; text-decoration: none; font-size: clamp(0.8rem, 1vw, 1rem);">
+                📝 Share Your Feedback
+            </a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // ============================================
+        // MOBILE MENU TOGGLE
+        // ============================================
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+
+        document.querySelectorAll('.nav-links-new a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('open');
+            });
+        });
+
+        // ============================================
+        // NAVBAR SCROLL EFFECT
+        // ============================================
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // ============================================
+        // LOAD FEATURED PRODUCTS
+        // ============================================
+        async function loadFeaturedProducts() {
+            try {
+                const response = await fetch('/api/admin/products');
+                const data = await response.json();
+                
+                if (!data.success || !data.products || data.products.length === 0) {
+                    loadFallbackProducts();
+                    return;
+                }
+
+                const activeProducts = data.products.filter(p => p.status === 'active');
+                const featured = activeProducts.slice(0, 8);
+                const container = document.getElementById('featuredProductsContainer');
+                
+                if (featured.length === 0) {
+                    loadFallbackProducts();
+                    return;
+                }
+
+                container.innerHTML = featured.map(product => `
+                    <div class="swiper-slide">
+                        <div class="product-card">
+                            <a href="product.html" style="display: block; text-decoration: none; color: inherit;">
+                                <div class="product-img-container">
+                                    <img src="${product.image || 'product.jpeg'}" 
+                                         alt="${product.name}" 
+                                         class="product-real-img"
+                                         onerror="this.src='product.jpeg'">
+                                </div>
+                                <div class="product-info">
+                                    <h3 class="product-title">${product.name}</h3>
+                                    <div class="product-meta">
+                                        <span class="product-price">₹${parseFloat(product.price).toFixed(0)}</span>
+                                        <button class="btn btn-primary" onclick="event.preventDefault(); addToCart('${product.id}', '${product.name.replace(/'/g, "\\'")}', ${parseFloat(product.price)}, '${product.category || ''}')">
+                                            Add To Cart
+                                        </button>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+
+                if (window.swiper) {
+                    window.swiper.update();
+                } else {
+                    initSwiper();
+                }
+                
+                document.getElementById('productCount').textContent = activeProducts.length + '+';
+            } catch (error) {
+                console.error('Error loading products:', error);
+                loadFallbackProducts();
+            }
+        }
+
+        function loadFallbackProducts() {
+            const container = document.getElementById('featuredProductsContainer');
+            container.innerHTML = `
+                <div class="swiper-slide">
+                    <div class="product-card">
+                        <a href="product.html" style="display: block; text-decoration: none; color: inherit;">
+                            <div class="product-img-container">
+                                <img src="abc.jpeg" alt="Product" class="product-real-img">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">PRADH Desi Fuel Blend</h3>
+                                <div class="product-meta">
+                                    <span class="product-price">₹599</span>
+                                    <button class="btn btn-primary" onclick="addToCart('pdf-500gm', 'PRADH Desi Fuel', 599, '500 GM')">Add To Cart</button>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="product-card">
+                        <a href="product.html" style="display: block; text-decoration: none; color: inherit;">
+                            <div class="product-img-container">
+                                <img src="abc.jpeg" alt="Product" class="product-real-img">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">PRADH Desi Fuel Blend</h3>
+                                <div class="product-meta">
+                                    <span class="product-price">₹349</span>
+                                    <button class="btn btn-primary" onclick="addToCart('pdf-500gm2', 'PRADH Desi Fuel', 349, '500 GM')">Add To Cart</button>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            `;
+            document.getElementById('productCount').textContent = '5+';
+            initSwiper();
+        }
+
+        function initSwiper() {
+            if (window.swiper) {
+                window.swiper.destroy(true, true);
+            }
+            window.swiper = new Swiper(".mySwiper", {
+                slidesPerView: 1,
+                spaceBetween: 16,
+                loop: true,
+                autoplay: {
+                    delay: 2500,
+                    disableOnInteraction: false,
+                },
+                breakpoints: {
+                    640: { slidesPerView: 2, spaceBetween: 16 },
+                    1024: { slidesPerView: 3, spaceBetween: 24 },
+                },
+            });
+        }
+
+        // ============================================
+        // ADD TO CART
+        // ============================================
+        function addToCart(id, name, price, variant) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: id,
+                    name: name,
+                    price: parseFloat(price),
+                    quantity: 1,
+                    variant: variant || ''
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartBadge();
+            showNotification(`${name} added to cart! 🛒`);
+        }
+
+        function updateCartBadge() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            
+            const badge = document.getElementById('cartBadge');
+            if (badge) {
+                badge.textContent = totalItems;
+                badge.style.display = totalItems > 0 ? 'flex' : 'none';
+                badge.classList.remove('pulse');
+                void badge.offsetWidth;
+                badge.classList.add('pulse');
+            }
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification-toast';
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                background: #22c55e;
+                color: white;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 9999;
+                font-weight: 500;
+                animation: slideIn 0.3s ease;
+                max-width: 320px;
+                font-size: 14px;
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
+
+        function updateCustomerCount() {
+            const count = Math.floor(Math.random() * 500) + 1200;
+            document.getElementById('customerCount').textContent = count + '+';
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartBadge();
+            loadFeaturedProducts();
+            updateCustomerCount();
+            
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    updateCartBadge();
+                }
+            });
+        });
+
+        const styleEl = document.createElement('style');
+        styleEl.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            .notification-toast {
+                animation: slideIn 0.3s ease;
+            }
+        `;
+        document.head.appendChild(styleEl);
+    </script>
+</body>
+</html>

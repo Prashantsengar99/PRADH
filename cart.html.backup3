@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - PRADH Desi Fuel</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Cart Page Specific Styles */
+        .cart-page {
+            background: #0f172a;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .cart-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #1e293b;
+            border-radius: 20px;
+            border: 1px solid #334155;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #334155;
+        }
+        
+        .cart-header h2 {
+            color: #facc15;
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .cart-header h2 i {
+            color: #facc15;
+        }
+        
+        .cart-count-badge {
+            background: #facc15;
+            color: #0f172a;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        /* Cart Items List */
+        .cart-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .cart-item {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid #334155;
+            transition: all 0.3s ease;
+        }
+        
+        .cart-item:hover {
+            border-color: #facc15;
+            transform: translateX(4px);
+        }
+        
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #1e293b;
+            flex-shrink: 0;
+            border: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .cart-item-image .no-image {
+            color: #64748b;
+            font-size: 30px;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .cart-item-name {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .cart-item-variant {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        
+        .cart-item-price {
+            color: #facc15;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 4px;
+        }
+        
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-btn:hover {
+            background: #facc15;
+            color: #0f172a;
+        }
+        
+        .quantity-btn:active {
+            transform: scale(0.9);
+        }
+        
+        .quantity-number {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        .item-total {
+            color: #facc15;
+            font-size: 18px;
+            font-weight: 700;
+            min-width: 80px;
+            text-align: right;
+        }
+        
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .remove-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            transform: scale(1.1);
+        }
+        
+        /* Cart Summary */
+        .cart-summary {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .cart-summary-left {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .cart-summary-right {
+            text-align: right;
+            min-width: 200px;
+        }
+        
+        .cart-total-label {
+            color: #94a3b8;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .cart-total-amount {
+            color: #facc15;
+            font-size: 36px;
+            font-weight: 700;
+            margin: 4px 0;
+        }
+        
+        .cart-total-sub {
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        .cart-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .btn-primary-cart {
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #facc15, #eab308);
+            color: #0f172a;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            justify-content: center;
+            min-width: 200px;
+        }
+        
+        .btn-primary-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(250, 204, 21, 0.3);
+        }
+        
+        .btn-primary-cart:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary-cart {
+            padding: 14px 30px;
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-secondary-cart:hover {
+            background: #334155;
+            color: #ffffff;
+        }
+        
+        .btn-danger-cart {
+            padding: 14px 30px;
+            background: transparent;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-danger-cart:hover {
+            background: #ef4444;
+            color: #ffffff;
+        }
+        
+        /* Empty Cart */
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-cart-icon {
+            font-size: 80px;
+            color: #334155;
+            margin-bottom: 20px;
+        }
+        
+        .empty-cart h2 {
+            color: #ffffff;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .empty-cart p {
+            color: #94a3b8;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .btn-shop-now {
+            display: inline-block;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #facc15, #eab308);
+            color: #0f172a;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+        
+        .btn-shop-now:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(250, 204, 21, 0.3);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cart-container {
+                padding: 20px;
+            }
+            
+            .cart-item {
+                flex-wrap: wrap;
+                padding: 16px;
+            }
+            
+            .cart-item-actions {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 12px;
+                padding-top: 12px;
+                border-top: 1px solid #334155;
+            }
+            
+            .cart-header h2 {
+                font-size: 22px;
+            }
+            
+            .cart-total-amount {
+                font-size: 28px;
+            }
+            
+            .cart-summary {
+                flex-direction: column;
+            }
+            
+            .cart-summary-right {
+                width: 100%;
+                text-align: left;
+            }
+            
+            .btn-primary-cart {
+                min-width: 100%;
+            }
+            
+            .cart-item-image {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .item-total {
+                min-width: 60px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .cart-container {
+                padding: 12px;
+                border-radius: 12px;
+            }
+            
+            .cart-item {
+                padding: 12px;
+            }
+            
+            .cart-item-name {
+                font-size: 15px;
+            }
+            
+            .cart-item-price {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="logo.jpeg" alt="PRADH DESI FUEL Logo" style="height: 40px; width: auto; display: inline-block; vertical-align: middle;">
+                </a>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="product.html" class="nav-link">Products</a></li>
+                <li><a href="about.html" class="nav-link">Our Story</a></li>
+                <li><a href="contact.html" class="nav-link">Contact & Policies</a></li>
+                <li><a href="cart.html" class="nav-link cart-icon-wrapper">Cart <span id="cart-count">0</span></a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Header Tools -->
+    <div class="header-tools">
+        <div class="nav-icons">
+            <a href="product.html"><i class="fas fa-box"></i><span>Products</span></a>
+            <a href="order.html"><i class="fas fa-shopping-bag"></i><span>Orders</span></a>
+            <a href="cart.html"><i class="fas fa-shopping-cart"></i><span>Cart</span></a>
+            <a href="myaccount.html"><i class="fas fa-user"></i><span>Account</span></a>
+        </div>
+        <div class="search-container">
+            <input type="text" placeholder="Health mix search karein..." class="search-input">
+            <button class="search-btn">Search</button>
+        </div>
+    </div>
+
+    <!-- Cart Main Content -->
+    <div class="cart-page">
+        <div class="cart-container">
+            <div class="cart-header">
+                <h2>
+                    <i class="fas fa-shopping-cart"></i>
+                    Your Cart
+                    <span class="cart-count-badge" id="cartCountBadge">0</span>
+                </h2>
+                <div style="color: #94a3b8; font-size: 14px;" id="deliveryInfo">
+                    <i class="fas fa-truck"></i> Loading delivery info...
+                </div>
+            </div>
+
+            <!-- Cart Items Container -->
+            <div id="cartItemsContainer">
+                <!-- Items will be rendered here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/918979993655?text=Hello%20PRADH%20Desi%20Fuel!%20I%20have%20a%20query%20about%20your%20product." 
+       class="whatsapp-floating-btn" 
+       target="_blank" 
+       title="Chat with us on WhatsApp">
+        <svg viewBox="0 0 32 32" class="whatsapp-svg">
+            <path d="M16 2a13 13 0 0 0-11.3 19.4L3 29l7.8-2A13 13 0 1 0 16 2zm0 24a11 11 0 0 1-5.6-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4A11 11 0 1 1 16 26zm5.9-8.1c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.1-.7.2l-1 1.3c-.2.3-.5.3-.8.1a10.3 10.3 0 0 1-3.7-2.3 11.4 11.4 0 0 1-2.5-3.2c-.2-.4 0-.6.2-.8l.6-.7v-.4c-.2-.5-.7-1.7-1-2.4-.2-.6-.5-.6-.7-.6h-.6a1.3 1.3 0 0 0-1 .4 4.8 4.8 0 0 0-1.5 3.5 8.3 8.3 0 0 0 1.8 4.4 19 19 0 0 0 7.3 6.5c3.5 1.4 4.2 1.1 5 1a4.2 4.20 0 0 2.8-2 3.4 3.4 0 0 0 .2-2c-.1-.2-.4-.3-.7-.5z"/>
+        </svg>
+    </a>
+
+    <!-- Footer -->
+    <footer>
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+            <p>&copy; 2026 <span>PRADH</span>. All Rights Reserved.</p>
+            <a href="https://forms.gle/wybyGnhVKrNikMJV6" target="_blank" class="feedback-btn">
+                📝 Share Your Feedback
+            </a>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        // ============================================
+        // GET DELIVERY SETTINGS FROM SERVER
+        // ============================================
+        let deliverySettings = {
+            deliveryCharge: 0,
+            freeDeliveryThreshold: 0
+        };
+
+        async function getDeliverySettings() {
+            try {
+                const response = await fetch('/api/delivery-charge');
+                const data = await response.json();
+                if (data.success) {
+                    deliverySettings.deliveryCharge = data.deliveryCharge || 0;
+                    deliverySettings.freeDeliveryThreshold = data.freeDeliveryThreshold || 0;
+                    
+                    // Update header
+                    const deliveryInfo = document.getElementById('deliveryInfo');
+                    if (deliveryInfo) {
+                        deliveryInfo.innerHTML = `<i class="fas fa-truck"></i> Free delivery on orders above ₹${deliverySettings.freeDeliveryThreshold}`;
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching delivery settings:', error);
+            }
+        }
+
+        // ============================================
+        // LOAD CART
+        // ============================================
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const container = document.getElementById('cartItemsContainer');
+            
+            // Update cart badge
+            updateCartBadgeUI(cart);
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🛒</div>
+                        <h2>Your Cart is Empty</h2>
+                        <p>Time to fuel your fitness journey! Browse our premium desi blends.</p>
+                        <a href="product.html" class="btn-shop-now">
+                            <i class="fas fa-shopping-bag"></i> Start Shopping
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="cart-items-list">';
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const itemTotal = parseFloat(item.price) * parseInt(item.quantity);
+                total += itemTotal;
+                
+                html += `
+                    <div class="cart-item" data-index="${index}">
+                        <div class="cart-item-image">
+                            ${item.image ? 
+                                `<img src="${item.image}" alt="${item.name}">` : 
+                                `<div class="no-image">💪</div>`
+                            }
+                        </div>
+                        <div class="cart-item-details">
+                            <div class="cart-item-name">${item.name || 'Product'}</div>
+                            ${item.variant ? `<div class="cart-item-variant">${item.variant}</div>` : ''}
+                            <div class="cart-item-price">₹${parseFloat(item.price).toFixed(2)}</div>
+                        </div>
+                        <div class="cart-item-actions">
+                            <div class="quantity-control">
+                                <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span class="quantity-number">${item.quantity}</span>
+                                <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="item-total">₹${itemTotal.toFixed(2)}</div>
+                            <button class="remove-btn" onclick="removeItem(${index})" title="Remove item">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+
+            // Summary section - Using dynamic delivery settings
+            const deliveryCharge = total > deliverySettings.freeDeliveryThreshold ? 0 : deliverySettings.deliveryCharge;
+            const grandTotal = total + deliveryCharge;
+
+            html += `
+                <div class="cart-summary">
+                    <div class="cart-summary-left">
+                        <button class="btn-secondary-cart" onclick="window.location.href='product.html'">
+                            <i class="fas fa-arrow-left"></i> Continue Shopping
+                        </button>
+                        <button class="btn-danger-cart" onclick="clearCart()">
+                            <i class="fas fa-trash-alt"></i> Clear Cart
+                        </button>
+                    </div>
+                    <div class="cart-summary-right">
+                        <div class="cart-total-label">Subtotal</div>
+                        <div class="cart-total-amount">₹${total.toFixed(2)}</div>
+                        ${deliveryCharge > 0 ? `
+                            <div class="cart-total-sub">
+                                <i class="fas fa-truck"></i> Delivery: ₹${deliveryCharge.toFixed(2)}
+                                <br>
+                                <small style="color: #64748b;">Free delivery above ₹${deliverySettings.freeDeliveryThreshold}</small>
+                            </div>
+                        ` : `
+                            <div class="cart-total-sub" style="color: #22c55e;">
+                                <i class="fas fa-check-circle"></i> Free Delivery
+                                <br>
+                                <small style="color: #64748b;">You saved ₹${deliverySettings.deliveryCharge} on delivery!</small>
+                            </div>
+                        `}
+                        <div style="margin-top: 8px; color: #94a3b8; font-size: 14px;">
+                            Total: ₹${grandTotal.toFixed(2)}
+                        </div>
+                    </div>
+                </div>
+                <div class="cart-actions">
+                    <button class="btn-primary-cart" onclick="proceedToCheckout()">
+                        <i class="fas fa-lock"></i> Proceed to Checkout
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function updateCartBadgeUI(cart) {
+            const totalItems = cart.reduce((sum, item) => sum + (parseInt(item.quantity) || 1), 0);
+            const badges = document.querySelectorAll('#cart-count, #cartCountBadge');
+            badges.forEach(badge => {
+                if (badge) {
+                    badge.textContent = totalItems;
+                }
+            });
+        }
+
+        function updateQuantity(index, change) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart[index]) {
+                cart[index].quantity = Math.max(1, parseInt(cart[index].quantity) + change);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                loadCart();
+                if (window.updateCartBadge) window.updateCartBadge();
+            }
+        }
+
+        function removeItem(index) {
+            if (confirm('Remove this item from your cart?')) {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cart.splice(index, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                loadCart();
+                if (window.updateCartBadge) window.updateCartBadge();
+                showNotification('Item removed from cart');
+            }
+        }
+
+        function clearCart() {
+            if (confirm('Clear your entire cart?')) {
+                localStorage.removeItem('cart');
+                loadCart();
+                if (window.updateCartBadge) window.updateCartBadge();
+                showNotification('Cart cleared');
+            }
+        }
+
+        function proceedToCheckout() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                showNotification('Your cart is empty!');
+                return;
+            }
+            window.location.href = 'payment.html';
+        }
+
+        function showNotification(message) {
+            const existing = document.querySelector('.notification-toast');
+            if (existing) existing.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = 'notification-toast';
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                background: #22c55e;
+                color: white;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 9999;
+                font-weight: 500;
+                animation: slideIn 0.3s ease;
+                max-width: 350px;
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
+
+        // ============================================
+        // LOAD CART ON PAGE LOAD
+        // ============================================
+        document.addEventListener('DOMContentLoaded', async function() {
+            // First get delivery settings
+            await getDeliverySettings();
+            // Then load cart
+            loadCart();
+        });
+    </script>
+</body>
+</html>
+
+// ============================================
+// DELIVERY SETTINGS FOR CART - ADD THIS
+// ============================================
+
+async function getDeliverySettings() {
+    try {
+        const response = await fetch('/api/delivery-charge');
+        const data = await response.json();
+        if (data.success) {
+            window.deliverySettings = {
+                deliveryCharge: data.deliveryCharge || 0,
+                freeDeliveryThreshold: data.freeDeliveryThreshold || 0
+            };
+            console.log('📦 Delivery settings loaded:', window.deliverySettings);
+        }
+    } catch (error) {
+        console.error('Error fetching delivery settings:', error);
+        window.deliverySettings = { deliveryCharge: 49, freeDeliveryThreshold: 999 };
+    }
+}
+
+// Load delivery settings on page load
+document.addEventListener('DOMContentLoaded', async function() {
+    await getDeliverySettings();
+});
+
+// ============================================
+// STOCK VALIDATION - ADD THIS
+// ============================================
+
+// Check product stock before adding to cart
+async function checkStock(productId, quantity) {
+    try {
+        const response = await fetch(`/api/products/${productId}/stock`);
+        const data = await response.json();
+        if (data.success) {
+            return { 
+                available: data.stock >= quantity, 
+                stock: data.stock 
+            };
+        }
+        return { available: false, stock: 0 };
+    } catch (error) {
+        console.error('Error checking stock:', error);
+        return { available: false, stock: 0 };
+    }
+}
+
+// Modified add to cart with stock check
+async function addToCartWithStock(productId, name, price, quantity, variant) {
+    // Check stock first
+    const stockCheck = await checkStock(productId, quantity);
+    
+    if (!stockCheck.available) {
+        alert(`❌ Sorry! Only ${stockCheck.stock} items available in stock.`);
+        return false;
+    }
+    
+    // Add to cart
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingItem = cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        const newQuantity = existingItem.quantity + quantity;
+        const recheck = await checkStock(productId, newQuantity);
+        if (!recheck.available) {
+            alert(`❌ Sorry! Only ${recheck.stock} items available in stock.`);
+            return false;
+        }
+        existingItem.quantity = newQuantity;
+    } else {
+        cart.push({
+            id: productId,
+            name: name,
+            price: parseFloat(price),
+            quantity: quantity || 1,
+            variant: variant || ''
+        });
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartBadge();
+    showNotification(`${name} added to cart! 🛒`);
+    return true;
+}
+
+// On checkout - validate all cart items stock
+async function validateCartStock() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    for (let item of cart) {
+        const stockCheck = await checkStock(item.id, item.quantity);
+        if (!stockCheck.available) {
+            alert(`❌ "${item.name}" only ${stockCheck.stock} items available. Please reduce quantity.`);
+            return false;
+        }
+    }
+    return true;
+}
+
+// ============================================
+// STOCK VALIDATION FOR CART
+// ============================================
+
+async function checkStock(productId, quantity) {
+    try {
+        const response = await fetch('/api/products/' + productId + '/stock');
+        const data = await response.json();
+        if (data.success) {
+            return { 
+                available: data.stock >= quantity, 
+                stock: data.stock 
+            };
+        }
+        return { available: false, stock: 0 };
+    } catch (error) {
+        console.error('Error checking stock:', error);
+        return { available: false, stock: 0 };
+    }
+}
+
+async function validateCartStock() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    for (let item of cart) {
+        const stockCheck = await checkStock(item.id, item.quantity);
+        if (!stockCheck.available) {
+            alert('❌ "' + item.name + '" only ' + stockCheck.stock + ' items available. Please reduce quantity.');
+            return false;
+        }
+    }
+    return true;
+}
+
+// ============================================
+// STOCK VALIDATION FOR CART
+// ============================================
+
+async function checkStock(productId, quantity) {
+    try {
+        const response = await fetch('/api/products/' + productId + '/stock');
+        const data = await response.json();
+        if (data.success) {
+            return { 
+                available: data.stock >= quantity, 
+                stock: data.stock 
+            };
+        }
+        return { available: false, stock: 0 };
+    } catch (error) {
+        console.error('Error checking stock:', error);
+        return { available: false, stock: 0 };
+    }
+}
+
+async function validateCartStock() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    for (let item of cart) {
+        const stockCheck = await checkStock(item.id, item.quantity);
+        if (!stockCheck.available) {
+            alert('❌ "' + item.name + '" only ' + stockCheck.stock + ' items available. Please reduce quantity.');
+            return false;
+        }
+    }
+    return true;
+}

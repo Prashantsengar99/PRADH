@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1782462331351,
+    "username": "testuser123",
+    "email": "test123@gmail.com",
+    "password": "1234",
+    "phone": "",
+    "createdAt": "2026-06-26T08:25:31.351Z",
+    "rewards": 0,
+    "level": "Bronze"
+  },
+  {
+    "id": 1782462623743,
+    "username": "prashantsengar99",
+    "email": "thakurprashant9720@gmail.com",
+    "password": "0000",
+    "phone": "",
+    "createdAt": "2026-06-26T08:30:23.743Z",
+    "rewards": 0,
+    "level": "Bronze"
+  },
+  {
+    "id": 1782462909016,
+    "username": "testuser",
+    "email": "test@gmail.com",
+    "password": "1234",
+    "phone": "",
+    "createdAt": "2026-06-26T08:35:09.016Z",
+    "rewards": 0,
+    "level": "Bronze"
+  }
+]
