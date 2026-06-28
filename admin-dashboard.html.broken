@@ -705,6 +705,12 @@
 </div>
 
 <script>
+    (function() {
+        if (localStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'admin.html';
+        }
+    })();
+
     // ============================================
     // NAVIGATION
     // ============================================
