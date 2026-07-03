@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Tracking - PRADH Desi Fuel</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        
+        .navbar-custom {
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-link-custom {
+            color: #94a3b8;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .nav-link-custom:hover { color: #ffffff; }
+        .nav-link-custom.active { color: #facc15; }
+        
+        /* Tracking Timeline */
+        .tracking-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .tracking-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .tracking-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+        .tracking-header h1 span {
+            color: #facc15;
+        }
+        .tracking-header p {
+            color: #94a3b8;
+            margin-top: 8px;
+        }
+        
+        .order-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+        .order-card .order-id {
+            color: #facc15;
+            font-family: monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .order-card .order-status {
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .status-pending { background: #facc15; color: #0f172a; }
+        .status-paid { background: #22c55e; color: #0f172a; }
+        .status-shipped { background: #3b82f6; color: white; }
+        .status-delivered { background: #8b5cf6; color: white; }
+        .status-cancelled { background: #ef4444; color: white; }
+        
+        /* Progress Bar */
+        .progress-container {
+            margin: 30px 0;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #0f172a;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-bar .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #facc15, #eab308);
+            border-radius: 4px;
+            transition: width 1s ease;
+            width: 0%;
+        }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+        .progress-label .current {
+            color: #facc15;
+            font-weight: 600;
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #334155;
+        }
+        .timeline-item {
+            position: relative;
+            padding: 20px 0 20px 30px;
+            opacity: 0.4;
+            transition: all 0.5s ease;
+        }
+        .timeline-item.active {
+            opacity: 1;
+        }
+        .timeline-item.completed {
+            opacity: 1;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 24px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #334155;
+            border: 2px solid #334155;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+        .timeline-item.completed::before {
+            background: #22c55e;
+            border-color: #22c55e;
+        }
+        .timeline-item.active::before {
+            background: #facc15;
+            border-color: #facc15;
+            box-shadow: 0 0 20px rgba(250, 204, 21, 0.4);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+        }
+        .timeline-item .icon {
+            position: absolute;
+            left: -38px;
+            top: 20px;
+            font-size: 1.2rem;
+            color: #334155;
+            transition: all 0.3s ease;
+            background: #0f172a;
+            padding: 2px;
+            border-radius: 50%;
+        }
+        .timeline-item.completed .icon {
+            color: #22c55e;
+        }
+        .timeline-item.active .icon {
+            color: #facc15;
+        }
+        .timeline-item .content {
+            padding-left: 10px;
+        }
+        .timeline-item .content .title {
+            font-weight: 600;
+            color: #ffffff;
+            font-size: 1.05rem;
+        }
+        .timeline-item .content .desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 2px;
+        }
+        .timeline-item .content .time {
+            color: #64748b;
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+        
+        /* Items Preview */
+        .items-preview {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .items-preview .item-tag {
+            background: #0f172a;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            border: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .items-preview .item-tag .qty {
+            color: #facc15;
+            font-weight: 700;
+        }
+        
+        /* Search Form */
+        .search-form {
+            display: flex;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+        .search-form input {
+            flex: 1;
+            padding: 14px 20px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+        .search-form input:focus {
+            border-color: #facc15;
+            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.08);
+        }
+        .search-form input::placeholder {
+            color: #64748b;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0;
+        }
+        .search-form button {
+            padding: 14px 30px;
+            background: linear-gradient(135deg, #facc15, #eab308);
+            color: #0f172a;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .search-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(250, 204, 21, 0.25);
+        }
+        
+        /* Error/Empty States */
+        .error-state, .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .error-state i, .empty-state i {
+            font-size: 60px;
+            color: #334155;
+            display: block;
+            margin-bottom: 16px;
+        }
+        .error-state h3, .empty-state h3 {
+            color: #ffffff;
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        .error-state p, .empty-state p {
+            color: #94a3b8;
+        }
+        .error-state .btn-retry {
+            margin-top: 16px;
+            padding: 12px 30px;
+            background: #facc15;
+            color: #0f172a;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        
+        /* Order Details */
+        .order-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .order-detail-item {
+            background: #0f172a;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+        .order-detail-item .label {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .order-detail-item .value {
+            color: #ffffff;
+            font-weight: 600;
+            margin-top: 2px;
+            font-size: 0.95rem;
+        }
+        .order-detail-item .value.gold {
+            color: #facc15;
+        }
+        
+        /* WhatsApp */
+        .whatsapp-floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .whatsapp-floating-btn:hover { transform: scale(1.1); }
+        .whatsapp-svg { width: 32px; height: 32px; fill: white; }
+        
+        @media (max-width: 768px) {
+            .tracking-header h1 { font-size: 1.8rem; }
+            .search-form { flex-direction: column; }
+            .search-form button { justify-content: center; }
+            .order-details-grid { grid-template-columns: 1fr; }
+            .timeline { padding-left: 30px; }
+            .timeline-item { padding: 16px 0 16px 20px; }
+            .timeline-item::before { left: -25px; width: 12px; height: 12px; }
+            .timeline-item .icon { left: -30px; font-size: 1rem; }
+            .whatsapp-floating-btn { width: 50px; height: 50px; bottom: 20px; right: 20px; }
+            .whatsapp-svg { width: 26px; height: 26px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<header class="navbar-custom">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="logo.jpeg" alt="PRADH" class="h-10 w-auto rounded-lg">
+                <div>
+                    <span class="text-white font-extrabold text-xl tracking-tight">PRADH<span class="text-[#facc15]">.</span></span>
+                    <span class="block text-[10px] text-[#64748b] font-semibold tracking-wider uppercase">Desi Fuel</span>
+                </div>
+            </a>
+            <ul class="flex items-center gap-1">
+                <li><a href="index.html" class="nav-link-custom px-4 py-2 rounded-lg text-sm">Home</a></li>
+                <li><a href="product.html" class="nav-link-custom px-4 py-2 rounded-lg text-sm">Products</a></li>
+                <li><a href="order.html" class="nav-link-custom active px-4 py-2 rounded-lg text-sm">Orders</a></li>
+                <li><a href="cart.html" class="nav-link-custom px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+                    <i class="fas fa-shopping-bag"></i> Cart
+                    <span id="cart-count" class="bg-[#ef4444] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
+                </a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="tracking-container">
+    <div class="tracking-header">
+        <h1>📦 <span>Track</span> Your Order</h1>
+        <p>Enter your order ID to track real-time status</p>
+    </div>
+    
+    <!-- Search Form -->
+    <form id="trackForm" class="search-form" onsubmit="trackOrder(event)">
+        <input type="text" id="orderInput" placeholder="Enter Order ID (e.g., ORD12345678)" required>
+        <button type="submit"><i class="fas fa-search"></i> Track</button>
+    </form>
+    
+    <!-- Result Container -->
+    <div id="trackingResult">
+        <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <h3>Enter Order ID</h3>
+            <p>Enter your order ID above to see tracking details</p>
+        </div>
+    </div>
+</main>
+
+<!-- ===== WHATSAPP ===== -->
+<a href="https://wa.me/918979993655?text=Hello%20PRADH%20Desi%20Fuel!%20I%20want%20to%20track%20my%20order." 
+   class="whatsapp-floating-btn" target="_blank">
+    <svg viewBox="0 0 32 32" class="whatsapp-svg">
+        <path d="M16 2a13 13 0 0 0-11.3 19.4L3 29l7.8-2A13 13 0 1 0 16 2zm0 24a11 11 0 0 1-5.6-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4A11 11 0 1 1 16 26zm5.9-8.1c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.1-.7.2l-1 1.3c-.2.3-.5.3-.8.1a10.3 10.3 0 0 1-3.7-2.3 11.4 11.4 0 0 1-2.5-3.2c-.2-.4 0-.6.2-.8l.6-.7v-.4c-.2-.5-.7-1.7-1-2.4-.2-.6-.5-.6-.7-.6h-.6a1.3 1.3 0 0 0-1 .4 4.8 4.8 0 0 0-1.5 3.5 8.3 8.3 0 0 0 1.8 4.4 19 19 0 0 0 7.3 6.5c3.5 1.4 4.2 1.1 5 1a4.2 4.2 0 0 0 2.8-2 3.4 3.4 0 0 0 .2-2c-.1-.2-.4-.3-.7-.5z"/>
+    </svg>
+</a>
+
+<footer class="border-t border-[#334155] mt-12">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <p class="text-center text-[#64748b] text-sm">&copy; 2026 <span class="text-[#facc15] font-semibold">PRADH</span>. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<script>
+    // ============================================
+    // TRACK ORDER
+    // ============================================
+    async function trackOrder(event) {
+        event.preventDefault();
+        
+        const input = document.getElementById('orderInput');
+        const orderId = input.value.trim();
+        
+        if (!orderId) {
+            showError('Please enter an Order ID');
+            return;
+        }
+        
+        const container = document.getElementById('trackingResult');
+        container.innerHTML = `
+            <div class="text-center py-12">
+                <i class="fas fa-spinner fa-spin text-4xl text-[#facc15]"></i>
+                <p class="text-[#94a3b8] mt-4">Tracking your order...</p>
+            </div>
+        `;
+        
+        try {
+            const response = await fetch(`/api/order/track/${orderId}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                renderTracking(data);
+            } else {
+                showError(data.message || 'Order not found');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showError('Failed to track order. Please try again.');
+        }
+    }
+    
+    // ============================================
+    // RENDER TRACKING
+    // ============================================
+    function renderTracking(data) {
+        const container = document.getElementById('trackingResult');
+        const { order, timeline, currentStatusIndex, progress } = data;
+        
+        const statusClass = order.status || 'pending';
+        const statusMap = {
+            'pending': 'Pending',
+            'paid': 'Paid ✅',
+            'shipped': 'Shipped 🚚',
+            'delivered': 'Delivered 📦',
+            'cancelled': 'Cancelled ❌'
+        };
+        
+        container.innerHTML = `
+            <div class="order-card">
+                <div class="flex justify-between items-center flex-wrap gap-4">
+                    <div>
+                        <div class="order-id">#${order.id}</div>
+                        <div class="text-[#94a3b8] text-sm mt-1">
+                            <i class="far fa-calendar-alt"></i> ${new Date(order.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </div>
+                    </div>
+                    <div>
+                        <span class="order-status status-${statusClass}">${statusMap[statusClass] || order.status}</span>
+                    </div>
+                </div>
+                
+                <div class="order-details-grid">
+                    <div class="order-detail-item">
+                        <div class="label">Total Amount</div>
+                        <div class="value gold">₹${(order.total || 0).toFixed(2)}</div>
+                    </div>
+                    <div class="order-detail-item">
+                        <div class="label">Items</div>
+                        <div class="value">${order.items ? order.items.length : 0} products</div>
+                    </div>
+                </div>
+                
+                ${order.items && order.items.length > 0 ? `
+                    <div class="items-preview mt-3">
+                        ${order.items.slice(0, 4).map(item => `
+                            <span class="item-tag">
+                                <span class="qty">${item.quantity}×</span> ${item.name}
+                            </span>
+                        `).join('')}
+                        ${order.items.length > 4 ? `<span class="item-tag">+${order.items.length - 4} more</span>` : ''}
+                    </div>
+                ` : ''}
+                
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%;"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Order Placed</span>
+                        <span class="current">${progress}%</span>
+                        <span>Delivered</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline">
+                ${timeline.map((item, index) => {
+                    const isActive = index === currentStatusIndex;
+                    const isCompleted = item.completed;
+                    const isUpcoming = !isCompleted && !isActive;
+                    
+                    let statusClass = '';
+                    if (isCompleted) statusClass = 'completed';
+                    else if (isActive) statusClass = 'active';
+                    else statusClass = '';
+                    
+                    return `
+                        <div class="timeline-item ${statusClass}">
+                            <span class="icon"><i class="fas ${item.icon}"></i></span>
+                            <div class="content">
+                                <div class="title">${item.status}</div>
+                                <div class="desc">${item.description}</div>
+                                ${item.time ? `
+                                    <div class="time">
+                                        <i class="far fa-clock"></i> ${new Date(item.time).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+            
+            ${order.status === 'delivered' ? `
+                <div class="mt-6 p-4 bg-[#22c55e]/10 border border-[#22c55e]/20 rounded-xl text-center">
+                    <i class="fas fa-check-circle text-[#22c55e] text-2xl"></i>
+                    <p class="text-[#22c55e] font-semibold mt-2">🎉 Order Delivered Successfully!</p>
+                    <p class="text-[#94a3b8] text-sm">Thank you for shopping with PRADH Desi Fuel!</p>
+                </div>
+            ` : order.status === 'cancelled' ? `
+                <div class="mt-6 p-4 bg-[#ef4444]/10 border border-[#ef4444]/20 rounded-xl text-center">
+                    <i class="fas fa-times-circle text-[#ef4444] text-2xl"></i>
+                    <p class="text-[#ef4444] font-semibold mt-2">Order Cancelled</p>
+                    <p class="text-[#94a3b8] text-sm">This order has been cancelled.</p>
+                </div>
+            ` : `
+                <div class="mt-6 p-4 bg-[#3b82f6]/10 border border-[#3b82f6]/20 rounded-xl text-center">
+                    <i class="fas fa-truck text-[#3b82f6] text-2xl"></i>
+                    <p class="text-[#3b82f6] font-semibold mt-2">🚚 Your order is on the way!</p>
+                    <p class="text-[#94a3b8] text-sm">Track your order in real-time. Delivery in 2-3 business days.</p>
+                </div>
+            `}
+        `;
+    }
+    
+    // ============================================
+    // SHOW ERROR
+    // ============================================
+    function showError(message) {
+        const container = document.getElementById('trackingResult');
+        container.innerHTML = `
+            <div class="error-state">
+                <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>
+                <h3 style="color: #ef4444;">Order Not Found</h3>
+                <p>${message}</p>
+                <p class="text-[#64748b] text-sm mt-2">Please check your Order ID and try again.</p>
+                <button class="btn-retry" onclick="document.getElementById('trackForm').reset(); document.getElementById('trackingResult').innerHTML = '<div class=\\"empty-state\\"><i class=\\"fas fa-box-open\\"></i><h3>Enter Order ID</h3><p>Enter your order ID above to see tracking details</p></div>'">
+                    <i class="fas fa-arrow-left"></i> Try Again
+                </button>
+            </div>
+        `;
+    }
+    
+    // ============================================
+    // AUTO TRACK FROM URL
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('order');
+        
+        if (orderId) {
+            document.getElementById('orderInput').value = orderId;
+            trackOrder(new Event('submit'));
+        }
+        
+        // Update cart badge
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartCount = document.getElementById('cart-count');
+        if (cartCount) {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+        }
+    });
+</script>
+</body>
+</html>

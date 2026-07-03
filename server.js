@@ -1006,3 +1006,116 @@ app.listen(PORT, () => {
     console.log('✅ Free Delivery Threshold: ₹' + deliverySettings.freeDeliveryThreshold);
     console.log('✅ Server is ready!\n');
 });
+
+// ============================================
+// ORDER TRACKING API
+// ============================================
+
+// Get order tracking details
+app.get('/api/order/track/:orderId', async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        
+        const order = await Order.findOne({ 
+            $or: [{ id: orderId }, { order_id: orderId }]
+        });
+        
+        if (!order) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Order not found' 
+            });
+        }
+        
+        // Tracking timeline
+        const timeline = [];
+        
+        // Order Placed
+        timeline.push({
+            status: 'Order Placed',
+            description: 'Your order has been confirmed',
+            time: order.createdAt || order.date,
+            icon: 'fa-box',
+            color: '#facc15',
+            completed: true
+        });
+        
+        // Payment Confirmed
+        timeline.push({
+            status: 'Payment Confirmed',
+            description: 'Payment has been verified',
+            time: order.payment_id ? order.date : null,
+            icon: 'fa-credit-card',
+            color: '#22c55e',
+            completed: !!order.payment_id
+        });
+        
+        // Processing
+        timeline.push({
+            status: 'Processing',
+            description: 'Your order is being prepared',
+            time: order.status === 'shipped' || order.status === 'delivered' ? order.date : null,
+            icon: 'fa-cogs',
+            color: '#3b82f6',
+            completed: order.status === 'shipped' || order.status === 'delivered'
+        });
+        
+        // Shipped
+        timeline.push({
+            status: 'Shipped',
+            description: 'Your order is on the way! 🚚',
+            time: order.status === 'shipped' || order.status === 'delivered' ? order.date : null,
+            icon: 'fa-truck',
+            color: '#8b5cf6',
+            completed: order.status === 'shipped' || order.status === 'delivered'
+        });
+        
+        // Out for Delivery
+        timeline.push({
+            status: 'Out for Delivery',
+            description: 'Delivery agent is on the way',
+            time: order.status === 'delivered' ? order.date : null,
+            icon: 'fa-map-pin',
+            color: '#f59e0b',
+            completed: order.status === 'delivered'
+        });
+        
+        // Delivered
+        timeline.push({
+            status: 'Delivered',
+            description: 'Order delivered successfully! 🎉',
+            time: order.status === 'delivered' ? order.date : null,
+            icon: 'fa-check-circle',
+            color: '#22c55e',
+            completed: order.status === 'delivered'
+        });
+        
+        // Current status index
+        let currentStatusIndex = 0;
+        for (let i = 0; i < timeline.length; i++) {
+            if (!timeline[i].completed) break;
+            currentStatusIndex = i;
+        }
+        
+        res.json({
+            success: true,
+            order: {
+                id: order.id,
+                status: order.status,
+                total: order.total,
+                date: order.date,
+                items: order.items
+            },
+            timeline: timeline,
+            currentStatusIndex: currentStatusIndex,
+            progress: Math.round(((currentStatusIndex + 1) / timeline.length) * 100)
+        });
+        
+    } catch (error) {
+        console.error('Error tracking order:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: error.message 
+        });
+    }
+});
