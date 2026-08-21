@@ -4,679 +4,1502 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details | PRADH DESI FUEL</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
-        .p-detail-container {
-            max-width: 1200px;
-            margin: 2rem auto;
+        /* ============================================
+           CSS VARIABLES
+           ============================================ */
+        :root {
+            --primary: #facc15;
+            --primary-dark: #eab308;
+            --primary-glow: rgba(250, 204, 21, 0.2);
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #2a3a4f;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --shadow: 0 8px 32px rgba(0,0,0,0.3);
+            --shadow-hover: 0 12px 48px rgba(0,0,0,0.5);
+            --radius: 16px;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* ============================================
+           SCROLLBAR
+           ============================================ */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
+        /* ============================================
+           ANIMATIONS
+           ============================================ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* ============================================
+           NAVBAR
+           ============================================ */
+        .navbar-new {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 0 16px;
+            transition: var(--transition);
+        }
+
+        .navbar-new.scrolled {
+            background: rgba(15, 23, 42, 0.98);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+        }
+
+        .nav-container-new {
+            max-width: 1280px;
+            margin: 0 auto;
             display: flex;
-            gap: 3rem;
-            padding: 0 1rem;
-        }
-        .p-image-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .main-product-img {
-            width: 100%;
-            max-height: 450px;
-            object-fit: contain;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: #fff;
-        }
-        .thumb-images-wrapper {
-            display: flex;
-            gap: 0.5rem;
-        }
-        .thumb-img {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .thumb-img.active {
-            border-color: var(--accent-green, #2e7d32);
-        }
-        .p-info-section {
-            flex: 1;
-            text-align: left;
-        }
-        .p-title { font-size: 2rem; margin-bottom: 0.5rem; color: #333; }
-        .p-description { font-size: 1rem; color: #555; line-height: 1.6; margin-bottom: 1.5rem; }
-        
-        .specs-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-        }
-        .specs-table tr {
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .specs-table td {
-            padding: 12px 8px;
-            color: #444;
-            vertical-align: top;
-        }
-        .specs-table td:first-child {
-            width: 30%;
-            color: #777;
-            font-weight: 500;
-        }
-        .specs-collapsed {
-            position: relative;
-            max-height: 150px;
-            overflow: hidden;
-            transition: max-height 0.4s ease-in-out;
-        }
-        .specs-expanded {
-            max-height: 1200px;
-        }
-        .specs-collapsed .specs-fade {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 55px;
-            background: linear-gradient(transparent, rgba(255, 255, 255, 0.95));
-        }
-        .specs-expanded .specs-fade {
-            display: none;
-        }
-        .read-more-btn {
-            background: none;
-            border: none;
-            color: #2874f0;
-            font-size: 0.95rem;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 5px 0;
-            margin-top: 5px;
-            display: inline-flex;
             align-items: center;
-            gap: 5px;
-        }
-        .read-more-btn:hover {
-            color: #0043aa;
-            text-decoration: underline;
-        }
-        .faq-item {
-            border: 1px solid #eaeaea;
-            border-radius: 6px;
-            overflow: hidden;
-            background-color: #fff;
-            transition: all 0.3s ease;
-        }
-        .faq-item:hover {
-            border-color: #ddd;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
-        .faq-question {
-            width: 100%;
-            background: #fafafa;
-            border: none;
-            outline: none;
-            padding: 15px 20px;
-            display: flex;
             justify-content: space-between;
-            align-items: center;
-            text-align: left;
-            font-size: 0.98rem;
-            font-weight: 500;
-            color: #333;
-            cursor: pointer;
+            height: 64px;
         }
-        .faq-question:hover { background: #f5f5f5; }
-        .faq-icon { font-size: 1.2rem; color: #777; transition: transform 0.3s ease; }
-        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background-color: #fff; }
-        .faq-answer p { padding: 15px 20px; margin: 0; font-size: 0.92rem; color: #555; line-height: 1.6; border-top: 1px solid #f5f5f5; }
-        .faq-item.active .faq-icon { transform: rotate(45deg); color: #ff9f00; }
-        .faq-item.active { border-color: #e0e0e0; }
-        .rating-summary-box {
+
+        .logo-new {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #eaeaea;
+            gap: 12px;
+            text-decoration: none;
+            flex-shrink: 0;
         }
-        .rating-big-number {
-            background-color: #26a541;
-            color: white;
-            padding: 5px 12px;
-            font-size: 1.8rem;
-            font-weight: bold;
-            border-radius: 6px;
-            display: inline-flex;
+
+        .logo-new img {
+            height: 38px;
+            width: auto;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .logo-new:hover img {
+            transform: scale(1.05);
+        }
+
+        .logo-text .brand {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text .brand span {
+            color: var(--primary);
+        }
+
+        .logo-text .tagline {
+            font-size: 8px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .menu-toggle-new {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: var(--transition);
+        }
+
+        .menu-toggle-new:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .menu-toggle-new span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: var(--text-light);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .menu-toggle-new.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .menu-toggle-new.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .menu-toggle-new.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .nav-links-new {
+            display: flex;
             align-items: center;
             gap: 4px;
+            list-style: none;
         }
-        .review-card {
-            border-bottom: 1px solid #eee;
-            padding-bottom: 1.2rem;
-        }
-        .review-header {
+
+        .nav-links-new li a {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 0.5rem;
-        }
-        .review-badge {
-            background-color: #26a541;
-            color: white;
-            padding: 2px 6px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            border-radius: 4px;
-        }
-        .review-title {
-            font-size: 1.05rem;
-            color: #212121;
-        }
-        .review-body {
-            font-size: 0.95rem;
-            color: #333;
-            line-height: 1.5;
-            margin-bottom: 0.5rem;
-        }
-        .review-footer {
-            display: flex;
-            gap: 15px;
-            font-size: 0.85rem;
-            color: #878787;
-        }
-        .customer-name {
+            gap: 8px;
+            padding: 8px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
             font-weight: 500;
-            color: #555;
+            border-radius: 10px;
+            transition: var(--transition);
+            position: relative;
         }
-        .customer-gallery-img {
+
+        .nav-links-new li a i {
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .nav-links-new li a:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,0.06);
+        }
+
+        .nav-links-new li a:hover i {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-links-new li a.active {
+            color: var(--primary);
+            background: rgba(250, 204, 21, 0.08);
+        }
+
+        .nav-links-new li a.active i {
+            color: var(--primary);
+        }
+
+        .nav-links-new li a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .cart-badge-new {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-dark);
+            transition: var(--transition);
+        }
+
+        .cart-badge-new.visible {
+            display: flex;
+        }
+
+        .cart-badge-new.pulse {
+            animation: pulse 0.4s ease;
+        }
+
+        /* ============================================
+           BREADCRUMB
+           ============================================ */
+        .breadcrumb {
+            max-width: 1280px;
+            margin: 16px auto 0;
+            padding: 0 16px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary);
+        }
+
+        .breadcrumb span {
+            color: var(--text-light);
+        }
+
+        /* ============================================
+           PRODUCT DETAIL CONTAINER
+           ============================================ */
+        .p-detail-container {
+            max-width: 1280px;
+            margin: 24px auto 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            padding: 0 16px;
+        }
+
+        /* --- Image Section --- */
+        .p-image-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .main-image-wrapper {
+            position: relative;
+            background: #0a0f1a;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.06);
+            aspect-ratio: 1/1;
+            cursor: zoom-in;
+        }
+
+        .main-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: var(--transition);
+        }
+
+        .main-image-wrapper:hover img {
+            transform: scale(1.05);
+        }
+
+        .main-image-wrapper .zoom-hint {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 11px;
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .thumb-images-wrapper {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 4px 0;
+        }
+
+        .thumb-images-wrapper::-webkit-scrollbar {
+            height: 4px;
+        }
+        .thumb-images-wrapper::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        .thumb-images-wrapper::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .thumb-img {
             width: 80px;
             height: 80px;
             object-fit: cover;
-            border-radius: 6px;
-            border: 1px solid #ddd;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.06);
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: var(--transition);
+            flex-shrink: 0;
         }
-        .customer-gallery-img:hover, .review-img-click:hover {
+
+        .thumb-img:hover {
+            border-color: rgba(250, 204, 21, 0.3);
             transform: scale(1.05);
-            border-color: #ff9f00;
         }
-        .review-attached-images {
+
+        .thumb-img.active {
+            border-color: var(--primary);
+        }
+
+        /* --- Product Info Section --- */
+        .p-info-section {
             display: flex;
-            gap: 10px;
-            margin: 0.8rem 0;
+            flex-direction: column;
+            gap: 16px;
         }
-        .review-img-click {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid #eee;
-            cursor: pointer;
+
+        .p-title {
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
         }
-        .verified-buyer-badge {
-            background-color: #f1f8f5;
-            color: #108444;
-            padding: 2px 6px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            border-radius: 3px;
-            border: 1px solid #d4eedd;
-        }
-        .review-modal {
-            display: none;
-            position: fixed;
-            z-index: 10000;
-            padding-top: 100px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.8);
-        }
-        .review-modal-content {
-            margin: auto;
-            display: block;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 8px;
-            max-height: 80vh;
-            object-fit: contain;
-        }
-        .close-modal {
-            position: absolute;
-            top: 30px;
-            right: 35px;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        /* ===== REVIEW SECTION DARK THEME FIXES ===== */
-        .reviews-section {
-            margin-top: 3rem;
-            border-top: 1px solid #334155;
-            padding-top: 2rem;
-        }
-        .reviews-section h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            color: #facc15;
-        }
-        .review-summary-container {
+
+        .p-rating-summary {
             display: flex;
             align-items: center;
-            gap: 2rem;
-            background: #0f172a;
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #334155;
-            margin-bottom: 2rem;
+            gap: 16px;
             flex-wrap: wrap;
         }
-        .review-summary-container .avg-rating {
-            text-align: center;
+
+        .p-rating-summary .stars {
+            color: var(--primary);
+            font-size: 16px;
         }
-        .review-summary-container .avg-rating .number {
-            font-size: 3rem;
+
+        .p-rating-summary .count {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .p-rating-summary .count:hover {
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .p-rating-summary .verified-badge {
+            color: #22c55e;
+            font-size: 13px;
+        }
+
+        .p-price-box {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 16px 20px;
+            background: rgba(250, 204, 21, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(250, 204, 21, 0.1);
+        }
+
+        .p-price {
+            font-size: clamp(28px, 3.5vw, 36px);
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .p-original-price {
+            font-size: 18px;
+            color: var(--text-muted);
+            text-decoration: line-through;
+        }
+
+        .p-discount-tag {
+            color: #22c55e;
             font-weight: 700;
-            color: #facc15;
+            font-size: 16px;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 4px 12px;
+            border-radius: 50px;
         }
-        .review-summary-container .avg-rating .stars {
-            color: #facc15;
-            font-size: 1.5rem;
+
+        .p-stock-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
         }
-        .review-summary-container .avg-rating .count {
-            color: #94a3b8;
-            font-size: 0.9rem;
+
+        .p-stock-status .in-stock {
+            color: #22c55e;
         }
-        .review-summary-container .rating-bars {
+
+        .p-stock-status .out-of-stock {
+            color: #ef4444;
+        }
+
+        .p-stock-status .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .p-stock-status .dot.in-stock {
+            background: #22c55e;
+            animation: pulse 2s infinite;
+        }
+
+        .p-stock-status .dot.out-of-stock {
+            background: #ef4444;
+        }
+
+        .p-description {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.8;
+            padding: 12px 0;
+        }
+
+        /* --- Trust Badges --- */
+        .trust-badges {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            padding: 12px 0;
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 12px;
+            background: rgba(255,255,255,0.03);
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .trust-badge i {
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        /* --- Add to Cart --- */
+        .p-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .btn-primary {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             flex: 1;
-            min-width: 150px;
+            justify-content: center;
+            min-width: 160px;
         }
-        .review-summary-container .rating-bars .bar-row {
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--primary-glow);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            padding: 14px 28px;
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.1);
+            color: var(--text-light);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(250, 204, 21, 0.05);
+        }
+
+        .btn-secondary i {
+            font-size: 18px;
+        }
+
+        /* --- Quantity Selector --- */
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 4px;
+        }
+
+        .quantity-selector button {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: rgba(255,255,255,0.06);
+            color: var(--text-light);
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .quantity-selector button:hover {
+            background: rgba(250, 204, 21, 0.15);
+            color: var(--primary);
+        }
+
+        .quantity-selector span {
+            font-size: 18px;
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        /* --- Product Details Tabs --- */
+        .p-tabs {
+            margin-top: 16px;
+        }
+
+        .p-tabs-nav {
+            display: flex;
+            gap: 4px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .p-tabs-nav button {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .p-tabs-nav button:hover {
+            color: var(--text-light);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .p-tabs-nav button.active {
+            color: var(--primary);
+            background: rgba(250, 204, 21, 0.08);
+        }
+
+        .p-tabs-content {
+            padding: 16px 0;
+        }
+
+        .p-tab-panel {
+            display: none;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .p-tab-panel.active {
+            display: block;
+        }
+
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .specs-table tr {
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .specs-table td {
+            padding: 12px 8px;
+            color: var(--text-muted);
+            font-size: 14px;
+            vertical-align: top;
+        }
+
+        .specs-table td:first-child {
+            color: var(--text-light);
+            font-weight: 500;
+            width: 35%;
+        }
+
+        .specs-table tr:last-child {
+            border-bottom: none;
+        }
+
+        /* --- FAQ --- */
+        .faq-item {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 8px;
+            transition: var(--transition);
+        }
+
+        .faq-item:hover {
+            border-color: rgba(250, 204, 21, 0.15);
+        }
+
+        .faq-item.active {
+            border-color: var(--primary);
+        }
+
+        .faq-question {
+            width: 100%;
+            background: rgba(255,255,255,0.02);
+            border: none;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .faq-icon {
+            font-size: 20px;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+            color: var(--primary);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .faq-answer p {
+            padding: 0 20px 16px;
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+
+        /* --- Reviews --- */
+        .reviews-section {
+            margin-top: 24px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+        }
+
+        .reviews-section h3 {
+            font-size: 20px;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .review-summary-container {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            background: rgba(255,255,255,0.02);
+            padding: 20px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+
+        .avg-rating {
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .avg-rating .number {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .avg-rating .stars {
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .avg-rating .count {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .rating-bars {
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .bar-row {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin: 4px 0;
+            margin: 3px 0;
         }
-        .review-summary-container .rating-bars .bar-row .label {
-            color: #94a3b8;
-            font-size: 0.8rem;
-            width: 30px;
+
+        .bar-row .label {
+            color: var(--text-muted);
+            font-size: 12px;
+            width: 32px;
         }
-        .review-summary-container .rating-bars .bar-row .bar-track {
+
+        .bar-row .bar-track {
             flex: 1;
             height: 6px;
-            background: #1e293b;
+            background: var(--border-color);
             border-radius: 3px;
             overflow: hidden;
         }
-        .review-summary-container .rating-bars .bar-row .bar-track .bar-fill {
+
+        .bar-row .bar-track .bar-fill {
             height: 100%;
-            background: #facc15;
+            background: var(--primary);
             width: 0%;
-            transition: width 0.5s ease;
+            border-radius: 3px;
+            transition: width 0.6s ease;
         }
-        .review-summary-container .rating-bars .bar-row .count {
-            color: #94a3b8;
-            font-size: 0.8rem;
+
+        .bar-row .count {
+            color: var(--text-muted);
+            font-size: 12px;
             width: 30px;
+            text-align: right;
         }
-        
+
+        /* --- Review Form --- */
         .review-form-container {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 2rem;
+            padding: 20px 24px;
+            margin-bottom: 24px;
         }
+
         .review-form-container h4 {
             color: #ffffff;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
+            margin-bottom: 16px;
         }
-        .review-form-container label {
-            color: #94a3b8;
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        .review-form-container .form-input {
-            width: 100%;
-            padding: 12px 16px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            color: #ffffff;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        .review-form-container .form-input:focus {
-            outline: none;
-            border-color: #facc15;
-            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.1);
-        }
-        .review-form-container .form-input::placeholder {
-            color: #64748b;
-        }
-        .btn-submit-review {
-            background: #facc15;
-            color: #0f172a;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 16px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .btn-submit-review:hover {
-            background: #eab308;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3);
-        }
-        .rating-text {
-            color: #94a3b8;
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-        
-        /* STAR RATING STYLES - FIXED FOR DARK THEME */
+
         .star-rating-container {
             display: flex;
             gap: 8px;
-            font-size: 2.5rem;
+            font-size: 32px;
             cursor: pointer;
-            padding: 10px 0;
+            padding: 8px 0;
         }
+
         .star-rating-container .star {
-            color: #334155;
-            transition: all 0.2s ease;
+            color: var(--border-color);
+            transition: var(--transition);
             cursor: pointer;
-            font-size: 2.5rem;
-            line-height: 1;
             user-select: none;
         }
+
         .star-rating-container .star.active {
-            color: #facc15;
+            color: var(--primary);
         }
+
         .star-rating-container .star:hover {
             transform: scale(1.2);
-            color: #facc15;
         }
-        .star-rating-container .star.hover {
-            color: #facc15;
+
+        .rating-text {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 4px;
         }
-        
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 14px;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn-submit-review {
+            padding: 10px 28px;
+            background: var(--primary);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-submit-review:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+
         .review-card-dark {
-            background: #0f172a;
-            border: 1px solid #334155;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: all 0.3s;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            transition: var(--transition);
         }
+
         .review-card-dark:hover {
-            border-color: #facc15;
+            border-color: rgba(250, 204, 21, 0.15);
         }
+
         .review-card-dark .review-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 8px;
+            gap: 8px;
+            margin-bottom: 6px;
         }
+
         .review-card-dark .review-rating {
-            color: #facc15;
-            font-size: 1.2rem;
+            color: var(--primary);
         }
+
         .review-card-dark .review-user {
             color: #ffffff;
             font-weight: 600;
         }
+
         .review-card-dark .review-date {
-            color: #94a3b8;
-            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-size: 12px;
         }
+
         .review-card-dark .review-comment {
-            color: #e2e8f0;
-            margin-top: 10px;
+            color: var(--text-muted);
             line-height: 1.6;
+            font-size: 14px;
+            margin: 4px 0;
         }
+
         .review-card-dark .review-verified {
             color: #22c55e;
-            font-size: 0.8rem;
-            margin-top: 8px;
+            font-size: 12px;
+            margin-top: 6px;
         }
-        #reviewMessage {
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
-        .review-loading {
-            text-align: center;
-            color: #94a3b8;
-            padding: 30px 0;
-        }
-        .review-loading i {
-            font-size: 40px;
-            display: block;
-            margin-bottom: 10px;
-            color: #facc15;
-        }
+
         .no-reviews {
             text-align: center;
-            color: #94a3b8;
+            color: var(--text-muted);
             padding: 30px 0;
         }
+
         .no-reviews i {
             font-size: 40px;
             display: block;
             margin-bottom: 10px;
-            color: #334155;
+            color: var(--border-color);
         }
-        .review-error {
+
+        .review-loading {
             text-align: center;
-            color: #ef4444;
+            color: var(--text-muted);
             padding: 30px 0;
         }
-        
+
+        .review-loading i {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        /* --- Related Products --- */
+        .related-products {
+            max-width: 1280px;
+            margin: 0 auto 40px;
+            padding: 0 16px;
+        }
+
+        .related-products h2 {
+            font-size: 24px;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: var(--transition);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(250, 204, 21, 0.15);
+        }
+
+        .related-card img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+        }
+
+        .related-card .info {
+            padding: 12px 14px;
+        }
+
+        .related-card .info h4 {
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        .related-card .info .price {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 15px;
+            margin-top: 4px;
+        }
+
+        /* --- Toast Notification --- */
+        .notification-toast {
+            position: fixed;
+            bottom: 90px;
+            right: 24px;
+            padding: 14px 24px;
+            background: #22c55e;
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            z-index: 9999;
+            font-weight: 500;
+            animation: slideIn 0.4s ease;
+            max-width: 340px;
+            font-size: 14px;
+        }
+
+        /* --- WhatsApp Floating --- */
+        .whatsapp-floating-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 999;
+            background: #25D366;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            transition: var(--transition);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .whatsapp-floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 35px rgba(37, 211, 102, 0.5);
+        }
+
+        .whatsapp-floating-btn svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 1px solid rgba(255,255,255,0.04);
+            padding: 24px 16px;
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .footer-content p {
+            color: var(--text-muted);
+            font-size: clamp(13px, 1vw, 15px);
+        }
+
+        .footer-content p span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .footer-content .feedback-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: clamp(13px, 1vw, 15px);
+            transition: var(--transition);
+        }
+
+        .footer-content .feedback-link:hover {
+            color: var(--primary);
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
         @media (max-width: 768px) {
-            .p-detail-container { flex-direction: column; gap: 1.5rem; }
-            .review-summary-container { flex-direction: column; align-items: center; }
-            .star-rating-container { font-size: 2rem; }
-            .star-rating-container .star { font-size: 2rem; }
+            .menu-toggle-new {
+                display: flex;
+            }
+
+            .nav-links-new {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: rgba(15, 23, 42, 0.98);
+                backdrop-filter: blur(20px);
+                padding: 12px 16px 24px;
+                gap: 2px;
+                border-bottom: 1px solid rgba(255,255,255,0.06);
+                max-height: calc(100vh - 64px);
+                overflow-y: auto;
+            }
+
+            .nav-links-new.open {
+                display: flex;
+            }
+
+            .nav-links-new li a {
+                padding: 12px 16px;
+                font-size: 15px;
+            }
+
+            .nav-links-new li a.active::after {
+                display: none;
+            }
+
+            .p-detail-container {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                margin: 16px auto 40px;
+            }
+
+            .p-price-box {
+                padding: 12px 16px;
+            }
+
+            .p-actions {
+                flex-direction: column;
+            }
+
+            .btn-primary {
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+
+            .btn-secondary {
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+
+            .review-summary-container {
+                flex-direction: column;
+                align-items: center;
+                padding: 16px;
+                gap: 16px;
+            }
+
+            .rating-bars {
+                width: 100%;
+            }
+
+            .thumb-img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .trust-badges {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .related-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+
+            .whatsapp-floating-btn {
+                width: 50px;
+                height: 50px;
+                bottom: 16px;
+                right: 16px;
+            }
+
+            .whatsapp-floating-btn svg {
+                width: 26px;
+                height: 26px;
+            }
+
+            .breadcrumb {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .p-price {
+                font-size: 24px;
+            }
+
+            .p-original-price {
+                font-size: 14px;
+            }
+
+            .p-discount-tag {
+                font-size: 13px;
+            }
+
+            .p-title {
+                font-size: 20px;
+            }
+
+            .trust-badges {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .trust-badge {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+
+            .quantity-selector button {
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+            }
+
+            .quantity-selector span {
+                font-size: 16px;
+                min-width: 30px;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .nav-links-new {
+                display: flex !important;
+            }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="nav-container">
-            <div class="logo"><a href="index.html">PRADH <span></span></a></div>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="product.html" class="nav-link active">Products</a></li>
-                <li><a href="cart.html" class="nav-link">Cart <span id="cart-count">0</span></a></li>
-            </ul>
-        </div>
-    </header>
+<!-- ===== NAVBAR ===== -->
+<header class="navbar-new" id="navbar">
+    <div class="nav-container-new">
+        <a href="index.html" class="logo-new">
+            <img src="logo.jpeg" alt="PRADH DESI FUEL Logo" loading="lazy">
+            <div class="logo-text">
+                <span class="brand">PRADH<span>.</span></span>
+                <span class="tagline">Desi Fuel</span>
+            </div>
+        </a>
 
-    <main class="p-detail-container">
-        <!-- LEFT SIDE: IMAGES -->
-        <div class="p-image-section">
-            <img id="mainImg" src="product1.jpeg" alt="Product Image" class="main-product-img">
-            <div class="thumb-images-wrapper" id="thumbWrapper"></div>
+        <ul class="nav-links-new" id="navLinks">
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="product.html" class="active"><i class="fas fa-box"></i> Products</a></li>
+            <li><a href="about.html"><i class="fas fa-leaf"></i> Our Story</a></li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li>
+                <a href="cart.html" class="cart-link" style="position:relative;">
+                    <i class="fas fa-shopping-bag"></i> Cart
+                    <span class="cart-badge-new" id="cartBadge">0</span>
+                </a>
+            </li>
+        </ul>
+
+        <button class="menu-toggle-new" id="menuToggle" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</header>
+
+<!-- ===== BREADCRUMB ===== -->
+<div class="breadcrumb">
+    <a href="index.html">Home</a> &gt; 
+    <a href="product.html">Products</a> &gt; 
+    <span id="breadcrumbProduct">Product Details</span>
+</div>
+
+<!-- ===== PRODUCT DETAIL ===== -->
+<main class="p-detail-container" id="productContainer">
+    <!-- LEFT: Image Section -->
+    <div class="p-image-section">
+        <div class="main-image-wrapper" id="mainImageWrapper">
+            <img id="mainImg" src="product1.jpeg" alt="Product Image" loading="lazy">
+            <div class="zoom-hint"><i class="fas fa-search-plus"></i> Hover to zoom</div>
+        </div>
+        <div class="thumb-images-wrapper" id="thumbWrapper">
+            <!-- Thumbnails loaded dynamically -->
+        </div>
+    </div>
+
+    <!-- RIGHT: Product Info -->
+    <div class="p-info-section">
+        <h1 class="p-title" id="pTitle">Product Name</h1>
+
+        <div class="p-rating-summary">
+            <span class="stars" id="starDisplay">☆☆☆☆☆</span>
+            <span class="count" id="ratingCount">0 reviews</span>
+            <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified Seller</span>
         </div>
 
-        <!-- RIGHT SIDE: DETAILS -->
-        <div class="p-info-section">
-            <h1 class="p-title" id="pTitle">Product Name</h1>
-            
-            <div class="main-price-box" style="margin: 1rem 0; display: flex; flex-direction: column; gap: 4px;">
-                <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-                    <span id="pPrice" style="font-size: 2.2rem; font-weight: bold; color: #212121;">₹0</span>
-                    <span id="pOriginalPrice" style="text-decoration: line-through; color: #878787; font-size: 1.2rem;">₹0</span>
-                    <span id="pDiscountTag" style="color: #388e3c; font-size: 1.1rem; font-weight: 600;"></span>
-                </div>
-                <div style="color: #388e3c; font-weight: 500; font-size: 0.95rem; margin-top: 2px;">
-                    🚀 Delivery: <span style="font-weight: bold; text-transform: uppercase;">FREE</span>
-                </div>
+        <div class="p-price-box">
+            <span class="p-price" id="pPrice">₹0</span>
+            <span class="p-original-price" id="pOriginalPrice">₹0</span>
+            <span class="p-discount-tag" id="pDiscountTag">0% OFF</span>
+        </div>
+
+        <div class="p-stock-status" id="stockStatus">
+            <span class="dot in-stock"></span>
+            <span class="in-stock" id="stockText">In Stock</span>
+        </div>
+
+        <p class="p-description" id="pDesc">Loading description...</p>
+
+        <!-- Trust Badges -->
+        <div class="trust-badges">
+            <div class="trust-badge"><i class="fas fa-truck"></i> Free Delivery</div>
+            <div class="trust-badge"><i class="fas fa-money-bill-wave"></i> Cash on Delivery</div>
+            <div class="trust-badge"><i class="fas fa-undo"></i> 7 Days Return</div>
+            <div class="trust-badge"><i class="fas fa-shield-alt"></i> 100% Genuine</div>
+        </div>
+
+        <!-- Quantity & Add to Cart -->
+        <div class="p-actions">
+            <div class="quantity-selector">
+                <button onclick="decrementQuantity()"><i class="fas fa-minus"></i></button>
+                <span id="quantityDisplay">1</span>
+                <button onclick="incrementQuantity()"><i class="fas fa-plus"></i></button>
+            </div>
+            <button class="btn-primary" id="addToCartBtn">
+                <i class="fas fa-shopping-cart"></i> Add to Cart
+            </button>
+            <button class="btn-secondary" onclick="window.location.href='cart.html'">
+                <i class="fas fa-shopping-bag"></i> View Cart
+            </button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="p-tabs">
+            <div class="p-tabs-nav">
+                <button class="active" data-tab="specs">📋 Specifications</button>
+                <button data-tab="faq">❓ FAQs</button>
+                <button data-tab="reviews">⭐ Reviews</button>
             </div>
 
-            <p class="p-description" id="pDesc">Loading Description...</p>
-            
-            <button class="btn btn-primary" id="addToCartBtn" style="background-color: #ff9f00; color: white; padding: 0.8rem 2rem; font-size: 1.1rem; border-radius: 4px; margin-bottom: 2rem; cursor: pointer; border: none; font-weight: bold;">
-                🛒 ADD TO CART
-            </button>
-
-            <!-- SPECIFICATIONS SECTION -->
-            <div class="specs-section" style="margin-top: 2rem;">
-                <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: #222; font-weight: 600;">Product Specifications</h3>
-                <div id="specsContainer" class="specs-collapsed">
+            <div class="p-tabs-content">
+                <!-- Specs Tab -->
+                <div class="p-tab-panel active" id="tabSpecs">
                     <table class="specs-table">
                         <tbody id="specsBody"></tbody>
                     </table>
-                    <div class="specs-fade"></div>
                 </div>
-                <button id="toggleSpecsBtn" onclick="toggleSpecifications()" class="read-more-btn">
-                    Read More ↓
-                </button>
-            </div>
 
-            <!-- FAQ SECTION -->
-            <div class="faq-section" style="margin-top: 3rem; border-top: 1px solid #eee; padding-top: 2rem;">
-                <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem; color: #222; font-weight: 600;">Frequently Asked Questions (FAQs)</h3>
-                <div class="faq-container" style="display: flex; flex-direction: column; gap: 10px;">
-                    <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFaq(this)">
-                            <span>Q: Kya DESI FUEL me refined sugar ya koi artificial sweetener hai?</span>
-                            <span class="faq-icon">+</span>
-                        </button>
-                        <div class="faq-answer"><p>Bilkul nahi bhai! Hum zero percent refined sugar use karte hain. Isme mithaas ke liye sirf aur sirf premium Artisanal Thread Mishri (Dhaga Mishri) crystals ka use kiya gaya hai, jo health ke liye ekdum safe aur beneficial hai.</p></div>
-                    </div>
-                    <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFaq(this)">
-                            <span>Q: Ise kaun-kaun pee sakta hai aur ise kaise prepare karna hai?</span>
-                            <span class="faq-icon">+</span>
-                        </button>
-                        <div class="faq-answer"><p>Koki yeh 100% natural roasted grains aur nuts ka blend hai, ise 2 saal se bade bacchon se lekar ghar ke buzurgon tak sabhi pee sakte hain. Bas 2 chammach (approx 30g) powder ko 250ml garm ya thande doodh me milana hai, acche se shake karna hai aur aapka premium energy drink taiyar!</p></div>
-                    </div>
-                    <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFaq(this)">
-                            <span>Q: Isme Ashwagandha aur Shatavari ka kya role hai?</span>
-                            <span class="faq-icon">+</span>
-                        </button>
-                        <div class="faq-answer"><p>Yeh hamari traditional wellness enrichment ka hissa hain. Ashwagandha body me energy, stamina aur stress management ko improve karta hai, jabki Shatavari overall strength aur immunity ko badhati hai. Yeh natural herbs DESI FUEL ko normal protein powder se kahin zyada takatwar banati hain.</p></div>
-                    </div>
-                    <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFaq(this)">
-                            <span>Q: Order karne ke baad delivery me kitna samay lagta hai?</span>
-                            <span class="faq-icon">+</span>
-                        </button>
-                        <div class="faq-answer"><p>Hum batch preparation ke turant baad fresh pack karke dispatch karte hain. Uttar Pradesh aur Delhi-NCR me delivery 2-3 din me ho jaati hai, aur baaki India me 3-5 working days ke andar order aapke ghar pahunch jayega. Aap ise website par live track bhi kar sakte hain!</p></div>
+                <!-- FAQ Tab -->
+                <div class="p-tab-panel" id="tabFaq">
+                    <div class="faq-container" id="faqContainer">
+                        <!-- FAQs loaded dynamically -->
                     </div>
                 </div>
-            </div>
 
-            <!-- ====== REVIEWS SECTION - COMPLETE FIX ====== -->
-            <div class="reviews-section">
-                <h3><i class="fas fa-star"></i> Customer Reviews & Ratings</h3>
-                
-                <!-- Rating Summary -->
-                <div class="review-summary-container" id="reviewSummary">
-                    <div class="avg-rating">
-                        <div class="number" id="avgRating">0</div>
-                        <div class="stars" id="starDisplay">☆☆☆☆☆</div>
-                        <div class="count"><span id="totalReviews">0</span> Reviews</div>
-                    </div>
-                    <div class="rating-bars">
-                        <div class="bar-row">
-                            <span class="label">5 ★</span>
-                            <div class="bar-track"><div class="bar-fill" id="bar5"></div></div>
-                            <span class="count" id="count5">0</span>
+                <!-- Reviews Tab -->
+                <div class="p-tab-panel" id="tabReviews">
+                    <div class="reviews-section">
+                        <!-- Review Summary -->
+                        <div class="review-summary-container" id="reviewSummary">
+                            <div class="avg-rating">
+                                <div class="number" id="avgRating">0</div>
+                                <div class="stars" id="reviewStarDisplay">☆☆☆☆☆</div>
+                                <div class="count"><span id="totalReviews">0</span> Reviews</div>
+                            </div>
+                            <div class="rating-bars">
+                                <div class="bar-row"><span class="label">5 ★</span><div class="bar-track"><div class="bar-fill" id="bar5"></div></div><span class="count" id="count5">0</span></div>
+                                <div class="bar-row"><span class="label">4 ★</span><div class="bar-track"><div class="bar-fill" id="bar4"></div></div><span class="count" id="count4">0</span></div>
+                                <div class="bar-row"><span class="label">3 ★</span><div class="bar-track"><div class="bar-fill" id="bar3"></div></div><span class="count" id="count3">0</span></div>
+                                <div class="bar-row"><span class="label">2 ★</span><div class="bar-track"><div class="bar-fill" id="bar2"></div></div><span class="count" id="count2">0</span></div>
+                                <div class="bar-row"><span class="label">1 ★</span><div class="bar-track"><div class="bar-fill" id="bar1"></div></div><span class="count" id="count1">0</span></div>
+                            </div>
                         </div>
-                        <div class="bar-row">
-                            <span class="label">4 ★</span>
-                            <div class="bar-track"><div class="bar-fill" id="bar4"></div></div>
-                            <span class="count" id="count4">0</span>
+
+                        <!-- Submit Review -->
+                        <div class="review-form-container">
+                            <h4><i class="fas fa-pen"></i> Write a Review</h4>
+                            <div style="margin-bottom:12px;">
+                                <label style="color:var(--text-muted);font-size:14px;">Your Rating</label>
+                                <div class="star-rating-container" id="starRating">
+                                    <span class="star" data-value="1" onclick="setRating(1)" onmouseover="hoverStar(1)" onmouseout="resetStars()">☆</span>
+                                    <span class="star" data-value="2" onclick="setRating(2)" onmouseover="hoverStar(2)" onmouseout="resetStars()">☆</span>
+                                    <span class="star" data-value="3" onclick="setRating(3)" onmouseover="hoverStar(3)" onmouseout="resetStars()">☆</span>
+                                    <span class="star" data-value="4" onclick="setRating(4)" onmouseover="hoverStar(4)" onmouseout="resetStars()">☆</span>
+                                    <span class="star" data-value="5" onclick="setRating(5)" onmouseover="hoverStar(5)" onmouseout="resetStars()">☆</span>
+                                </div>
+                                <div class="rating-text" id="ratingText">Select a rating</div>
+                            </div>
+                            <div style="margin-bottom:12px;">
+                                <label style="color:var(--text-muted);font-size:14px;">Your Name</label>
+                                <input type="text" id="reviewerName" class="form-input" placeholder="Enter your name">
+                            </div>
+                            <div style="margin-bottom:12px;">
+                                <label style="color:var(--text-muted);font-size:14px;">Your Review</label>
+                                <textarea id="reviewComment" class="form-input" rows="3" placeholder="Share your experience with this product..."></textarea>
+                            </div>
+                            <button onclick="submitReview()" class="btn-submit-review">
+                                <i class="fas fa-paper-plane"></i> Submit Review
+                            </button>
+                            <div id="reviewMessage" style="margin-top:10px;"></div>
                         </div>
-                        <div class="bar-row">
-                            <span class="label">3 ★</span>
-                            <div class="bar-track"><div class="bar-fill" id="bar3"></div></div>
-                            <span class="count" id="count3">0</span>
+
+                        <!-- Reviews List -->
+                        <div id="reviewsList">
+                            <div class="review-loading">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                Loading reviews...
+                            </div>
                         </div>
-                        <div class="bar-row">
-                            <span class="label">2 ★</span>
-                            <div class="bar-track"><div class="bar-fill" id="bar2"></div></div>
-                            <span class="count" id="count2">0</span>
-                        </div>
-                        <div class="bar-row">
-                            <span class="label">1 ★</span>
-                            <div class="bar-track"><div class="bar-fill" id="bar1"></div></div>
-                            <span class="count" id="count1">0</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Submit Review Form -->
-                <div class="review-form-container">
-                    <h4><i class="fas fa-pen"></i> Write a Review</h4>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label>Your Rating</label>
-                        <div class="star-rating-container" id="starRating">
-                            <span class="star" data-value="1" onclick="setRating(1)" onmouseover="hoverStar(1)" onmouseout="resetStars()">☆</span>
-                            <span class="star" data-value="2" onclick="setRating(2)" onmouseover="hoverStar(2)" onmouseout="resetStars()">☆</span>
-                            <span class="star" data-value="3" onclick="setRating(3)" onmouseover="hoverStar(3)" onmouseout="resetStars()">☆</span>
-                            <span class="star" data-value="4" onclick="setRating(4)" onmouseover="hoverStar(4)" onmouseout="resetStars()">☆</span>
-                            <span class="star" data-value="5" onclick="setRating(5)" onmouseover="hoverStar(5)" onmouseout="resetStars()">☆</span>
-                        </div>
-                        <div class="rating-text" id="ratingText">Select a rating</div>
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label>Your Name</label>
-                        <input type="text" id="reviewerName" class="form-input" placeholder="Enter your name">
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label>Your Review</label>
-                        <textarea id="reviewComment" class="form-input" rows="4" placeholder="Share your experience with this product..."></textarea>
-                    </div>
-                    
-                    <button onclick="submitReview()" class="btn-submit-review">
-                        <i class="fas fa-paper-plane"></i> Submit Review
-                    </button>
-                    <div id="reviewMessage"></div>
-                </div>
-                
-                <!-- Reviews List -->
-                <div id="reviewsList">
-                    <div class="review-loading">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        Loading reviews...
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
-    <script src="product-detail.js"></script>
+<!-- ===== RELATED PRODUCTS ===== -->
+<section class="related-products" id="relatedSection" style="display:none;">
+    <h2>You Might Also Like</h2>
+    <div class="related-grid" id="relatedGrid">
+        <!-- Related products loaded dynamically -->
+    </div>
+</section>
+
+<!-- ===== WHATSAPP ===== -->
+<a href="https://wa.me/918979993655?text=Hello%20PRADH%20Desi%20Fuel!%20I%20have%20a%20query%20about%20your%20product." 
+   class="whatsapp-floating-btn" 
+   target="_blank" 
+   title="Chat with us on WhatsApp">
+    <svg viewBox="0 0 32 32">
+        <path d="M16 2a13 13 0 0 0-11.3 19.4L3 29l7.8-2A13 13 0 1 0 16 2zm0 24a11 11 0 0 1-5.6-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4A11 11 0 1 1 16 26zm5.9-8.1c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.1-.7.2l-1 1.3c-.2.3-.5.3-.8.1a10.3 10.3 0 0 1-3.7-2.3 11.4 11.4 0 0 1-2.5-3.2c-.2-.4 0-.6.2-.8l.6-.7v-.4c-.2-.5-.7-1.7-1-2.4-.2-.6-.5-.6-.7-.6h-.6a1.3 1.3 0 0 0-1 .4 4.8 4.8 0 0 0-1.5 3.5 8.3 8.3 0 0 0 1.8 4.4 19 19 0 0 0 7.3 6.5c3.5 1.4 4.2 1.1 5 1a4.2 4.2 0 0 0 2.8-2 3.4 3.4 0 0 0 .2-2c-.1-.2-.4-.3-.7-.5z"/>
+    </svg>
+</a>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 <span>PRADH</span>. All Rights Reserved.</p>
+        <a href="https://forms.gle/wybyGnhVKrNikMJV6" target="_blank" class="feedback-link">
+            <i class="fas fa-pen"></i> Share Your Feedback
+        </a>
+    </div>
+</footer>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="product-detail.js"></script>
+
 </body>
 </html>
-

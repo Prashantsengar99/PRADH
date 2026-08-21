@@ -3,394 +3,1086 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Orders - PRADH Desi Fuel</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>My Orders | PRADH DESI FUEL</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
-        .announcement-bar {
-            background: linear-gradient(135deg, #facc15, #eab308);
-            padding: 10px 20px;
-            text-align: center;
-            color: #0f172a;
-            font-weight: 600;
+        /* ============================================
+           CSS VARIABLES
+           ============================================ */
+        :root {
+            --primary: #facc15;
+            --primary-dark: #eab308;
+            --primary-glow: rgba(250, 204, 21, 0.2);
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #2a3a4f;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --shadow: 0 8px 32px rgba(0,0,0,0.3);
+            --shadow-hover: 0 12px 48px rgba(0,0,0,0.5);
+            --radius: 16px;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --whatsapp: #25D366;
         }
-        .orders-container {
-            max-width: 900px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #1e293b;
-            border-radius: 20px;
-            border: 1px solid #334155;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .orders-container h2 {
-            color: #facc15;
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 20px;
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ============================================
+           SCROLLBAR
+           ============================================ */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
+        /* ============================================
+           ANIMATIONS
+           ============================================ */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes countUp {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ============================================
+           NAVBAR
+           ============================================ */
+        .navbar-new {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 0 16px;
+            transition: var(--transition);
+        }
+
+        .navbar-new.scrolled {
+            background: rgba(15, 23, 42, 0.98);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+        }
+
+        .nav-container-new {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .logo-new {
             display: flex;
             align-items: center;
             gap: 12px;
+            text-decoration: none;
+            flex-shrink: 0;
         }
+
+        .logo-new img {
+            height: 38px;
+            width: auto;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .logo-new:hover img {
+            transform: scale(1.05);
+        }
+
+        .logo-text .brand {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text .brand span {
+            color: var(--primary);
+        }
+
+        .logo-text .tagline {
+            font-size: 8px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .menu-toggle-new {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: var(--transition);
+        }
+
+        .menu-toggle-new:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .menu-toggle-new span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: var(--text-light);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .menu-toggle-new.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .menu-toggle-new.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .menu-toggle-new.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .nav-links-new {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            list-style: none;
+        }
+
+        .nav-links-new li a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 10px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links-new li a i {
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .nav-links-new li a:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,0.06);
+        }
+
+        .nav-links-new li a:hover i {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-links-new li a.active {
+            color: var(--primary);
+            background: rgba(250, 204, 21, 0.08);
+        }
+
+        .nav-links-new li a.active i {
+            color: var(--primary);
+        }
+
+        .nav-links-new li a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .cart-badge-new {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-dark);
+            transition: var(--transition);
+        }
+
+        .cart-badge-new.visible {
+            display: flex;
+        }
+
+        .cart-badge-new.pulse {
+            animation: pulse 0.4s ease;
+        }
+
+        /* ============================================
+           PAGE HEADER
+           ============================================ */
+        .orders-hero {
+            padding: 30px 16px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.03) 0%, transparent 50%);
+        }
+
+        .orders-hero h1 {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 800;
+        }
+
+        .orders-hero h1 .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .orders-hero p {
+            color: var(--text-muted);
+            font-size: clamp(14px, 1.2vw, 17px);
+        }
+
+        /* ============================================
+           ORDERS PAGE
+           ============================================ */
+        .orders-page {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px 16px 60px;
+        }
+
+        .orders-container {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 28px 32px;
+            box-shadow: var(--shadow);
+        }
+
+        .orders-container h2 {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .orders-container h2 i {
+            color: var(--primary);
+        }
+
+        /* --- Phone Input Section --- */
         .phone-input-section {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 30px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
         }
+
         .phone-input-section h3 {
             color: #ffffff;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
+
         .phone-input-section h3 i {
-            color: #facc15;
+            color: var(--primary);
         }
+
         .phone-input-group {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
         }
+
         .phone-input-group input {
             flex: 1;
-            min-width: 200px;
-            padding: 14px 20px;
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            color: #ffffff;
-            font-size: 16px;
-            transition: all 0.3s;
+            min-width: 180px;
+            padding: 12px 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 15px;
+            transition: var(--transition);
         }
+
         .phone-input-group input:focus {
             outline: none;
-            border-color: #facc15;
-            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
         }
+
         .phone-input-group input::placeholder {
-            color: #64748b;
+            color: var(--text-muted);
         }
+
         .phone-input-group button {
-            padding: 14px 30px;
-            background: linear-gradient(135deg, #facc15, #eab308);
-            color: #0f172a;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--bg-dark);
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             gap: 8px;
         }
+
         .phone-input-group button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(250, 204, 21, 0.3);
+            box-shadow: 0 8px 25px var(--primary-glow);
         }
+
         .saved-phones {
-            margin-top: 15px;
+            margin-top: 12px;
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
         }
+
         .saved-phone-tag {
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: #94a3b8;
-            padding: 6px 14px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: var(--text-muted);
+            padding: 4px 14px;
             border-radius: 20px;
             font-size: 13px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
         }
+
         .saved-phone-tag:hover {
-            border-color: #facc15;
-            color: #facc15;
+            border-color: var(--primary);
+            color: var(--primary);
         }
+
+        .user-info-display {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 12px;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.04);
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .user-info-display.show {
+            display: flex;
+        }
+
+        .user-info-display strong {
+            color: var(--primary);
+        }
+
+        .user-info-display .clear-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 4px 12px;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .user-info-display .clear-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* --- Filters --- */
+        .order-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            padding: 6px 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: var(--text-muted);
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover {
+            color: var(--text-light);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .filter-btn.active {
+            background: rgba(250, 204, 21, 0.1);
+            color: var(--primary);
+            border-color: rgba(250, 204, 21, 0.15);
+        }
+
+        .order-count-badge {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-left: auto;
+        }
+
+        /* --- Order Cards --- */
         .order-card {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 16px;
-            padding: 24px;
-            margin: 20px 0;
-            transition: all 0.3s;
-            position: relative;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 12px 0;
+            transition: var(--transition);
+            animation: fadeIn 0.5s ease;
         }
+
         .order-card:hover {
-            border-color: #facc15;
+            border-color: rgba(250, 204, 21, 0.1);
             transform: translateX(4px);
         }
+
         .order-card.cancelled {
-            border-color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.2);
             opacity: 0.7;
         }
+
         .order-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            border-bottom: 2px solid #334155;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
             flex-wrap: wrap;
             gap: 10px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            margin-bottom: 12px;
         }
-        .order-header-left {
-            flex: 1;
-        }
-        .order-header-left strong {
-            color: #facc15;
-            font-size: 18px;
-        }
-        .order-header-left small {
-            color: #94a3b8;
-            font-size: 13px;
-            display: block;
-            margin-top: 4px;
-        }
-        .order-status {
+
+        .order-id {
             font-weight: 700;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            text-transform: uppercase;
+            font-size: 16px;
+            color: var(--primary);
+            font-family: monospace;
         }
-        .status-paid { background: #22c55e; color: #0f172a; }
-        .status-pending { background: #facc15; color: #0f172a; }
-        .status-shipped { background: #3b82f6; color: #ffffff; }
-        .status-delivered { background: #8b5cf6; color: #ffffff; }
-        .status-cancelled { background: #ef4444; color: #ffffff; }
-        .order-items { margin: 10px 0; }
+
+        .order-date {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .order-date i {
+            margin-right: 4px;
+        }
+
+        .order-status {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .order-status.delivered { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+        .order-status.paid { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+        .order-status.pending { background: rgba(250, 204, 21, 0.15); color: var(--primary); }
+        .order-status.shipped { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+        .order-status.cancelled { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+        .order-items {
+            margin: 10px 0;
+        }
+
         .order-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            color: #e2e8f0;
-            border-bottom: 1px solid #1e293b;
+            padding: 6px 0;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
         }
-        .order-item:last-child { border-bottom: none; }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
         .order-item .item-name {
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        .order-item .item-name .qty-badge {
-            background: #facc15;
-            color: #0f172a;
+
+        .order-item .qty-badge {
+            background: var(--primary);
+            color: var(--bg-dark);
             padding: 0 10px;
             border-radius: 12px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
         }
+
         .order-item .item-price {
-            color: #facc15;
+            color: var(--primary);
             font-weight: 600;
         }
-        .order-coupon { color: #22c55e; font-size: 14px; margin: 5px 0; }
+
+        .order-coupon {
+            color: #22c55e;
+            font-size: 13px;
+            margin: 6px 0;
+        }
+
+        .order-delivery {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin: 4px 0;
+        }
+
+        .order-delivery .free {
+            color: #22c55e;
+        }
+
         .order-total {
             text-align: right;
             font-size: 20px;
             font-weight: 700;
-            padding-top: 15px;
-            border-top: 2px solid #334155;
-            margin-top: 15px;
-            color: #facc15;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            margin-top: 12px;
+            color: var(--primary);
         }
-        .order-total span { color: #ffffff; font-weight: 400; }
-        .order-delivery {
-            color: #94a3b8;
+
+        .order-total span {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+        .cancellation-reason {
+            margin-top: 10px;
+            padding: 10px 16px;
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.1);
+            border-radius: 8px;
+            color: #ef4444;
             font-size: 13px;
-            margin-top: 8px;
         }
+
         .order-actions {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
+            margin-top: 14px;
             flex-wrap: wrap;
         }
+
         .order-actions button {
-            padding: 8px 20px;
+            padding: 8px 18px;
             border: none;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        .order-actions button:hover { transform: translateY(-2px); }
-        .btn-invoice { background: #8b5cf6; color: white; }
-        .btn-invoice:hover { background: #7c3aed; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
-        .btn-cancel { background: #ef4444; color: white; }
-        .btn-cancel:hover { background: #dc2626; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
-        .btn-cancel:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .btn-track { background: #3b82f6; color: white; }
-        .btn-track:hover { background: #2563eb; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
-        .btn-reorder { background: #facc15; color: #0f172a; }
-        .btn-reorder:hover { background: #eab308; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3); }
-        .cancelled-badge {
+
+        .order-actions button:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-invoice {
+            background: rgba(139, 92, 246, 0.15);
+            color: #8b5cf6;
+            border: 1px solid rgba(139, 92, 246, 0.15);
+        }
+        .btn-invoice:hover {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .btn-cancel {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.1);
+        }
+        .btn-cancel:hover {
             background: #ef4444;
             color: white;
-            padding: 2px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-left: 8px;
         }
-        .cancellation-reason {
-            margin-top: 10px;
-            padding: 10px 15px;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid #ef4444;
-            border-radius: 8px;
-            color: #ef4444;
-            font-size: 14px;
+        .btn-cancel:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
         }
+
+        .btn-track {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+        .btn-track:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-reorder {
+            background: rgba(250, 204, 21, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(250, 204, 21, 0.1);
+        }
+        .btn-reorder:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+
+        /* --- No Orders --- */
         .no-orders {
             text-align: center;
             padding: 60px 20px;
-            color: #94a3b8;
+            color: var(--text-muted);
         }
+
         .no-orders i {
             font-size: 60px;
-            color: #334155;
+            color: var(--border-color);
             display: block;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
-        .no-orders a {
-            display: inline-block;
-            margin-top: 20px;
+
+        .no-orders h3 {
+            color: #ffffff;
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .no-orders p {
+            margin-bottom: 20px;
+        }
+
+        .btn-shop {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             padding: 12px 30px;
-            background: linear-gradient(135deg, #facc15, #eab308);
-            color: #0f172a;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--bg-dark);
             text-decoration: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-weight: 700;
-            transition: all 0.3s;
+            font-size: 15px;
+            transition: var(--transition);
         }
-        .no-orders a:hover {
+
+        .btn-shop:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(250, 204, 21, 0.3);
+            box-shadow: 0 8px 25px var(--primary-glow);
         }
+
         .loading-orders {
             text-align: center;
             padding: 40px;
-            color: #94a3b8;
+            color: var(--text-muted);
         }
+
         .loading-orders i {
             font-size: 40px;
-            color: #facc15;
+            color: var(--primary);
             display: block;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
-        .user-info-display {
-            color: #94a3b8;
-            font-size: 14px;
-            margin: 10px 0;
-            padding: 10px 15px;
-            background: #0f172a;
-            border-radius: 8px;
-            border: 1px solid #334155;
-        }
-        .user-info-display strong { color: #facc15; }
+
+        /* ============================================
+           WHATSAPP FLOATING
+           ============================================ */
         .whatsapp-floating-btn {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #25D366;
-            color: white;
+            bottom: 24px;
+            right: 24px;
+            z-index: 999;
+            background: var(--whatsapp);
             width: 60px;
             height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-            z-index: 1000;
-            transition: all 0.3s;
-            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            transition: var(--transition);
+            animation: pulse 3s ease-in-out infinite;
         }
-        .whatsapp-floating-btn:hover { transform: scale(1.1); }
-        .whatsapp-svg { width: 32px; height: 32px; fill: white; }
+
+        .whatsapp-floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 35px rgba(37, 211, 102, 0.5);
+        }
+
+        .whatsapp-floating-btn svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        footer {
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 1px solid rgba(255,255,255,0.04);
+            padding: 24px 16px;
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .footer-content p {
+            color: var(--text-muted);
+            font-size: clamp(13px, 1vw, 15px);
+        }
+
+        .footer-content p span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .footer-content .feedback-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: clamp(13px, 1vw, 15px);
+            transition: var(--transition);
+        }
+
+        .footer-content .feedback-link:hover {
+            color: var(--primary);
+        }
+
+        /* ============================================
+           TOAST NOTIFICATION
+           ============================================ */
+        .notification-toast {
+            position: fixed;
+            bottom: 90px;
+            right: 24px;
+            padding: 14px 24px;
+            background: #22c55e;
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            z-index: 9999;
+            font-weight: 500;
+            animation: slideIn 0.4s ease;
+            max-width: 340px;
+            font-size: 14px;
+        }
+
+        .notification-toast.error {
+            background: #ef4444;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
         @media (max-width: 768px) {
-            .orders-container { margin: 20px 10px; padding: 16px; }
-            .orders-container h2 { font-size: 22px; }
-            .phone-input-group { flex-direction: column; }
-            .phone-input-group input { min-width: unset; width: 100%; }
-            .phone-input-group button { width: 100%; justify-content: center; }
-            .order-header { flex-direction: column; }
-            .order-total { font-size: 17px; }
-            .order-actions { flex-direction: column; }
-            .order-actions button { width: 100%; justify-content: center; }
-            .whatsapp-floating-btn { width: 50px; height: 50px; bottom: 20px; right: 20px; }
-            .whatsapp-svg { width: 26px; height: 26px; }
+            .menu-toggle-new {
+                display: flex;
+            }
+
+            .nav-links-new {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: rgba(15, 23, 42, 0.98);
+                backdrop-filter: blur(20px);
+                padding: 12px 16px 24px;
+                gap: 2px;
+                border-bottom: 1px solid rgba(255,255,255,0.06);
+                max-height: calc(100vh - 64px);
+                overflow-y: auto;
+            }
+
+            .nav-links-new.open {
+                display: flex;
+            }
+
+            .nav-links-new li a {
+                padding: 12px 16px;
+                font-size: 15px;
+            }
+
+            .nav-links-new li a.active::after {
+                display: none;
+            }
+
+            .orders-container {
+                padding: 16px;
+            }
+
+            .orders-container h2 {
+                font-size: 20px;
+            }
+
+            .phone-input-group {
+                flex-direction: column;
+            }
+
+            .phone-input-group input {
+                min-width: unset;
+                width: 100%;
+            }
+
+            .phone-input-group button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .order-card {
+                padding: 16px;
+            }
+
+            .order-header {
+                flex-direction: column;
+            }
+
+            .order-actions {
+                flex-direction: column;
+            }
+
+            .order-actions button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .order-filters {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 4px;
+            }
+
+            .order-filters .filter-btn {
+                white-space: nowrap;
+            }
+
+            .order-count-badge {
+                display: none;
+            }
+
+            .whatsapp-floating-btn {
+                width: 50px;
+                height: 50px;
+                bottom: 16px;
+                right: 16px;
+            }
+
+            .whatsapp-floating-btn svg {
+                width: 26px;
+                height: 26px;
+            }
+
+            .user-info-display {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .orders-container {
+                padding: 12px;
+            }
+
+            .orders-container h2 {
+                font-size: 18px;
+            }
+
+            .order-id {
+                font-size: 14px;
+            }
+
+            .order-total {
+                font-size: 17px;
+            }
+
+            .phone-input-section {
+                padding: 16px;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .nav-links-new {
+                display: flex !important;
+            }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="nav-container">
-            <div class="logo">
-                <a href="index.html">
-                    <img src="logo.jpeg" alt="PRADH DESI FUEL Logo" style="height: 40px; width: auto; display: inline-block; vertical-align: middle;">
-                </a>
+<!-- ===== NAVBAR ===== -->
+<header class="navbar-new" id="navbar">
+    <div class="nav-container-new">
+        <a href="index.html" class="logo-new">
+            <img src="logo.jpeg" alt="PRADH DESI FUEL Logo" loading="lazy">
+            <div class="logo-text">
+                <span class="brand">PRADH<span>.</span></span>
+                <span class="tagline">Desi Fuel</span>
             </div>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="product.html" class="nav-link">Products</a></li>
-                <li><a href="about.html" class="nav-link">Our Story</a></li>
-                <li><a href="contact.html" class="nav-link">Contact & Policies</a></li>
-                <li><a href="cart.html" class="nav-link cart-icon-wrapper">Cart <span id="cart-count">0</span></a></li>
-            </ul>
-        </div>
-    </header>
+        </a>
 
-    <div class="header-tools">
-        <div class="nav-icons">
-            <a href="product.html"><i class="fas fa-box"></i><span>Products</span></a>
-            <a href="order.html"><i class="fas fa-shopping-bag"></i><span>Orders</span></a>
-            <a href="cart.html"><i class="fas fa-shopping-cart"></i><span>Cart</span></a>
-            <a href="myaccount.html"><i class="fas fa-user"></i><span>Account</span></a>
-        </div>
-        <div class="search-container">
-            <input type="text" placeholder="Health mix search karein..." class="search-input">
-            <button class="search-btn">Search</button>
-        </div>
+        <ul class="nav-links-new" id="navLinks">
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="product.html"><i class="fas fa-box"></i> Products</a></li>
+            <li><a href="about.html"><i class="fas fa-leaf"></i> Our Story</a></li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li>
+                <a href="cart.html" style="position:relative;">
+                    <i class="fas fa-shopping-bag"></i> Cart
+                    <span class="cart-badge-new" id="cartBadge">0</span>
+                </a>
+            </li>
+        </ul>
+
+        <button class="menu-toggle-new" id="menuToggle" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </div>
+</header>
 
+<!-- ===== PAGE HEADER ===== -->
+<div class="orders-hero">
+    <h1>
+        <i class="fas fa-shopping-bag" style="color:var(--primary);"></i>
+        My <span class="highlight">Orders</span>
+    </h1>
+    <p>Track and manage all your orders in one place</p>
+</div>
+
+<!-- ===== ORDERS PAGE ===== -->
+<div class="orders-page">
     <div class="orders-container">
         <h2>
-            <i class="fas fa-shopping-bag"></i> My Orders
-            <span style="font-size: 14px; color: #94a3b8; font-weight: 400; margin-left: auto;" id="orderCount"></span>
+            <i class="fas fa-shopping-bag"></i> Orders
+            <span class="order-count-badge" id="orderCount">0 orders</span>
         </h2>
 
+        <!-- Phone Input -->
         <div class="phone-input-section">
-            <h3>
-                <i class="fas fa-phone-alt"></i> Track Orders by Phone Number
-            </h3>
+            <h3><i class="fas fa-phone-alt"></i> Find Your Orders</h3>
             <div class="phone-input-group">
-                <input type="tel" id="phoneInput" placeholder="Enter your phone number (e.g., 9876543210)" maxlength="10">
+                <input type="tel" id="phoneInput" placeholder="Enter phone number (e.g., 9876543210)" maxlength="10">
                 <button onclick="trackOrders()">
                     <i class="fas fa-search"></i> Track Orders
                 </button>
             </div>
             <div class="saved-phones" id="savedPhones"></div>
-            <div class="user-info-display" id="userInfoDisplay" style="display: none;">
-                <i class="fas fa-user-circle"></i> Showing orders for: <strong id="displayPhone"></strong>
-                <button onclick="clearPhone()" style="background: none; border: none; color: #ef4444; cursor: pointer; margin-left: 10px; font-size: 12px;">
+            <div class="user-info-display" id="userInfoDisplay">
+                <span>
+                    <i class="fas fa-user-circle"></i> Showing orders for: 
+                    <strong id="displayPhone"></strong>
+                </span>
+                <button class="clear-btn" onclick="clearPhone()">
                     <i class="fas fa-times"></i> Clear
                 </button>
             </div>
         </div>
 
+        <!-- Filters -->
+        <div class="order-filters" id="filterContainer">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="pending">Pending</button>
+            <button class="filter-btn" data-filter="paid">Paid</button>
+            <button class="filter-btn" data-filter="shipped">Shipped</button>
+            <button class="filter-btn" data-filter="delivered">Delivered</button>
+            <button class="filter-btn" data-filter="cancelled">Cancelled</button>
+        </div>
+
+        <!-- Orders List -->
         <div id="ordersList">
             <div class="loading-orders">
                 <i class="fas fa-truck"></i>
@@ -398,338 +1090,443 @@
             </div>
         </div>
     </div>
+</div>
 
-    <a href="https://wa.me/918979993655?text=Hello%20PRADH%20Desi%20Fuel!%20I%20have%20a%20query%20about%20my%20order." 
-       class="whatsapp-floating-btn" target="_blank" title="Chat with us on WhatsApp">
-        <svg viewBox="0 0 32 32" class="whatsapp-svg">
-            <path d="M16 2a13 13 0 0 0-11.3 19.4L3 29l7.8-2A13 13 0 1 0 16 2zm0 24a11 11 0 0 1-5.6-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4A11 11 0 1 1 16 26zm5.9-8.1c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.1-.7.2l-1 1.3c-.2.3-.5.3-.8.1a10.3 10.3 0 0 1-3.7-2.3 11.4 11.4 0 0 1-2.5-3.2c-.2-.4 0-.6.2-.8l.6-.7v-.4c-.2-.5-.7-1.7-1-2.4-.2-.6-.5-.6-.7-.6h-.6a1.3 1.3 0 0 0-1 .4 4.8 4.8 0 0 0-1.5 3.5 8.3 8.3 0 0 0 1.8 4.4 19 19 0 0 0 7.3 6.5c3.5 1.4 4.2 1.1 5 1a4.2 4.2 0 0 0 2.8-2 3.4 3.4 0 0 0 .2-2c-.1-.2-.4-.3-.7-.5z"/>
-        </svg>
-    </a>
+<!-- ===== WHATSAPP FLOATING ===== -->
+<a href="https://wa.me/918979993655?text=Hello%20PRADH%20Desi%20Fuel!%20I%20have%20a%20query%20about%20my%20order." 
+   class="whatsapp-floating-btn" 
+   target="_blank" 
+   title="Chat with us on WhatsApp">
+    <svg viewBox="0 0 32 32">
+        <path d="M16 2a13 13 0 0 0-11.3 19.4L3 29l7.8-2A13 13 0 1 0 16 2zm0 24a11 11 0 0 1-5.6-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4A11 11 0 1 1 16 26zm5.9-8.1c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.1-.7.2l-1 1.3c-.2.3-.5.3-.8.1a10.3 10.3 0 0 1-3.7-2.3 11.4 11.4 0 0 1-2.5-3.2c-.2-.4 0-.6.2-.8l.6-.7v-.4c-.2-.5-.7-1.7-1-2.4-.2-.6-.5-.6-.7-.6h-.6a1.3 1.3 0 0 0-1 .4 4.8 4.8 0 0 0-1.5 3.5 8.3 8.3 0 0 0 1.8 4.4 19 19 0 0 0 7.3 6.5c3.5 1.4 4.2 1.1 5 1a4.2 4.2 0 0 0 2.8-2 3.4 3.4 0 0 0 .2-2c-.1-.2-.4-.3-.7-.5z"/>
+    </svg>
+</a>
 
-    <footer>
-        <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-            <p>&copy; 2026 <span>PRADH</span>. All Rights Reserved.</p>
-            <a href="https://forms.gle/wybyGnhVKrNikMJV6" target="_blank" class="feedback-btn">📝 Share Your Feedback</a>
-        </div>
-    </footer>
+<!-- ===== FOOTER ===== -->
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2026 <span>PRADH</span>. All Rights Reserved.</p>
+        <a href="https://forms.gle/wybyGnhVKrNikMJV6" target="_blank" class="feedback-link">
+            <i class="fas fa-pen"></i> Share Your Feedback
+        </a>
+    </div>
+</footer>
 
-    <script src="main.js"></script>
-    <script>
-        // ============================================
-        // SAVED PHONE NUMBERS
-        // ============================================
-        function getSavedPhones() {
-            try {
-                return JSON.parse(localStorage.getItem('trackedPhones') || '[]');
-            } catch {
-                return [];
+<!-- ===== SCRIPTS ===== -->
+<script>
+    // ============================================
+    // NAVBAR - MOBILE MENU
+    // ============================================
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    menuToggle?.addEventListener('click', function() {
+        this.classList.toggle('active');
+        navLinks.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.nav-links-new a').forEach(link => {
+        link.addEventListener('click', () => {
+            menuToggle?.classList.remove('active');
+            navLinks?.classList.remove('open');
+        });
+    });
+
+    // ============================================
+    // NAVBAR - SCROLL EFFECT
+    // ============================================
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', function() {
+        navbar?.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // ============================================
+    // CART BADGE
+    // ============================================
+    function updateCartBadge() {
+        try {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const total = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            const badge = document.getElementById('cartBadge');
+            if (badge) {
+                badge.textContent = total;
+                if (total > 0) {
+                    badge.classList.add('visible');
+                    badge.classList.remove('pulse');
+                    void badge.offsetWidth;
+                    badge.classList.add('pulse');
+                } else {
+                    badge.classList.remove('visible');
+                }
             }
+        } catch (e) {}
+    }
+
+    // ============================================
+    // SAVED PHONE NUMBERS
+    // ============================================
+    function getSavedPhones() {
+        try {
+            return JSON.parse(localStorage.getItem('trackedPhones') || '[]');
+        } catch {
+            return [];
         }
+    }
 
-        function savePhone(phone) {
-            let phones = getSavedPhones();
-            if (!phones.includes(phone)) {
-                phones.push(phone);
-                localStorage.setItem('trackedPhones', JSON.stringify(phones));
-            }
-            renderSavedPhones();
+    function savePhone(phone) {
+        let phones = getSavedPhones();
+        if (!phones.includes(phone)) {
+            phones.push(phone);
+            localStorage.setItem('trackedPhones', JSON.stringify(phones));
         }
+        renderSavedPhones();
+    }
 
-        function renderSavedPhones() {
-            const container = document.getElementById('savedPhones');
-            const phones = getSavedPhones();
-            if (phones.length > 0) {
-                container.innerHTML = phones.map(p => `
-                    <span class="saved-phone-tag" onclick="trackPhone('${p}')">
-                        <i class="fas fa-phone"></i> ${p}
-                    </span>
-                `).join('');
-            } else {
-                container.innerHTML = '';
-            }
+    function renderSavedPhones() {
+        const container = document.getElementById('savedPhones');
+        const phones = getSavedPhones();
+        if (phones.length > 0) {
+            container.innerHTML = phones.map(p => `
+                <span class="saved-phone-tag" onclick="trackPhone('${p}')">
+                    <i class="fas fa-phone"></i> ${p}
+                </span>
+            `).join('');
+        } else {
+            container.innerHTML = '';
         }
+    }
 
-        function trackPhone(phone) {
-            document.getElementById('phoneInput').value = phone;
-            trackOrders();
-        }
+    function trackPhone(phone) {
+        document.getElementById('phoneInput').value = phone;
+        trackOrders();
+    }
 
-        // ============================================
-        // TRACK ORDERS
-        // ============================================
-        async function trackOrders() {
-            const phone = document.getElementById('phoneInput').value.trim();
-            if (!phone || phone.length < 10) {
-                document.getElementById('ordersList').innerHTML = `
-                    <div class="no-orders">
-                        <i class="fas fa-exclamation-circle" style="color: #facc15;"></i>
-                        <h3>Please enter a valid phone number</h3>
-                        <p>Enter your 10-digit phone number to track your orders</p>
-                    </div>
-                `;
-                return;
-            }
+    // ============================================
+    // TRACK ORDERS
+    // ============================================
+    let allOrders = [];
+    let currentFilter = 'all';
 
+    async function trackOrders() {
+        const phone = document.getElementById('phoneInput').value.trim();
+        if (!phone || phone.length < 10) {
             document.getElementById('ordersList').innerHTML = `
-                <div class="loading-orders">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    Searching for orders...
+                <div class="no-orders">
+                    <i class="fas fa-exclamation-circle" style="color:var(--primary);"></i>
+                    <h3>Please Enter a Valid Phone Number</h3>
+                    <p>Enter your 10-digit phone number to track your orders</p>
                 </div>
             `;
+            return;
+        }
 
-            try {
-                const response = await fetch('/get-orders');
-                const data = await response.json();
-                
-                if (data.success && data.orders) {
-                    const userOrders = data.orders.filter(order => 
-                        order.customer && (
-                            order.customer.phone === phone || 
-                            order.customer.phone === '+91' + phone ||
-                            order.customer.phone === '91' + phone
-                        )
-                    );
-                    
-                    savePhone(phone);
-                    const display = document.getElementById('userInfoDisplay');
-                    document.getElementById('displayPhone').textContent = phone;
-                    display.style.display = 'block';
-                    document.getElementById('orderCount').textContent = `${userOrders.length} orders found`;
-                    
-                    if (userOrders.length > 0) {
-                        displayOrders(userOrders);
-                    } else {
-                        document.getElementById('ordersList').innerHTML = `
-                            <div class="no-orders">
-                                <i class="fas fa-box-open"></i>
-                                <h3>No orders found</h3>
-                                <p>No orders found for phone number <strong style="color: #facc15;">${phone}</strong></p>
-                                <a href="product.html">Start Shopping</a>
-                            </div>
-                        `;
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching orders:', error);
-                document.getElementById('ordersList').innerHTML = `
-                    <div class="no-orders">
-                        <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>
-                        <h3>Error loading orders</h3>
-                        <p>${error.message}</p>
-                        <button onclick="trackOrders()" style="background: #facc15; color: #0f172a; border: none; padding: 12px 30px; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px;">
-                            <i class="fas fa-sync"></i> Retry
+        document.getElementById('ordersList').innerHTML = `
+            <div class="loading-orders">
+                <i class="fas fa-spinner fa-spin"></i>
+                Searching for orders...
+            </div>
+        `;
+
+        try {
+            const response = await fetch('/get-orders');
+            const data = await response.json();
+
+            if (data.success && data.orders) {
+                allOrders = data.orders.filter(order => 
+                    order.customer && (
+                        order.customer.phone === phone || 
+                        order.customer.phone === '+91' + phone ||
+                        order.customer.phone === '91' + phone ||
+                        order.customer.phone === phone.replace(/^0+/, '')
+                    )
+                );
+
+                savePhone(phone);
+                const display = document.getElementById('userInfoDisplay');
+                document.getElementById('displayPhone').textContent = phone;
+                display.classList.add('show');
+                document.getElementById('orderCount').textContent = allOrders.length + ' orders';
+
+                applyFilter();
+            }
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+            document.getElementById('ordersList').innerHTML = `
+                <div class="no-orders">
+                    <i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i>
+                    <h3>Error Loading Orders</h3>
+                    <p>${error.message}</p>
+                    <button onclick="trackOrders()" style="background:var(--primary);color:var(--bg-dark);border:none;padding:12px 30px;border-radius:10px;font-weight:700;cursor:pointer;margin-top:10px;">
+                        <i class="fas fa-sync"></i> Retry
+                    </button>
+                </div>
+            `;
+        }
+    }
+
+    // ============================================
+    // FILTER ORDERS
+    // ============================================
+    function applyFilter() {
+        const filtered = currentFilter === 'all' 
+            ? allOrders 
+            : allOrders.filter(o => (o.status || 'pending').toLowerCase() === currentFilter);
+
+        if (filtered.length > 0) {
+            displayOrders(filtered);
+        } else {
+            document.getElementById('ordersList').innerHTML = `
+                <div class="no-orders">
+                    <i class="fas fa-inbox"></i>
+                    <h3>No ${currentFilter !== 'all' ? currentFilter : ''} Orders Found</h3>
+                    <p>Try changing the filter or check other phone numbers</p>
+                </div>
+            `;
+        }
+    }
+
+    // ============================================
+    // FILTER BUTTONS
+    // ============================================
+    document.getElementById('filterContainer')?.addEventListener('click', function(e) {
+        const btn = e.target.closest('.filter-btn');
+        if (!btn) return;
+
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        applyFilter();
+    });
+
+    // ============================================
+    // DISPLAY ORDERS
+    // ============================================
+    function displayOrders(orders) {
+        const container = document.getElementById('ordersList');
+        orders.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        container.innerHTML = orders.map(order => {
+            const isCancelled = order.status === 'cancelled';
+            const canCancel = !isCancelled && (order.status === 'pending' || order.status === 'paid');
+            const status = order.status || 'pending';
+
+            return `
+                <div class="order-card ${isCancelled ? 'cancelled' : ''}">
+                    <div class="order-header">
+                        <div>
+                            <span class="order-id">#${order.id || order.order_id || 'N/A'}</span>
+                            <span class="order-date">
+                                <i class="far fa-calendar-alt"></i> 
+                                ${order.date ? new Date(order.date).toLocaleDateString('en-IN', {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    year: 'numeric'
+                                }) : 'N/A'}
+                            </span>
+                        </div>
+                        <span class="order-status ${status}">${status.toUpperCase()}</span>
+                    </div>
+
+                    ${order.coupon ? `<div class="order-coupon">🎉 Coupon Applied: ${order.coupon}</div>` : ''}
+
+                    <div class="order-items">
+                        ${order.items && order.items.length > 0 ? 
+                            order.items.map(item => `
+                                <div class="order-item">
+                                    <span class="item-name">
+                                        ${item.name || 'Product'}
+                                        <span class="qty-badge">×${item.quantity || 1}</span>
+                                    </span>
+                                    <span class="item-price">₹${(item.price * (item.quantity || 1)).toFixed(0)}</span>
+                                </div>
+                            `).join('') : 
+                            '<div style="color:var(--text-muted);padding:10px 0;">No item details</div>'
+                        }
+                    </div>
+
+                    ${order.deliveryCharge !== undefined ? `
+                        <div class="order-delivery">
+                            <i class="fas fa-truck"></i> 
+                            Delivery: ${order.deliveryCharge === 0 ? '<span class="free">FREE 🎉</span>' : '₹' + order.deliveryCharge.toFixed(0)}
+                        </div>
+                    ` : ''}
+
+                    ${order.cancellation_reason ? `
+                        <div class="cancellation-reason">
+                            <i class="fas fa-info-circle"></i> ${order.cancellation_reason}
+                        </div>
+                    ` : ''}
+
+                    <div class="order-total">
+                        <span>Total:</span> ₹${(order.total || 0).toFixed(0)}
+                    </div>
+
+                    <div class="order-actions">
+                        ${canCancel ? `
+                            <button class="btn-cancel" onclick="cancelOrder('${order.id || order.order_id}')">
+                                <i class="fas fa-times-circle"></i> Cancel
+                            </button>
+                        ` : ''}
+                        <button class="btn-track" onclick="trackOrderStatus('${order.id || order.order_id}')">
+                            <i class="fas fa-truck"></i> Track
+                        </button>
+                        <button class="btn-invoice" onclick="downloadInvoice('${order.id || order.order_id}')">
+                            <i class="fas fa-file-pdf"></i> Invoice
+                        </button>
+                        <button class="btn-reorder" onclick="reorder('${order.id || order.order_id}')">
+                            <i class="fas fa-redo"></i> Reorder
                         </button>
                     </div>
-                `;
-            }
-        }
-
-        // ============================================
-        // TRACK ORDER STATUS - PROPER TRACKING PAGE
-        // ============================================
-        function trackOrderStatus(orderId) {
-            // Redirect to tracking page with order ID
-            window.location.href = `/order-tracking.html?order=${orderId}`;
-        }
-
-        // ============================================
-        // DISPLAY ORDERS
-        // ============================================
-        function displayOrders(orders) {
-            const container = document.getElementById('ordersList');
-            orders.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            container.innerHTML = orders.map(order => {
-                const isCancelled = order.status === 'cancelled';
-                const canCancel = !isCancelled && (order.status === 'pending' || order.status === 'paid');
-                
-                return `
-                    <div class="order-card ${isCancelled ? 'cancelled' : ''}">
-                        <div class="order-header">
-                            <div class="order-header-left">
-                                <strong>
-                                    Order #${order.id || order.order_id || 'N/A'}
-                                    ${isCancelled ? '<span class="cancelled-badge">CANCELLED</span>' : ''}
-                                </strong>
-                                <small>
-                                    <i class="far fa-calendar-alt"></i> 
-                                    ${order.date ? new Date(order.date).toLocaleDateString('en-IN', { 
-                                        day: '2-digit', 
-                                        month: 'short', 
-                                        year: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit'
-                                    }) : 'N/A'}
-                                    ${order.payment_id ? ` • Payment: ${order.payment_id.slice(0, 10)}...` : ''}
-                                </small>
-                            </div>
-                            <div>
-                                <span class="order-status status-${order.status || 'pending'}">
-                                    ${(order.status || 'pending').toUpperCase()}
-                                </span>
-                            </div>
-                        </div>
-                        
-                        ${order.coupon ? `<div class="order-coupon">🎉 Coupon Applied: ${order.coupon} (${order.discount ? '₹' + order.discount.toFixed(2) + ' off' : ''})</div>` : ''}
-                        
-                        <div class="order-items">
-                            ${order.items && order.items.length > 0 ? 
-                                order.items.map(item => `
-                                    <div class="order-item">
-                                        <span class="item-name">
-                                            ${item.name || 'Product'}
-                                            <span class="qty-badge">×${item.quantity || 1}</span>
-                                        </span>
-                                        <span class="item-price">₹${(item.price * (item.quantity || 1)).toFixed(2)}</span>
-                                    </div>
-                                `).join('') : 
-                                '<div style="color: #94a3b8; padding: 10px 0;">No item details available</div>'
-                            }
-                        </div>
-                        
-                        ${order.deliveryCharge !== undefined ? `
-                            <div class="order-delivery">
-                                <i class="fas fa-truck"></i> 
-                                Delivery: ${order.deliveryCharge === 0 ? 'FREE' : '₹' + order.deliveryCharge.toFixed(2)}
-                                ${order.deliveryCharge === 0 ? ' 🎉' : ''}
-                            </div>
-                        ` : ''}
-                        
-                        ${order.cancellation_reason ? `
-                            <div class="cancellation-reason">
-                                <i class="fas fa-info-circle"></i> Reason: ${order.cancellation_reason}
-                            </div>
-                        ` : ''}
-                        
-                        <div class="order-total">
-                            <span>Total:</span> ₹${(order.total || 0).toFixed(2)}
-                        </div>
-                        
-                        <div class="order-actions">
-                            ${canCancel ? `
-                                <button class="btn-cancel" onclick="cancelOrder('${order.id || order.order_id}')">
-                                    <i class="fas fa-times-circle"></i> Cancel Order
-                                </button>
-                            ` : ''}
-                            
-                            ${!isCancelled ? `
-                                <button class="btn-track" onclick="trackOrderStatus('${order.id || order.order_id}')">
-                                    <i class="fas fa-truck"></i> Track Order
-                                </button>
-                            ` : ''}
-                            
-                            <button class="btn-invoice" onclick="downloadInvoice('${order.id || order.order_id}')">
-                                <i class="fas fa-file-pdf"></i> Invoice
-                            </button>
-                            
-                            <button class="btn-reorder" onclick="reorder('${order.id || order.order_id}')">
-                                <i class="fas fa-redo"></i> Reorder
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ============================================
-        // DOWNLOAD INVOICE
-        // ============================================
-        function downloadInvoice(orderId) {
-            const link = document.createElement('a');
-            link.href = `/api/invoice/${orderId}`;
-            link.target = '_blank';
-            link.download = `invoice-${orderId}.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // ============================================
-        // CANCEL ORDER
-        // ============================================
-        async function cancelOrder(orderId) {
-            const reason = prompt('Please tell us why you want to cancel this order (optional):');
-            if (reason === null) return;
-            if (!confirm(`Are you sure you want to cancel order ${orderId}?`)) return;
-            
-            try {
-                const response = await fetch(`/api/orders/${orderId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        status: 'cancelled',
-                        cancellation_reason: reason || 'Customer requested cancellation',
-                        cancelled_at: new Date().toISOString()
-                    })
-                });
-                
-                const data = await response.json();
-                if (data.success) {
-                    alert('✅ Order cancelled successfully!');
-                    trackOrders();
-                } else {
-                    alert('❌ Failed to cancel order: ' + data.error);
-                }
-            } catch (error) {
-                console.error('Error cancelling order:', error);
-                alert('❌ Error cancelling order: ' + error.message);
-            }
-        }
-
-        // ============================================
-        // REORDER
-        // ============================================
-        function reorder(orderId) {
-            window.location.href = 'product.html';
-        }
-
-        // ============================================
-        // CLEAR PHONE
-        // ============================================
-        function clearPhone() {
-            document.getElementById('phoneInput').value = '';
-            document.getElementById('userInfoDisplay').style.display = 'none';
-            document.getElementById('orderCount').textContent = '';
-            document.getElementById('ordersList').innerHTML = `
-                <div class="loading-orders">
-                    <i class="fas fa-truck"></i>
-                    Enter your phone number to track your orders
                 </div>
             `;
+        }).join('');
+    }
+
+    // ============================================
+    // TRACK ORDER STATUS - FULL PAGE
+    // ============================================
+    function trackOrderStatus(orderId) {
+        window.location.href = `/order-tracking.html?order=${orderId}`;
+    }
+
+    // ============================================
+    // DOWNLOAD INVOICE
+    // ============================================
+    function downloadInvoice(orderId) {
+        window.open(`/api/invoice/${orderId}`, '_blank');
+    }
+
+    // ============================================
+    // CANCEL ORDER
+    // ============================================
+    async function cancelOrder(orderId) {
+        const reason = prompt('Why do you want to cancel this order? (optional)');
+        if (reason === null) return;
+        if (!confirm(`Are you sure you want to cancel order #${orderId}?`)) return;
+
+        try {
+            const response = await fetch(`/api/orders/${orderId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    status: 'cancelled',
+                    cancellation_reason: reason || 'Customer requested cancellation'
+                })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                showNotification('✅ Order cancelled successfully!');
+                setTimeout(trackOrders, 1000);
+            } else {
+                showNotification('❌ ' + data.error, 'error');
+            }
+        } catch (error) {
+            console.error('Error cancelling order:', error);
+            showNotification('❌ Error cancelling order', 'error');
+        }
+    }
+
+    // ============================================
+    // REORDER
+    // ============================================
+    function reorder(orderId) {
+        window.location.href = 'product.html';
+    }
+
+    // ============================================
+    // CLEAR PHONE
+    // ============================================
+    function clearPhone() {
+        document.getElementById('phoneInput').value = '';
+        document.getElementById('userInfoDisplay').classList.remove('show');
+        document.getElementById('orderCount').textContent = '0 orders';
+        document.getElementById('ordersList').innerHTML = `
+            <div class="loading-orders">
+                <i class="fas fa-truck"></i>
+                Enter your phone number to track your orders
+            </div>
+        `;
+        allOrders = [];
+        currentFilter = 'all';
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.filter-btn[data-filter="all"]')?.classList.add('active');
+    }
+
+    // ============================================
+    // SHOW NOTIFICATION
+    // ============================================
+    function showNotification(message, type = 'success') {
+        document.querySelectorAll('.notification-toast').forEach(el => el.remove());
+
+        const toast = document.createElement('div');
+        toast.className = 'notification-toast' + (type === 'error' ? ' error' : '');
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.5s';
+            setTimeout(() => toast.remove(), 500);
+        }, 3500);
+    }
+
+    // ============================================
+    // SCROLL ANIMATIONS
+    // ============================================
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        observer.observe(el);
+    });
+
+    // ============================================
+    // INIT
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        renderSavedPhones();
+        updateCartBadge();
+
+        // Auto-track if logged in
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        if (user && user.phone) {
+            document.getElementById('phoneInput').value = user.phone;
+            setTimeout(trackOrders, 500);
+        } else {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser && loggedInUser.length >= 10) {
+                document.getElementById('phoneInput').value = loggedInUser;
+                setTimeout(trackOrders, 500);
+            }
         }
 
-        // ============================================
-        // INITIALIZATION
-        // ============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            renderSavedPhones();
-            
-            // Check if user is logged in and auto-track
-            const loggedInUser = localStorage.getItem('loggedInUser');
-            if (loggedInUser) {
-                document.getElementById('phoneInput').value = loggedInUser;
-                setTimeout(() => trackOrders(), 500);
-            }
-            
-            if (window.updateCartBadge) {
-                window.updateCartBadge();
-            }
-            
-            const menuToggle = document.getElementById('menuToggle');
-            const navMenu = document.getElementById('navMenu');
-            if (menuToggle && navMenu) {
-                menuToggle.addEventListener('click', function() {
-                    navMenu.classList.toggle('active');
-                });
-            }
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) updateCartBadge();
         });
+    });
 
-        // Enter key support
-        document.getElementById('phoneInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                trackOrders();
-            }
-        });
-    </script>
+    // Enter key support
+    document.getElementById('phoneInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') trackOrders();
+    });
+
+    // Make functions global
+    window.trackOrders = trackOrders;
+    window.trackPhone = trackPhone;
+    window.clearPhone = clearPhone;
+    window.cancelOrder = cancelOrder;
+    window.reorder = reorder;
+    window.downloadInvoice = downloadInvoice;
+    window.trackOrderStatus = trackOrderStatus;
+    window.updateCartBadge = updateCartBadge;
+    window.showNotification = showNotification;
+</script>
+
 </body>
 </html>

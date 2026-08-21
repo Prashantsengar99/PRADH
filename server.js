@@ -1119,3 +1119,151 @@ app.get('/api/order/track/:orderId', async (req, res) => {
         });
     }
 });
+
+
+// ============================================
+// ADMIN LOGIN API - ADD THIS IN server.js
+// ============================================
+
+// Admin credentials from .env file
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'pradhadmin';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Gaming1143';
+
+// Admin login endpoint
+app.post('/api/admin/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        
+        console.log('🔐 Admin login attempt:', { username, ip: req.ip });
+        
+        // Validate input
+        if (!username || !password) {
+            return res.status(400).json({
+                success: false,
+                error: 'Username and password required'
+            });
+        }
+        
+        // Check credentials from .env
+        if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+            // Generate JWT token for admin
+            const token = jwt.sign(
+                { 
+                    username: username, 
+                    role: 'admin',
+                    timestamp: Date.now()
+                }, 
+                JWT_SECRET, 
+                { expiresIn: '24h' }
+            );
+            
+            console.log('✅ Admin login successful:', username);
+            
+            return res.json({
+                success: true,
+                message: 'Login successful',
+                token: token,
+                user: {
+                    username: username,
+                    role: 'admin',
+                    name: 'PRADH Admin'
+                }
+            });
+        } else {
+            // Failed login - log attempt
+            console.log(`❌ Failed admin login attempt: ${username} from ${req.ip}`);
+            
+            return res.status(401).json({
+                success: false,
+                error: 'Invalid username or password'
+            });
+        }
+    } catch (error) {
+        console.error('Admin login error:', error);
+        return res.status(500).json({
+            success: false,
+            error: 'Server error. Please try again.'
+        });
+    }
+});
+
+// ============================================
+// VERIFY ADMIN TOKEN MIDDLEWARE
+// ============================================
+function verifyAdminToken(req, res, next) {
+    const token = req.headers.authorization?.split(' ')[1] || req.headers['x-auth-token'];
+    
+    if (!token) {
+        return res.status(401).json({
+            success: false,
+            error: 'No token provided'
+        });
+    }
+    
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        if (decoded.role !== 'admin') {
+            return res.status(403).json({
+                success: false,
+                error: 'Access denied. Admin only.'
+            });
+        }
+        req.user = decoded;
+        next();
+    } catch (error) {
+        return res.status(401).json({
+            success: false,
+            error: 'Invalid or expired token'
+        });
+    }
+}
+
+// ============================================
+// ADMIN DASHBOARD API
+// ============================================
+app.get('/api/admin/dashboard', verifyAdminToken, async (req, res) => {
+    try {
+        // Get stats from database
+        const totalOrders = await Order.countDocuments();
+        const totalProducts = await Product.countDocuments();
+        const totalUsers = await User.countDocuments();
+        const totalRevenue = await Order.aggregate([
+            { $match: { status: 'paid' } },
+            { $group: { _id: null, total: { $sum: '$total' } } }
+        ]);
+        
+        const stats = {
+            totalOrders: totalOrders || 0,
+            totalProducts: totalProducts || 0,
+            totalUsers: totalUsers || 0,
+            revenue: totalRevenue.length > 0 ? totalRevenue[0].total : 0,
+            pendingOrders: await Order.countDocuments({ status: 'pending' }),
+            paidOrders: await Order.countDocuments({ status: 'paid' }),
+            shippedOrders: await Order.countDocuments({ status: 'shipped' }),
+            deliveredOrders: await Order.countDocuments({ status: 'delivered' })
+        };
+        
+        res.json({ success: true, stats });
+    } catch (error) {
+        console.error('Dashboard error:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// ============================================
+// ADMIN VERIFY TOKEN API
+// ============================================
+app.get('/api/admin/verify', verifyAdminToken, async (req, res) => {
+    res.json({ 
+        success: true, 
+        message: 'Token is valid',
+        user: req.user 
+    });
+});
+
+// ============================================
+// ADMIN LOGOUT API
+// ============================================
+app.post('/api/admin/logout', verifyAdminToken, async (req, res) => {
+    res.json({ success: true, message: 'Logout successful' });
+});

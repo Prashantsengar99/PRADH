@@ -3,114 +3,1267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support & Policies | PRADH DESI FUEL</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Contact & Policies | PRADH DESI FUEL</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* ============================================
+           CSS VARIABLES
+           ============================================ */
+        :root {
+            --primary: #facc15;
+            --primary-dark: #eab308;
+            --primary-glow: rgba(250, 204, 21, 0.2);
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #2a3a4f;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --shadow: 0 8px 32px rgba(0,0,0,0.3);
+            --shadow-hover: 0 12px 48px rgba(0,0,0,0.5);
+            --radius: 16px;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --whatsapp: #25D366;
+            --instagram: #E4405F;
+            --facebook: #1877F2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* ============================================
+           SCROLLBAR
+           ============================================ */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
+        /* ============================================
+           ANIMATIONS
+           ============================================ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ============================================
+           NAVBAR
+           ============================================ */
+        .navbar-new {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 0 16px;
+            transition: var(--transition);
+        }
+
+        .navbar-new.scrolled {
+            background: rgba(15, 23, 42, 0.98);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+        }
+
+        .nav-container-new {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .logo-new {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .logo-new img {
+            height: 38px;
+            width: auto;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .logo-new:hover img {
+            transform: scale(1.05);
+        }
+
+        .logo-text .brand {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text .brand span {
+            color: var(--primary);
+        }
+
+        .logo-text .tagline {
+            font-size: 8px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .menu-toggle-new {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: var(--transition);
+        }
+
+        .menu-toggle-new:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .menu-toggle-new span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: var(--text-light);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .menu-toggle-new.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .menu-toggle-new.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .menu-toggle-new.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .nav-links-new {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            list-style: none;
+        }
+
+        .nav-links-new li a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 10px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links-new li a i {
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .nav-links-new li a:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,0.06);
+        }
+
+        .nav-links-new li a:hover i {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-links-new li a.active {
+            color: var(--primary);
+            background: rgba(250, 204, 21, 0.08);
+        }
+
+        .nav-links-new li a.active i {
+            color: var(--primary);
+        }
+
+        .nav-links-new li a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .cart-badge-new {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-dark);
+            transition: var(--transition);
+        }
+
+        .cart-badge-new.visible {
+            display: flex;
+        }
+
+        .cart-badge-new.pulse {
+            animation: pulse 0.4s ease;
+        }
+
+        /* ============================================
+           PAGE HEADER / HERO
+           ============================================ */
+        .contact-hero {
+            position: relative;
+            padding: 50px 16px 36px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.05) 0%, transparent 50%, rgba(250, 204, 21, 0.03) 100%);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .contact-hero h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .contact-hero h1 .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        .contact-hero p {
+            color: var(--text-muted);
+            font-size: clamp(15px, 1.2vw, 18px);
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .contact-hero .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(250, 204, 21, 0.1);
+            border: 1px solid rgba(250, 204, 21, 0.15);
+            padding: 6px 18px;
+            border-radius: 50px;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        /* ============================================
+           SECTION COMMON
+           ============================================ */
+        .section {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 16px 60px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(24px, 3vw, 34px);
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .section-title .highlight {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: clamp(14px, 1.2vw, 17px);
+            max-width: 550px;
+            margin: 0 auto 36px;
+            line-height: 1.8;
+        }
+
+        /* ============================================
+           CONTACT GRID
+           ============================================ */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        /* --- Contact Cards --- */
+        .contact-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .contact-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            border: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: var(--transition);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .contact-card:hover {
+            transform: translateX(6px);
+            border-color: rgba(250, 204, 21, 0.15);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .contact-card .icon-wrapper {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .contact-card .icon-wrapper.email {
+            background: rgba(250, 204, 21, 0.15);
+            color: var(--primary);
+        }
+
+        .contact-card .icon-wrapper.whatsapp {
+            background: rgba(37, 211, 102, 0.15);
+            color: var(--whatsapp);
+        }
+
+        .contact-card .icon-wrapper.phone {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+        }
+
+        .contact-card .icon-wrapper.location {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .contact-card .info h4 {
+            color: #ffffff;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .contact-card .info p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .contact-card .info a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .contact-card .info a:hover {
+            color: var(--primary-dark);
+        }
+
+        /* --- Social Links --- */
+        .social-section {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .social-section h3 {
+            color: #ffffff;
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .social-links-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .social-link-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .social-link-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .social-link-item.instagram {
+            background: rgba(228, 64, 95, 0.1);
+            color: var(--instagram);
+            border-color: rgba(228, 64, 95, 0.15);
+        }
+
+        .social-link-item.instagram:hover {
+            background: rgba(228, 64, 95, 0.15);
+        }
+
+        .social-link-item.facebook {
+            background: rgba(24, 119, 242, 0.1);
+            color: var(--facebook);
+            border-color: rgba(24, 119, 242, 0.15);
+        }
+
+        .social-link-item.facebook:hover {
+            background: rgba(24, 119, 242, 0.15);
+        }
+
+        .social-link-item.whatsapp {
+            background: rgba(37, 211, 102, 0.1);
+            color: var(--whatsapp);
+            border-color: rgba(37, 211, 102, 0.15);
+        }
+
+        .social-link-item.whatsapp:hover {
+            background: rgba(37, 211, 102, 0.15);
+        }
+
+        .social-link-item .emoji {
+            font-size: 20px;
+        }
+
+        /* --- Business Hours --- */
+        .hours-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .hours-card h3 {
+            color: #ffffff;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .hours-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .hours-row:last-child {
+            border-bottom: none;
+        }
+
+        .hours-row .day {
+            color: var(--text-light);
+        }
+
+        .hours-row .time {
+            color: var(--text-muted);
+        }
+
+        .hours-row .time .status {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        /* ============================================
+           POLICIES SECTION
+           ============================================ */
+        .policies-section {
+            margin-top: 40px;
+        }
+
+        .policies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .policy-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px 24px 28px;
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: var(--transition);
+        }
+
+        .policy-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(250, 204, 21, 0.15);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .policy-card .icon {
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .policy-card h3 {
+            color: #ffffff;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .policy-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .policy-card .highlight-text {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* ============================================
+           FAQ SECTION
+           ============================================ */
+        .faq-section {
+            margin-top: 40px;
+        }
+
+        .faq-item {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+            overflow: hidden;
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+
+        .faq-item:hover {
+            border-color: rgba(250, 204, 21, 0.1);
+        }
+
+        .faq-item.active {
+            border-color: var(--primary);
+        }
+
+        .faq-question {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-light);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .faq-icon {
+            font-size: 20px;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+            color: var(--primary);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .faq-answer p {
+            padding: 0 20px 16px;
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* ============================================
+           TRUST BADGES
+           ============================================ */
+        .trust-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px 40px;
+            padding: 24px 0;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            margin-top: 40px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .trust-item i {
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        /* ============================================
+           WHATSAPP FLOATING
+           ============================================ */
+        .whatsapp-floating-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 999;
+            background: #25D366;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            transition: var(--transition);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .whatsapp-floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 35px rgba(37, 211, 102, 0.5);
+        }
+
+        .whatsapp-floating-btn svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        footer {
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 1px solid rgba(255,255,255,0.04);
+            padding: 24px 16px;
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .footer-content p {
+            color: var(--text-muted);
+            font-size: clamp(13px, 1vw, 15px);
+        }
+
+        .footer-content p span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .footer-content .feedback-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: clamp(13px, 1vw, 15px);
+            transition: var(--transition);
+        }
+
+        .footer-content .feedback-link:hover {
+            color: var(--primary);
+        }
+
+        /* ============================================
+           TOAST NOTIFICATION
+           ============================================ */
+        .notification-toast {
+            position: fixed;
+            bottom: 90px;
+            right: 24px;
+            padding: 14px 24px;
+            background: #22c55e;
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            z-index: 9999;
+            font-weight: 500;
+            animation: slideIn 0.4s ease;
+            max-width: 340px;
+            font-size: 14px;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 768px) {
+            .menu-toggle-new {
+                display: flex;
+            }
+
+            .nav-links-new {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: rgba(15, 23, 42, 0.98);
+                backdrop-filter: blur(20px);
+                padding: 12px 16px 24px;
+                gap: 2px;
+                border-bottom: 1px solid rgba(255,255,255,0.06);
+                max-height: calc(100vh - 64px);
+                overflow-y: auto;
+            }
+
+            .nav-links-new.open {
+                display: flex;
+            }
+
+            .nav-links-new li a {
+                padding: 12px 16px;
+                font-size: 15px;
+            }
+
+            .nav-links-new li a.active::after {
+                display: none;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .social-links-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .policies-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-hero {
+                padding: 36px 16px 24px;
+            }
+
+            .contact-hero h1 {
+                font-size: 28px;
+            }
+
+            .trust-section {
+                gap: 16px 24px;
+                padding: 16px 0;
+            }
+
+            .trust-item {
+                font-size: 12px;
+            }
+
+            .whatsapp-floating-btn {
+                width: 50px;
+                height: 50px;
+                bottom: 16px;
+                right: 16px;
+            }
+
+            .whatsapp-floating-btn svg {
+                width: 26px;
+                height: 26px;
+            }
+
+            .contact-card {
+                padding: 16px 18px;
+            }
+
+            .contact-card .icon-wrapper {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .contact-hero h1 {
+                font-size: 24px;
+            }
+
+            .contact-card .info p {
+                font-size: 13px;
+            }
+
+            .policy-card h3 {
+                font-size: 16px;
+            }
+
+            .social-links-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .trust-section {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .nav-links-new {
+                display: flex !important;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <header>
-        <div class="nav-container">
-            <div class="logo"><a href="index.html">PRADH <span></span></a></div>
-            <div class="menu-toggle" id="menuToggle">
-                <span></span><span></span><span></span>
+<!-- ===== NAVBAR ===== -->
+<header class="navbar-new" id="navbar">
+    <div class="nav-container-new">
+        <a href="index.html" class="logo-new">
+            <img src="logo.jpeg" alt="PRADH DESI FUEL Logo" loading="lazy">
+            <div class="logo-text">
+                <span class="brand">PRADH<span>.</span></span>
+                <span class="tagline">Desi Fuel</span>
             </div>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="product.html" class="nav-link">Products</a></li>
-                <li><a href="about.html" class="nav-link">Our Story</a></li>
-                <li><a href="contact.html" class="nav-link active">Contact & Policies</a></li>
-                <li><a href="cart.html" class="nav-link cart-icon-wrapper">Cart <span id="cart-count">0</span></a></li>
-            </ul>
+        </a>
+
+        <ul class="nav-links-new" id="navLinks">
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="product.html"><i class="fas fa-box"></i> Products</a></li>
+            <li><a href="about.html"><i class="fas fa-leaf"></i> Our Story</a></li>
+            <li><a href="contact.html" class="active"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li>
+                <a href="cart.html" class="cart-link" style="position:relative;">
+                    <i class="fas fa-shopping-bag"></i> Cart
+                    <span class="cart-badge-new" id="cartBadge">0</span>
+                </a>
+            </li>
+        </ul>
+
+        <button class="menu-toggle-new" id="menuToggle" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</header>
+
+<!-- ===== CONTACT HERO ===== -->
+<section class="contact-hero">
+    <div class="badge">
+        <i class="fas fa-headset"></i> We're Here to Help
+    </div>
+    <h1>
+        <span class="highlight">Contact</span> &amp; Policies
+    </h1>
+    <p>
+        Have questions about our products, orders, or policies? 
+        Reach out to us — we're always happy to help!
+    </p>
+</section>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="section">
+
+    <!-- ===== CONTACT GRID ===== -->
+    <div class="contact-grid">
+        <!-- Left: Contact Cards -->
+        <div class="contact-cards">
+            <div class="contact-card animate-on-scroll">
+                <div class="icon-wrapper email"><i class="fas fa-envelope"></i></div>
+                <div class="info">
+                    <h4>Email</h4>
+                    <p><a href="mailto:pradhfoods@gmail.com">pradhfoods@gmail.com</a></p>
+                </div>
+            </div>
+
+            <div class="contact-card animate-on-scroll">
+                <div class="icon-wrapper whatsapp"><i class="fab fa-whatsapp"></i></div>
+                <div class="info">
+                    <h4>WhatsApp Support</h4>
+                    <p><a href="https://wa.me/918979993655" target="_blank">+91 89799 93655</a></p>
+                </div>
+            </div>
+
+            <div class="contact-card animate-on-scroll">
+                <div class="icon-wrapper phone"><i class="fas fa-phone"></i></div>
+                <div class="info">
+                    <h4>Phone</h4>
+                    <p><a href="tel:+918979993655">+91 89799 93655</a></p>
+                </div>
+            </div>
+
+            <div class="contact-card animate-on-scroll">
+                <div class="icon-wrapper location"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="info">
+                    <h4>Location</h4>
+                    <p>Uttar Pradesh, India</p>
+                </div>
+            </div>
+
+            <!-- Social Links -->
+            <div class="social-section animate-on-scroll">
+                <h3><i class="fas fa-share-alt"></i> Connect With Us</h3>
+                <div class="social-links-grid">
+                    <a href="https://www.instagram.com/pradhfoods?igsh=MTJ6c21kM3lpMjY4Mg==" target="_blank" class="social-link-item instagram">
+                        <span class="emoji">📸</span> Instagram
+                    </a>
+                    <a href="https://www.facebook.com/share/191E8hq2JA/" target="_blank" class="social-link-item facebook">
+                        <span class="emoji">📘</span> Facebook
+                    </a>
+                    <a href="https://wa.me/918979993655" target="_blank" class="social-link-item whatsapp">
+                        <span class="emoji">💬</span> WhatsApp
+                    </a>
+                </div>
+            </div>
+
+            <!-- Business Hours -->
+            <div class="hours-card animate-on-scroll">
+                <h3><i class="far fa-clock"></i> Business Hours</h3>
+                <div class="hours-row">
+                    <span class="day">Monday - Friday</span>
+                    <span class="time">9:00 AM - 8:00 PM</span>
+                </div>
+                <div class="hours-row">
+                    <span class="day">Saturday</span>
+                    <span class="time">9:00 AM - 6:00 PM</span>
+                </div>
+                <div class="hours-row">
+                    <span class="day">Sunday</span>
+                    <span class="time"><span class="status">Closed</span></span>
+                </div>
+                <div class="hours-row" style="border-bottom:none; padding-top:8px;">
+                    <span class="day" style="color:var(--text-muted); font-size:12px;">
+                        <i class="fas fa-clock" style="color:var(--primary);"></i> Response Time: &lt; 12 hours
+                    </span>
+                </div>
+            </div>
         </div>
-    </header>
 
-    <main class="section">
-        <h2 class="section-title">Contact & Brand Policies</h2>
-        <div class="policy-grid">
-            
-            <div>
-             <div class="contact-info-box">
-    <h3 style="color:white; margin-bottom: 1.5rem; border-bottom: 1px solid #374151; padding-bottom: 0.5rem;">Get In Touch</h3>
-    
-    <!-- Email -->
-    <div class="contact-method">
-        <h4>Email Channel</h4>
-        <p><a href="mailto:pradhfoods@gmail.com" style="color:var(--accent-yellow)">pradhfoods@gmail.com</a></p>
-    </div>
-    
-    <!-- WhatsApp Support -->
-    <div class="contact-method">
-        <h4>WhatsApp Support</h4>
-        <p><a href="https://wa.me/918979993655" target="_blank" style="color:var(--accent-green)">+91-8979993655</a></p>
-    </div>
-
-    <!-- Social Media Handles Section -->
-    <div class="contact-method" style="margin-top: 2.5rem;">
-        <h4 style="color: var(--text-light); margin-bottom: 1rem; font-size: 1.1rem; letter-spacing: 1px;">OUR SOCIALS</h4>
-        <div class="social-links-container" style="display: flex; flex-direction: column; gap: 0.75rem;">
-            
-            <!-- Instagram Link -->
-            <a href="https://www.instagram.com/pradhfoods?igsh=MTJ6c21kM3lpMjY4Mg==" target="_blank" class="social-link-item insta-color">
-                <span>📸</span> Instagram
-            </a>
-            
-            <!-- Facebook Link -->
-            <a href="https://www.facebook.com/share/191E8hq2JA/" target="_blank" class="social-link-item fb-color">
-                <span>📘</span> Facebook
-            </a>
-            
-            <!-- WhatsApp Community/Chat Link -->
-            <a href="https://wa.me/918979993655" target="_blank" class="social-link-item wa-color">
-                <span>💬</span> WhatsApp Chat
-            </a>
-
-        </div>
-    </div>
-</div>
-            <div>
-                <div class="policy-block">
+        <!-- Right: Policies -->
+        <div class="policies-section">
+            <h2 style="color:#ffffff; font-size:22px; margin-bottom:16px;">
+                <i class="fas fa-shield-alt" style="color:var(--primary);"></i> Our Policies
+            </h2>
+            <div class="policies-grid" style="grid-template-columns:1fr;">
+                <div class="policy-card animate-on-scroll">
+                    <span class="icon">🚚</span>
                     <h3>Shipping Policy</h3>
-                    <p>Orders are dispatched within 24–48 hours of confirmation. Deliveries take 3–7 business days depending on destination logistics.</p>
+                    <p>
+                        Orders are dispatched within <span class="highlight-text">24–48 hours</span> of confirmation. 
+                        Deliveries take <span class="highlight-text">3–7 business days</span> depending on destination logistics. 
+                        Free shipping on orders above ₹499.
+                    </p>
                 </div>
 
-                <div class="policy-block">
-                    <h3>Return & Replacement Policy</h3>
-                    <p>We only accept returns and provide replacements for products damaged during transit. To process a replacement request, you must provide unboxing video proof via email or WhatsApp within 24 hours of delivery.</p>
+                <div class="policy-card animate-on-scroll">
+                    <span class="icon">🔄</span>
+                    <h3>Return &amp; Replacement Policy</h3>
+                    <p>
+                        We only accept returns and provide replacements for products 
+                        <span class="highlight-text">damaged during transit</span>. To process a replacement request, 
+                        you must provide <span class="highlight-text">unboxing video proof</span> via email or WhatsApp 
+                        within <span class="highlight-text">24 hours</span> of delivery.
+                    </p>
                 </div>
 
-                <div class="policy-block">
+                <div class="policy-card animate-on-scroll">
+                    <span class="icon">🔒</span>
                     <h3>Privacy Policy</h3>
-                    <p>Your privacy matters to us. We operate on a strict data-security framework: your personal delivery coordinates or order logs are never shared or sold to external marketing networks.</p>
+                    <p>
+                        Your privacy matters to us. We operate on a strict data-security framework: 
+                        your personal delivery coordinates or order logs are 
+                        <span class="highlight-text">never shared or sold</span> to external marketing networks.
+                    </p>
+                </div>
+
+                <div class="policy-card animate-on-scroll">
+                    <span class="icon">💳</span>
+                    <h3>Payment Policy</h3>
+                    <p>
+                        We accept <span class="highlight-text">Cash on Delivery (COD)</span> and 
+                        <span class="highlight-text">Online Payments</span> (UPI, Cards, Net Banking). 
+                        All transactions are 100% secure and encrypted.
+                    </p>
                 </div>
             </div>
-
         </div>
-    </main>
+    </div>
 
-  
+    <!-- ===== FAQ SECTION ===== -->
+    <div class="faq-section">
+        <h2 style="color:#ffffff; font-size:22px; text-align:center; margin-bottom:20px;">
+            <i class="fas fa-question-circle" style="color:var(--primary);"></i> Frequently Asked Questions
+        </h2>
 
-    <script src="main.js"></script>
-    <!-- Floating WhatsApp Chat Button -->
+        <div class="faq-item animate-on-scroll">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span>How long does delivery take?</span>
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer"><p>Orders are dispatched within 24-48 hours. Delivery takes 3-7 business days depending on your location. You'll receive a tracking link once your order is shipped.</p></div>
+        </div>
+
+        <div class="faq-item animate-on-scroll">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span>Do you offer Cash on Delivery?</span>
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer"><p>Yes! We offer Cash on Delivery (COD) on all orders. You can also pay online via UPI, Cards, or Net Banking.</p></div>
+        </div>
+
+        <div class="faq-item animate-on-scroll">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span>Can I return a product?</span>
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer"><p>We accept returns only for products damaged during transit. You must provide unboxing video proof within 24 hours of delivery via email or WhatsApp.</p></div>
+        </div>
+
+        <div class="faq-item animate-on-scroll">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span>How do I contact customer support?</span>
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer"><p>You can reach us via WhatsApp at +91 89799 93655, email at pradhfoods@gmail.com, or through our Instagram DM. We respond within 12 hours.</p></div>
+        </div>
+    </div>
+
+    <!-- ===== TRUST BADGES ===== -->
+    <div class="trust-section">
+        <span class="trust-item"><i class="fas fa-shield-alt"></i> 100% Secure Payments</span>
+        <span class="trust-item"><i class="fas fa-truck"></i> Free Shipping Above ₹499</span>
+        <span class="trust-item"><i class="fas fa-undo"></i> Easy Returns</span>
+        <span class="trust-item"><i class="fas fa-headset"></i> 24/7 Support</span>
+        <span class="trust-item"><i class="fas fa-leaf"></i> 100% Natural</span>
+    </div>
+</main>
+
+<!-- ===== WHATSAPP FLOATING ===== -->
 <a href="https://wa.me/918979993655?text=Hello%20PRADH%20Desi%20Fuel!%20I%20have%20a%20query%20about%20your%20product." 
    class="whatsapp-floating-btn" 
    target="_blank" 
    title="Chat with us on WhatsApp">
-    <!-- WhatsApp Icon SVG Layer -->
-    <svg viewBox="0 0 32 32" class="whatsapp-svg">
+    <svg viewBox="0 0 32 32">
         <path d="M16 2a13 13 0 0 0-11.3 19.4L3 29l7.8-2A13 13 0 1 0 16 2zm0 24a11 11 0 0 1-5.6-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4A11 11 0 1 1 16 26zm5.9-8.1c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.1-.7.2l-1 1.3c-.2.3-.5.3-.8.1a10.3 10.3 0 0 1-3.7-2.3 11.4 11.4 0 0 1-2.5-3.2c-.2-.4 0-.6.2-.8l.6-.7v-.4c-.2-.5-.7-1.7-1-2.4-.2-.6-.5-.6-.7-.6h-.6a1.3 1.3 0 0 0-1 .4 4.8 4.8 0 0 0-1.5 3.5 8.3 8.3 0 0 0 1.8 4.4 19 19 0 0 0 7.3 6.5c3.5 1.4 4.2 1.1 5 1a4.2 4.2 0 0 0 2.8-2 3.4 3.4 0 0 0 .2-2c-.1-.2-.4-.3-.7-.5z"/>
     </svg>
 </a>
+
+<!-- ===== FOOTER ===== -->
 <footer>
-        <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-            <p>&copy; 2026 <span>PRADH </span>. All Rights Reserved.</p>
-            
-            <!-- Google Form Feedback Button -->
-            <a href="https://forms.gle/wybyGnhVKrNikMJV6" 
-               target="_blank" 
-               class="feedback-btn">
-               📝 Share Your Feedback
-            </a>
-        </div>
-    </footer>
+    <div class="footer-content">
+        <p>&copy; 2026 <span>PRADH</span>. All Rights Reserved.</p>
+        <a href="https://forms.gle/wybyGnhVKrNikMJV6" target="_blank" class="feedback-link">
+            <i class="fas fa-pen"></i> Share Your Feedback
+        </a>
+    </div>
+</footer>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+    // ============================================
+    // MOBILE MENU
+    // ============================================
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    menuToggle?.addEventListener('click', function() {
+        this.classList.toggle('active');
+        navLinks.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.nav-links-new a').forEach(link => {
+        link.addEventListener('click', () => {
+            menuToggle?.classList.remove('active');
+            navLinks?.classList.remove('open');
+        });
+    });
+
+    // ============================================
+    // NAVBAR SCROLL
+    // ============================================
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', function() {
+        navbar?.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // ============================================
+    // SCROLL ANIMATIONS
+    // ============================================
+    const animateElements = document.querySelectorAll('.animate-on-scroll');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+    animateElements.forEach(el => observer.observe(el));
+
+    // ============================================
+    // FAQ TOGGLE
+    // ============================================
+    function toggleFaq(element) {
+        const item = element.closest('.faq-item');
+        const answer = item.querySelector('.faq-answer');
+        const icon = item.querySelector('.faq-icon');
+
+        if (item.classList.contains('active')) {
+            item.classList.remove('active');
+            answer.style.maxHeight = '0';
+            icon.textContent = '+';
+        } else {
+            document.querySelectorAll('.faq-item').forEach(el => {
+                el.classList.remove('active');
+                el.querySelector('.faq-answer').style.maxHeight = '0';
+                el.querySelector('.faq-icon').textContent = '+';
+            });
+            item.classList.add('active');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            icon.textContent = '✕';
+        }
+    }
+
+    // ============================================
+    // CART BADGE
+    // ============================================
+    function updateCartBadge() {
+        try {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const total = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            const badge = document.getElementById('cartBadge');
+            if (badge) {
+                badge.textContent = total;
+                if (total > 0) {
+                    badge.classList.add('visible');
+                    badge.classList.remove('pulse');
+                    void badge.offsetWidth;
+                    badge.classList.add('pulse');
+                } else {
+                    badge.classList.remove('visible');
+                }
+            }
+        } catch (e) {}
+    }
+
+    // ============================================
+    // INIT
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        updateCartBadge();
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) updateCartBadge();
+        });
+    });
+
+    // Make toggleFaq globally available
+    window.toggleFaq = toggleFaq;
+</script>
+
 </body>
 </html>
